@@ -1,8 +1,8 @@
 /* 站点全部文案与作品数据 —— 与参考逐帧核对整理 */
 
 export const SITE = {
-  owner: 'AVA LI',
-  tagline: "AVA LI — PORTFOLIO '26",
+  owner: 'LIU YUSHAN', // 草稿：拼写方式待把关（LIU YUSHAN / YUSHAN LIU）
+  tagline: "LIU YUSHAN — PORTFOLIO '26", // 草稿：待把关
   year: '2026',
 }
 

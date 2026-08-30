@@ -1,5 +1,5 @@
 {
-  "name": "locker-folio",
+  "name": "yushan-locker",
   "compatibility_date": "2026-08-21",
   // 纯静态站：没有 Worker 脚本，只把 vite 的产物目录整体托管。
   "assets": {
@@ -8,6 +8,7 @@
     // 不要回落到 index.html —— 那会让缺失的贴图以 200 + HTML 的形式返回，
     // 把「素材 404」伪装成解码失败。
     "not_found_handling": "none"
-  },
-  "routes": [{ "pattern": "locker.zezn.dev", "custom_domain": true }]
+  }
+  // routes 暂留空：原仓库的 locker.zezn.dev 是原作者的域名，已移除。
+  // 正式发布时在这里加你自己的自定义域名，或用 workers.dev 默认域名。
 }
