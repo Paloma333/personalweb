@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { WEBSITES } from '../../data/content'
+import { WEBSITES, type WebsiteEntry } from '../../data/content'
 import BackToFolders from './BackToFolders'
 import { releaseImages, SIZES, workImage } from './imageSources'
 import './website.css'
@@ -10,8 +10,15 @@ import './website.css'
 const STEP = 78
 const RADIUS = 560
 
+type Props = {
+  /** 这一组轮播的作品；不传时回落到旧的 WEBSITES（占位数据） */
+  items?: WebsiteEntry[]
+  /** 左上角栏目标题 */
+  head?: string
+}
+
 /** SELECTED WORK › WEBSITE & WRITING —— 3D 环形封面轮播 */
-export default function WebsiteCarousel() {
+export default function WebsiteCarousel({ items = WEBSITES, head = 'WEBSITE & WRITING' }: Props) {
   /** 连续位置（不取模），保证旋转永远沿最短方向且两侧始终有卡片 */
   const [pos, setPos] = useState(0)
   const [open, setOpen] = useState(false)
@@ -27,9 +34,9 @@ export default function WebsiteCarousel() {
     return () => releaseImages(root)
   }, [])
 
-  const n = WEBSITES.length
+  const n = items.length
   const idx = ((Math.round(pos) % n) + n) % n
-  const cur = WEBSITES[idx]
+  const cur = items[idx]
 
   const go = useCallback((d: number) => {
     setOpen(false)
@@ -86,9 +93,9 @@ export default function WebsiteCarousel() {
   }
 
   /* 每张卡片渲染前后各一份副本，环上任意角度都不会缺口 */
-  const slots: { key: string; w: (typeof WEBSITES)[number]; a: number; active: boolean }[] = []
+  const slots: { key: string; w: WebsiteEntry; a: number; active: boolean }[] = []
   for (let rep = -1; rep <= 1; rep++) {
-    WEBSITES.forEach((w, i) => {
+    items.forEach((w, i) => {
       const a = (i + rep * n - pos) * STEP + drift
       if (Math.abs(a) > 150) return
       slots.push({ key: `${rep}-${i}`, w, a, active: Math.abs(a) < STEP / 2 })
@@ -98,7 +105,7 @@ export default function WebsiteCarousel() {
   return (
     <div ref={rootRef} className="wv wsc" style={{ ['--glow' as string]: cur.glow }}>
       <BackToFolders />
-      <h1 className="wsc__head">WEBSITE &amp; WRITING</h1>
+      <h1 className="wsc__head">{head}</h1>
       <div className="wsc__glow" aria-hidden />
 
       <div
@@ -155,14 +162,13 @@ export default function WebsiteCarousel() {
             ))}
           </h2>
           <p className="wsc__desc">{cur.desc}</p>
-          {/* 真正的出口按钮。原来这里只有一句静态说明，面板打开了也没地方点进项目；
-              cur.href 目前是占位 '#'（见 content.ts），所以标 aria-disabled */}
+          {/* 真正的出口按钮。href 为 '#' 时表示暂无公开链接，标 aria-disabled */}
           <a
             className="wsc__open"
             href={cur.href}
             target="_blank"
             rel="noreferrer"
-            aria-disabled="true"
+            aria-disabled={cur.href === '#' ? 'true' : undefined}
             tabIndex={open ? 0 : -1}
           >
             OPEN PROJECT ↗

@@ -101,24 +101,13 @@ export const SKILLS: SkillCard[] = [
   },
 ]
 
-/* ── SELECTED WORK：四个文件夹 ───────────────────────── */
+/* ── SELECTED WORK：三个文件夹（实习 / 个人项目 / 摄影） ── */
+/* 摄影文件夹沿用原有照片墙，Phase 3 再替换内容 */
 export const FOLDERS = [
   {
-    id: 'video',
-    en: ['VIDEO'],
-    cn: '影像作品',
-    bg: '#0b0b0d',
-    fg: '#e0322a',
-    cnFg: '#e0322a',
-    x: -30,
-    y: 12,
-    rot: -6,
-    z: 1,
-  },
-  {
-    id: 'design',
-    en: ['DESIGN'],
-    cn: '视觉类设计',
+    id: 'intern',
+    en: ['INTERNSHIP'],
+    cn: '实习经历',
     bg: '#c8f322',
     fg: '#1b28d8',
     cnFg: '#1b28d8',
@@ -128,9 +117,9 @@ export const FOLDERS = [
     z: 3,
   },
   {
-    id: 'photograph',
-    en: ['PHOTO', 'GRAPH'],
-    cn: '摄影作品',
+    id: 'projects',
+    en: ['PROJECTS'],
+    cn: '个人项目',
     bg: '#1b28d8',
     fg: '#c8f322',
     cnFg: '#ffffff',
@@ -140,9 +129,9 @@ export const FOLDERS = [
     z: 2,
   },
   {
-    id: 'website',
-    en: ['WEBSITE', '&', 'WRITING'],
-    cn: '文字作品',
+    id: 'photograph',
+    en: ['PHOTO', 'GRAPH'],
+    cn: '摄影',
     bg: '#f8f8f6',
     fg: '#14161a',
     cnFg: '#14161a',
@@ -253,6 +242,77 @@ export const WEBSITES = [
     desc: '公众号长图文写作与版式：把调研转成可读、可传播的叙事。',
     cover: 'wechat',
     glow: '#d7e3a4', // 图文封面的草绿
+    href: '#',
+  },
+]
+
+/* ── INTERNSHIP / PROJECTS：两栏作品数据（Phase 1 草稿，文案待把关） ──
+ * href 为 '#' 表示暂无公开链接（OPEN PROJECT 按钮 aria-disabled）。
+ * glow 是封面主色光晕，取各自封面往饱和方向偏一点的浅色。 */
+export type WebsiteEntry = (typeof WEBSITES)[number]
+
+export const INTERNSHIPS: WebsiteEntry[] = [
+  {
+    no: '01',
+    slug: 'MEITUAN / 策略中台',
+    title: ['Meituan /', 'Copilot'],
+    kicker: 'PRODUCT INTERNSHIP · 2026',
+    desc: '营销策略中台 0→1：沉淀可复用的策略模板，支撑发券、选品等场景规模化落地；引入 AI Copilot，把业务方的策略接入成本压缩到 3 人日。',
+    cover: 'meituan',
+    glow: '#ffdf70',
+    href: '#',
+  },
+  {
+    no: '02',
+    slug: 'DEWU / 内容流量分析',
+    title: ['Dewu /', 'Content Data'],
+    kicker: 'DATA PM INTERNSHIP · 2025',
+    desc: '重构内容社区流量分析体系：从指标口径到看板架构整体重做，让运营与推荐团队自助读数，驱动核心页面 UV 增长。',
+    cover: 'dewu',
+    glow: '#c9c9d6',
+    href: '#',
+  },
+  {
+    no: '03',
+    slug: "MCDONALD'S / GLOBAL DATA",
+    title: ["McDonald's /", 'AI Agent'],
+    kicker: 'DATA PM INTERNSHIP · 2024',
+    desc: 'Global 数据产品团队：负责 AI Summary Agent，聚合多源经营数据自动生成周期性业务洞察，服务多国市场团队的数据消费场景。',
+    cover: 'mcd',
+    glow: '#ffb3a0',
+    href: '#',
+  },
+]
+
+export const PROJECTS: WebsiteEntry[] = [
+  {
+    no: '01',
+    slug: '小屋日志 / HIM',
+    title: ['Him /', 'Home Inventory'],
+    kicker: 'INDIE PROJECT · 2026',
+    desc: '家用物品清单 App「小屋」：拍照即录入，多模态 AI 自动识别与归档。Next.js + Supabase + Qwen-VL 全栈独立开发，已上线。',
+    cover: 'him',
+    glow: '#cfe3b8',
+    href: 'https://him-theta-nine.vercel.app',
+  },
+  {
+    no: '02',
+    slug: '数字人文 / RESOURCE HUB',
+    title: ['Digital /', 'Humanities'],
+    kicker: 'CAMPUS PROJECT · 2024',
+    desc: '校级大创负责人：搭建数字人文学科资源汇总网站，编写 70 页《AI 驱动的数字人文教学与工具指南》；成果入选一桥大学 Linked Pasts 国际会议。',
+    cover: 'dh',
+    glow: '#b3c0ff',
+    href: '#',
+  },
+  {
+    no: '03',
+    slug: '雅思口语陪练 / AI COACH',
+    title: ['IELTS /', 'AI Coach'],
+    kicker: 'TEAM PROJECT · 2024',
+    desc: '雅思口语 AI 陪练网站：在线模拟考题 + AI 自动反馈。Vue + Flask，担任项目策划与前后端对接负责人。',
+    cover: 'ielts',
+    glow: '#e6f79a',
     href: '#',
   },
 ]

@@ -1,21 +1,19 @@
 import { lazy, Suspense } from 'react'
-import { FOLDERS } from '../../data/content'
+import { FOLDERS, INTERNSHIPS, PROJECTS } from '../../data/content'
 import { useStore, type WorkView } from '../../store'
 import CloseButton from './CloseButton'
 import './overlay.css'
 import './folders.css'
 
-const DesignView = lazy(() => import('../work/DesignView'))
 const PhotographWall = lazy(() => import('../work/PhotographWall'))
-const VideoList = lazy(() => import('../work/VideoList'))
 const WebsiteCarousel = lazy(() => import('../work/WebsiteCarousel'))
 
-/* 视频里四个文件夹的版位（相对 1320×724 底稿换算成百分比） */
+/* 三个文件夹的版位（相对 1320×724 底稿换算成百分比）：
+   实习占原来 DESIGN 的大位，个人项目与摄影沿用右侧上下两档 */
 const POS: Record<string, { l: number; t: number; w: number; h: number; rot: number }> = {
-  video: { l: 16.7, t: 47.0, w: 19.3, h: 30.4, rot: -6 },
-  design: { l: 33.0, t: 27.6, w: 29.2, h: 44.2, rot: -7 },
-  photograph: { l: 55.3, t: 9.7, w: 23.1, h: 35.9, rot: 3 },
-  website: { l: 56.8, t: 63.5, w: 22.3, h: 31.8, rot: 2 },
+  intern: { l: 33.0, t: 27.6, w: 29.2, h: 44.2, rot: -7 },
+  projects: { l: 55.3, t: 9.7, w: 23.1, h: 35.9, rot: 3 },
+  photograph: { l: 56.8, t: 63.5, w: 22.3, h: 31.8, rot: 2 },
 }
 
 export default function WorkFolders() {
@@ -25,10 +23,9 @@ export default function WorkFolders() {
   if (workView) {
     return (
       <Suspense fallback={<div className="wv wv--loading" />}>
-        {workView === 'design' && <DesignView />}
+        {workView === 'intern' && <WebsiteCarousel items={INTERNSHIPS} head="INTERNSHIP" />}
+        {workView === 'projects' && <WebsiteCarousel items={PROJECTS} head="PERSONAL PROJECTS" />}
         {workView === 'photograph' && <PhotographWall />}
-        {workView === 'video' && <VideoList />}
-        {workView === 'website' && <WebsiteCarousel />}
       </Suspense>
     )
   }
