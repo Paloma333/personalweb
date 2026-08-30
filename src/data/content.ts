@@ -26,27 +26,29 @@ export const NAV = [
   { id: 'contact', label: 'CONTACT' },
 ] as const
 
-/* ── ABOUT：工牌 ─────────────────────────────────────── */
+/* ── ABOUT：工牌 ───────────────────────────────────────
+ * 6 字段 + 印章 + 页脚。name 拼写（LIU YUSHAN / YUSHAN LIU）、印章 mid 字、出处声明
+ * 三项你把关时若换了，这里只改这三处。stampMid 留 TBD，等你确认；stampRing 同步用 '2026' 占位。 */
 export const ABOUT = {
-  cardNo: 'NO. xxx',
+  cardNo: 'NO. 027',
   title: ['BASIC', 'INFORMATION'],
   titleCn: '个人简介',
   sub: 'PERSONAL PORTFOLIO ID CARD',
   fields: [
-    { k: 'NAME / 姓名', v: 'XXX' },
-    { k: 'GENDER / 性别', v: 'XXX' },
-    { k: 'AGE / 年龄', v: 'XXX' },
-    { k: 'CLASS / 班级', v: 'XXX' },
-    { k: 'EDUCATION / 学历', v: 'XXX' },
-    { k: 'MAJOR / 专业', v: 'XXX' },
+    { k: 'NAME / 姓名', v: '刘雨姗 LIU YUSHAN' },
+    { k: 'EDUCATION / 教育', v: '香港中文大学 · 2027 届' /* ⚠️ 学院/专业待补 */ },
+    { k: 'UNDERGRAD / 本科', v: '华东师范大学 · 日语 + 数字素养微专业' },
+    { k: 'EXCHANGE / 交换', v: '日本神奈川大学 2024.9 – 2025.2' },
+    { k: 'LANGUAGE / 语言', v: '日语 专八 · N1 ｜ 英语 IELTS 7.0' },
+    { k: 'FOCUS / 求职方向', v: 'AI 产品 · 策略 · 数据产品' },
   ],
-  email: 'xxx',
-  phone: 'xxx',
+  email: 'paloma333@163.com',
+  phone: '', // 工牌不显示手机；留空避免误填
   stampTop: 'CERTIFIED',
-  stampMid: 'xxx',
-  stampRing: 'PERSONAL PORTFOLIO · xxx ·',
+  stampMid: 'TBD', // ⚠️ 待你确认：印章中间字（建议三个字：雨姗 / YUSHAN / 印中内容待把关）
+  stampRing: 'PERSONAL PORTFOLIO · 2026 ·',
   footL: 'IN MY CREATIVE ERA',
-  footR: 'PERSONAL DESIGN PORTFOLIO · 2026',
+  footR: 'PERSONAL PORTFOLIO · 2026',
 }
 
 /* ── SKILLS：三张卡片 ─────────────────────────────────── */
@@ -63,38 +65,36 @@ export type SkillCard = {
 export const SKILLS: SkillCard[] = [
   {
     no: '01',
-    kicker: '01 / VISUAL DESIGN',
-    title: '视觉设计',
-    desc: '以排版、色彩与图像建立可被记住的视觉秩序。',
+    kicker: '01 / HUMANITIES',
+    title: '人文素养',
+    desc: '日语专八 · N1。文学计量方向：用数据方法重读《东方快车》《赤い部屋》；吉本芭娜娜 AI 辅助翻译实践。文科不是我的出身标签，是我的方法来源。',
     rows: [
-      { k: 'GRAPHIC', v: 'Photoshop / Illustrator' },
-      { k: 'LAYOUT', v: 'InDesign / Figma' },
-      { k: 'MOTION', v: 'After Effects / C4D' },
+      { k: 'LANGUAGES', v: '日语 专八 · N1 / 英语 IELTS 7.0' },
+      { k: 'FIELDS', v: '文学计量 · 数字人文 · 数字媒体' },
     ],
     bg: '#1b28d8',
     fg: '#ffffff',
   },
   {
     no: '02',
-    kicker: '02 / DATA & INSIGHT',
-    title: '数据分析',
-    desc: '整理、分析并解释数据，为叙事与决策建立清晰依据。',
+    kicker: '02 / DATA',
+    title: '数据能力',
+    desc: 'Python / Pandas 文本处理、Gephi 社会网络分析、SQL 与看板搭建；也会把数据做成艺术——用 p5.js 给乐队写演出 VJ。',
     rows: [
-      { k: 'ANALYSIS', v: 'SPSS / SQL / Python' },
-      { k: 'WORKFLOW', v: 'Excel / VLOOKUP / 数据透视表' },
+      { k: 'ANALYSIS', v: 'Python · Pandas · SQL · Gephi' },
+      { k: 'OUTPUT', v: '数据看板 · 可视化 · 文本分析' },
     ],
     bg: '#c8f322',
     fg: '#12140f',
   },
   {
     no: '03',
-    kicker: '03 / GENERATIVE PRACTICE',
-    title: 'AI 工具',
-    desc: '把生成式工具融入研究、视觉试验与创意内容生产。',
+    kicker: '03 / AI PRACTICE',
+    title: 'AI 实践',
+    desc: '从 AI 辅助翻译到 AI Copilot / AI Agent 产品实习，再到用 Vibe Coding 上线「小屋」和这个网站本身——我对 AI 的兴趣一直是「用起来、做出来」。',
     rows: [
-      { k: 'IMAGE', v: 'Recraft / 即梦 AI / Nano Banana' },
-      { k: '3D', v: '焦点 AI / 混元 AI / Tripo' },
-      { k: 'RESEARCH', v: 'Gemini / GPT' },
+      { k: 'PRODUCT', v: 'AI Copilot · AI Summary Agent · Webapp · Skill' },
+      { k: 'BUILD', v: 'Next.js + Supabase + Qwen-VL · Vibe Coding' },
     ],
     bg: '#ffffff',
     fg: '#14161a',
@@ -179,12 +179,14 @@ export const IP_DESIGN = {
   ],
 }
 
-/* ── PHOTOGRAPH ──────────────────────────────────────── */
+/* ── PHOTOGRAPH ────────────────────────────────────────
+ * 拍立得正片：5 张原创人像，4:3 横向中心裁切 + 白边（上 50 / 下 110 / 左右 32）。
+ * 详见 scripts/gen-polaroid-photos.mjs。循环顺序按主观节奏排：远眺（东京塔）→ 玩（滑雪）→ 乐队 → 演出 → 海边吉他 */
 export const PHOTOS = [
-  'p1', 'p4', 'p2', 'p6',
-  'p5', 'p3', 'p6', 'p1',
-  'p2', 'p5', 'p4', 'p3',
-  'p6', 'p1', 'p3', 'p5',
+  'b1', 'b3', 'b4', 'b2',
+  'b5', 'b1', 'b2', 'b4',
+  'b3', 'b5', 'b1', 'b3',
+  'b2', 'b4', 'b5', 'b1',
 ]
 
 /* ── VIDEO ───────────────────────────────────────────── */
@@ -317,11 +319,13 @@ export const PROJECTS: WebsiteEntry[] = [
   },
 ]
 
-/* ── CONTACT：软木板便签 ─────────────────────────────── */
+/* ── CONTACT：软木板便签 ───────────────────────────────
+ * 三张种子便签 + 用户可自己钉新的。位置/旋转用软木板百分比，组件会钳在软木板范围内。
+ * ⚠️ s2 简历下载链接待简历 PDF 到位后挂 href（先保留 '#'）。 */
 export const NOTE_COLORS = ['#cfe0c3', '#f0e6a8', '#e8b7b7', '#a9c9dd', '#e5cfe0', '#d8cdb8']
 
 export const SEED_NOTES = [
-  { id: 's1', text: '', color: '#cfe0c3', x: 14, y: 42, rot: -2 },
-  { id: 's2', text: '', color: '#f0e6a8', x: 70, y: 12, rot: 3 },
-  { id: 's3', text: '', color: '#e8b7b7', x: 80, y: 33, rot: -3 },
+  { id: 's1', text: '📮  paloma333@163.com', color: '#cfe0c3', x: 14, y: 42, rot: -2 },
+  { id: 's2', text: '🎓  27 届 PM · 秋招联系 · 简历 ↓', color: '#f0e6a8', x: 70, y: 12, rot: 3 },
+  { id: 's3', text: '💬  加微信请注明「雨姗 + 求职」', color: '#e8b7b7', x: 80, y: 33, rot: -3 },
 ]
