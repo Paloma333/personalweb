@@ -15,7 +15,7 @@ import {
 export type Overlay = null | 'about' | 'skills' | 'work' | 'contact'
 
 /** SELECTED WORK 内部的子视图 */
-export type WorkView = null | 'intern' | 'projects' | 'photograph'
+export type WorkView = null | 'intern' | 'projects'
 
 /**
  * 旧的三段式阶段。

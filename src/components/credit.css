@@ -57,6 +57,13 @@
   border-bottom-color: var(--ink);
 }
 
+/* Note 行不是链接，没有下划线 */
+.cr__a--plain {
+  border-bottom: none;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* 窄屏两行会顶到缩放控件，收成一列并去掉英文键名的字距 */
 @media (max-width: 640px) {
   .cr {

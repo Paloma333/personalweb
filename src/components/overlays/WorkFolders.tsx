@@ -5,15 +5,13 @@ import CloseButton from './CloseButton'
 import './overlay.css'
 import './folders.css'
 
-const PhotographWall = lazy(() => import('../work/PhotographWall'))
 const WebsiteCarousel = lazy(() => import('../work/WebsiteCarousel'))
 
-/* 三个文件夹的版位（相对 1320×724 底稿换算成百分比）：
-   实习占原来 DESIGN 的大位，个人项目与摄影沿用右侧上下两档 */
+/* 两个文件夹的版位（相对 1320×724 底稿换算成百分比）：
+   实习占中间大位，个人项目右侧偏上 */
 const POS: Record<string, { l: number; t: number; w: number; h: number; rot: number }> = {
   intern: { l: 33.0, t: 27.6, w: 29.2, h: 44.2, rot: -7 },
-  projects: { l: 55.3, t: 9.7, w: 23.1, h: 35.9, rot: 3 },
-  photograph: { l: 56.8, t: 63.5, w: 22.3, h: 31.8, rot: 2 },
+  projects: { l: 58.0, t: 18.0, w: 23.0, h: 36.0, rot: 3 },
 }
 
 export default function WorkFolders() {
@@ -25,7 +23,6 @@ export default function WorkFolders() {
       <Suspense fallback={<div className="wv wv--loading" />}>
         {workView === 'intern' && <WebsiteCarousel items={INTERNSHIPS} head="INTERNSHIP" />}
         {workView === 'projects' && <WebsiteCarousel items={PROJECTS} head="PERSONAL PROJECTS" />}
-        {workView === 'photograph' && <PhotographWall />}
       </Suspense>
     )
   }

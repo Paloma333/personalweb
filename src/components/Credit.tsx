@@ -23,6 +23,12 @@ export default function Credit() {
         </a>
       </p>
       <p className="cr__line">
+        <span className="cr__k">Note</span>
+        <span className="cr__a cr__a--plain">
+          视觉创意复用 Locker 概念，内容与代码实践为本人完成
+        </span>
+      </p>
+      <p className="cr__line">
         <span className="cr__k">Source</span>
         <a
           className="cr__a u-tap-target"

@@ -45,7 +45,7 @@ export const ABOUT = {
   email: 'paloma333@163.com',
   phone: '', // 工牌不显示手机；留空避免误填
   stampTop: 'CERTIFIED',
-  stampMid: 'TBD', // ⚠️ 待你确认：印章中间字（建议三个字：雨姗 / YUSHAN / 印中内容待把关）
+  stampMid: '雨姗', // 印章中字（P0 文案确认：印中内容即本人名字）
   stampRing: 'PERSONAL PORTFOLIO · 2026 ·',
   footL: 'IN MY CREATIVE ERA',
   footR: 'PERSONAL PORTFOLIO · 2026',
@@ -101,8 +101,8 @@ export const SKILLS: SkillCard[] = [
   },
 ]
 
-/* ── SELECTED WORK：三个文件夹（实习 / 个人项目 / 摄影） ── */
-/* 摄影文件夹沿用原有照片墙，Phase 3 再替换内容 */
+/* ── SELECTED WORK：两个文件夹（实习 / 个人项目） ── */
+/* 摄影作为贴在柜门上的拍立得已退出作品区 */
 export const FOLDERS = [
   {
     id: 'intern',
@@ -111,8 +111,8 @@ export const FOLDERS = [
     bg: '#c8f322',
     fg: '#1b28d8',
     cnFg: '#1b28d8',
-    x: 0,
-    y: 0,
+    x: 8,
+    y: 6,
     rot: -7,
     z: 3,
   },
@@ -123,21 +123,9 @@ export const FOLDERS = [
     bg: '#1b28d8',
     fg: '#c8f322',
     cnFg: '#ffffff',
-    x: 30,
-    y: -18,
+    x: 38,
+    y: -12,
     rot: 3,
-    z: 2,
-  },
-  {
-    id: 'photograph',
-    en: ['PHOTO', 'GRAPH'],
-    cn: '摄影',
-    bg: '#f8f8f6',
-    fg: '#14161a',
-    cnFg: '#14161a',
-    x: 22,
-    y: 20,
-    rot: 2,
     z: 2,
   },
 ] as const
@@ -248,9 +236,13 @@ export const WEBSITES = [
   },
 ]
 
-/* ── INTERNSHIP / PROJECTS：两栏作品数据（Phase 1 草稿，文案待把关） ──
+/* ── INTERNSHIP / PROJECTS：作品数据 ──
  * href 为 '#' 表示暂无公开链接（OPEN PROJECT 按钮 aria-disabled）。
- * glow 是封面主色光晕，取各自封面往饱和方向偏一点的浅色。 */
+ * glow 是封面主色光晕，取各自封面往饱和方向偏一点的浅色。
+ *
+ * ⚠️ 三段实习的「数字归属」尚未与你最终核对：
+ *   草稿里「发券千万级、UV +13.5%、3 人日」三个数字已按理解分布，
+ *   实际可能错位，发送前请回头核一遍。月份按你简历里的区间写。 */
 export type WebsiteEntry = (typeof WEBSITES)[number]
 
 export const INTERNSHIPS: WebsiteEntry[] = [
@@ -258,8 +250,8 @@ export const INTERNSHIPS: WebsiteEntry[] = [
     no: '01',
     slug: 'MEITUAN / 策略中台',
     title: ['Meituan /', 'Copilot'],
-    kicker: 'PRODUCT INTERNSHIP · 2026',
-    desc: '营销策略中台 0→1：沉淀可复用的策略模板，支撑发券、选品等场景规模化落地；引入 AI Copilot，把业务方的策略接入成本压缩到 3 人日。',
+    kicker: 'PRODUCT INTERNSHIP · 2026.01–06',
+    desc: '营销策略引擎 0→1：沉淀可复用的策略模板，支撑发券、选品等场景规模化落地；引入 AI Copilot，把业务方的策略接入成本压缩到 3 人日，单次营销活动发券量级达千万级。',
     cover: 'meituan',
     glow: '#ffdf70',
     href: '#',
@@ -268,8 +260,8 @@ export const INTERNSHIPS: WebsiteEntry[] = [
     no: '02',
     slug: 'DEWU / 内容流量分析',
     title: ['Dewu /', 'Content Data'],
-    kicker: 'DATA PM INTERNSHIP · 2025',
-    desc: '重构内容社区流量分析体系：从指标口径到看板架构整体重做，让运营与推荐团队自助读数，驱动核心页面 UV 增长。',
+    kicker: 'DATA PM INTERNSHIP · 2025.08–12',
+    desc: '重构得物内容社区流量分析体系：从指标口径到看板架构整体重做，让运营与推荐团队自助读数，驱动核心页面 UV 增长 13.5%。',
     cover: 'dewu',
     glow: '#c9c9d6',
     href: '#',
@@ -278,7 +270,7 @@ export const INTERNSHIPS: WebsiteEntry[] = [
     no: '03',
     slug: "MCDONALD'S / GLOBAL DATA",
     title: ["McDonald's /", 'AI Agent'],
-    kicker: 'DATA PM INTERNSHIP · 2024',
+    kicker: 'DATA PM INTERNSHIP · 2025.04–07',
     desc: 'Global 数据产品团队：负责 AI Summary Agent，聚合多源经营数据自动生成周期性业务洞察，服务多国市场团队的数据消费场景。',
     cover: 'mcd',
     glow: '#ffb3a0',
@@ -305,7 +297,7 @@ export const PROJECTS: WebsiteEntry[] = [
     desc: '校级大创负责人：搭建数字人文学科资源汇总网站，编写 70 页《AI 驱动的数字人文教学与工具指南》；成果入选一桥大学 Linked Pasts 国际会议。',
     cover: 'dh',
     glow: '#b3c0ff',
-    href: '#',
+    href: 'https://github.com/Paloma333/DigitalHumanitiesHub',
   },
   {
     no: '03',
