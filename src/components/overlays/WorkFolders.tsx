@@ -6,7 +6,7 @@ import './overlay.css'
 import './folders.css'
 
 const InternshipGrid = lazy(() => import('../work/InternshipGrid'))
-const ProjectsScroll = lazy(() => import('../work/ProjectsScroll'))
+const ProjectsCarousel = lazy(() => import('../work/ProjectsCarousel'))
 
 /* 两个文件夹的版位（相对 1320×724 底稿换算成百分比）：
    实习 → 偏左大位；个人项目 → 右侧偏上。
@@ -15,8 +15,10 @@ const ProjectsScroll = lazy(() => import('../work/ProjectsScroll'))
 
 /* 两个栏目用的不是同一个组件：
    - intern  → 静态卡片网格（没有可打开的成品，不做翻封面的交互）
-   - projects → 纵向滚动陈列（2026-09-08 重做：3D 环形轮播把封面转成不可读的
-     立边、简介藏在点击后面；改成每项目一屏、左视觉右文案全部平铺） */
+   - projects → 横屏切屏轮播（2026-09-09 改版：从纵向 ProjectsScroll 换成
+     横屏 ProjectsCarousel，左右箭头 + 右侧项目名锚点导航——
+     与 INTERNSHIP 的卡片网格形成节奏差异，
+     同时每屏一项目左视觉右文案全部平铺保留） */
 const POS: Record<string, { l: number; t: number; w: number; h: number; rot: number }> = {
   intern:    { l: 30.0, t: 30.0, w: 32.0, h: 44.0, rot: -7 },
   projects:  { l: 64.0, t: 18.0, w: 24.0, h: 38.0, rot: 3 },
@@ -30,7 +32,7 @@ export default function WorkFolders() {
     return (
       <Suspense fallback={<div className="wv wv--loading" />}>
         {workView === 'intern' && <InternshipGrid items={INTERNSHIPS} head="INTERNSHIP" />}
-        {workView === 'projects' && <ProjectsScroll items={PROJECTS} head="PERSONAL PROJECTS" />}
+        {workView === 'projects' && <ProjectsCarousel items={PROJECTS} head="PERSONAL PROJECTS" />}
       </Suspense>
     )
   }
