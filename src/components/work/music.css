@@ -10,7 +10,7 @@
   font-family: var(--app-font, -apple-system, sans-serif);
 }
 .mp__head {
-  padding: 22px 36px 12px 200px;  /* leave room for BackToFolders */
+  padding: 22px 36px 14px 200px;  /* leave room for BackToFolders */
   border-bottom: 1px solid rgba(200, 200, 220, 0.12);
   background: linear-gradient(180deg, #241a2c 0%, #1b1422 100%);
 }
@@ -26,6 +26,16 @@
   font-weight: 700;
   margin: 4px 0 6px;
   color: #fbfaf6;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.mp__title-en {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(251, 250, 246, 0.32);
 }
 .mp__desc {
   font-size: 13px;
@@ -35,84 +45,343 @@
   line-height: 1.5;
 }
 
-.mp__tabs {
-  display: inline-flex;
-  gap: 6px;
-  padding: 4px;
-  background: rgba(0, 0, 0, 0.32);
-  border-radius: 999px;
-  border: 1px solid rgba(200, 200, 220, 0.12);
-}
-.mp__tabs button {
-  font-family: inherit;
-  border: none;
-  background: transparent;
-  color: rgba(251, 250, 246, 0.6);
-  border-radius: 999px;
-  cursor: pointer;
-  padding: 6px 14px;
+/* ── 顶部计数条 ─────────────────────────────────── */
+.mp__stats {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.15;
-  transition: background 0.18s, color 0.18s;
+  gap: 26px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.mp__tab-cn {
-  font-size: 12px;
-  font-weight: 600;
+.mp__stats li {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
 }
-.mp__tab-en {
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  opacity: 0.55;
-}
-.mp__tabs button.is-on {
-  background: #c8f322;
-  color: #1b1422;
-}
-.mp__tabs button:hover:not(.is-on) {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(251, 250, 246, 0.92);
-}
-
-.mp__body {
-  padding: 28px 36px;
-  overflow: hidden;
-  display: grid;
-}
-.mp__pane { display: grid; }
-
-.mp__placeholder {
-  border: 1px dashed rgba(200, 200, 220, 0.18);
-  border-radius: 16px;
-  padding: 60px 32px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.02);
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-}
-.mp__placeholder-mark {
+.mp__stat-k {
   font-family: 'Times New Roman', serif;
-  font-size: 48px;
+  font-size: 22px;
+  font-weight: 700;
   color: #c8f322;
   line-height: 1;
 }
-.mp__placeholder h3 {
-  font-family: 'Times New Roman', 'Songti SC', serif;
-  font-size: 22px;
-  margin: 4px 0;
+.mp__stat-v {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: rgba(251, 250, 246, 0.42);
+}
+
+/* ── 主体：左地图 / 右海报夹 ──────────────────────── */
+.mp__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 26px;
+  padding: 20px 36px 26px;
+  min-height: 0;
+}
+.mp__map {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 0;
+}
+.mp__map-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.mp__map-cn {
+  font-size: 15px;
+  font-weight: 700;
+}
+.mp__map-en {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #c8f322;
+  font-weight: 700;
+}
+.mp__map-note {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgba(251, 250, 246, 0.32);
+}
+
+/* ── 地图 SVG ──────────────────────────────────── */
+.gigmap {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+}
+.gm__grat line {
+  stroke: rgba(251, 250, 246, 0.08);
+  stroke-width: 1;
+}
+.gm__grat text {
+  fill: rgba(251, 250, 246, 0.26);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-anchor: middle;
+}
+.gm__route {
+  fill: none;
+  stroke: rgba(200, 243, 34, 0.34);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 8;
+  animation: gm-dash 30s linear infinite;
+}
+@keyframes gm-dash {
+  to { stroke-dashoffset: -280; }
+}
+.gm__city {
+  fill: none;
+  stroke: rgba(251, 250, 246, 0.5);
+  stroke-width: 1.5;
+}
+.gm__city-cn {
+  fill: rgba(251, 250, 246, 0.86);
+  font-size: 14px;
+  font-weight: 700;
+}
+.gm__city-en {
+  fill: rgba(251, 250, 246, 0.3);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+}
+.gm__spokes line {
+  stroke: rgba(200, 243, 34, 0.22);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.gm__pin {
+  cursor: pointer;
+  outline: none;
+}
+.gm__pin-halo {
+  fill: transparent;
+  transition: fill 0.18s;
+}
+.gm__pin.is-on .gm__pin-halo {
+  fill: rgba(200, 243, 34, 0.14);
+}
+.gm__pin-dot {
+  fill: #241a2c;
+  stroke: #c8f322;
+  stroke-width: 1.5;
+  transition: fill 0.18s;
+}
+.gm__pin-no {
+  fill: #c8f322;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  transition: fill 0.18s;
+}
+.gm__pin:hover .gm__pin-dot,
+.gm__pin.is-on .gm__pin-dot {
+  fill: #c8f322;
+}
+.gm__pin:hover .gm__pin-no,
+.gm__pin.is-on .gm__pin-no {
+  fill: #1b1422;
+}
+.gm__pin:focus-visible .gm__pin-dot {
+  stroke-width: 3.5;
+}
+
+.gm__tag rect {
+  fill: #c8f322;
+}
+.gm__tag text {
+  fill: #1b1422;
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.gm__scale line {
+  stroke: rgba(251, 250, 246, 0.4);
+  stroke-width: 1;
+}
+.gm__scale text {
+  fill: rgba(251, 250, 246, 0.4);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.gm__compass line {
+  stroke: rgba(251, 250, 246, 0.35);
+  stroke-width: 1;
+}
+.gm__compass polygon {
+  fill: rgba(251, 250, 246, 0.5);
+}
+.gm__compass text {
+  fill: rgba(251, 250, 246, 0.42);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-anchor: middle;
+}
+.gm__total-k {
+  fill: #c8f322;
+  font-family: 'Times New Roman', serif;
+  font-size: 30px;
+  font-weight: 700;
+}
+.gm__total-v {
+  fill: rgba(251, 250, 246, 0.4);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+}
+
+/* ── 场地 chips（同时是地图的图例） ───────────────────── */
+.mp__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mp__chips button {
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(200, 200, 220, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(251, 250, 246, 0.72);
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.mp__chips button:hover {
+  background: rgba(255, 255, 255, 0.09);
   color: #fbfaf6;
 }
-.mp__placeholder p {
-  margin: 0;
-  font-size: 13px;
-  color: rgba(251, 250, 246, 0.55);
-  max-width: 480px;
+.mp__chips button.is-on {
+  background: #c8f322;
+  border-color: #c8f322;
+  color: #1b1422;
 }
-.mp__placeholder-note {
-  font-size: 11px !important;
-  color: rgba(251, 250, 246, 0.36) !important;
-  margin-top: 8px !important;
-  font-style: italic;
+.mp__chip-no {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: #c8f322;
+}
+.mp__chip-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+.mp__chip-area {
+  font-size: 10px;
+  color: rgba(251, 250, 246, 0.4);
+}
+.mp__chips button.is-on .mp__chip-no,
+.mp__chips button.is-on .mp__chip-area {
+  color: rgba(27, 20, 34, 0.62);
+}
+
+/* ── 右侧海报夹 ─────────────────────────────────── */
+.mp__poster {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  min-height: 0;
+}
+.mp__pframe {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(200, 200, 220, 0.14);
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.mp__pframe img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.mp__ptba {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin: 24px;
+  padding: 44px 24px;
+  width: 100%;
+  border: 1px dashed rgba(200, 200, 220, 0.24);
+  border-radius: 10px;
+  color: rgba(251, 250, 246, 0.45);
+}
+.mp__ptba-mark {
+  font-family: 'Times New Roman', serif;
+  font-size: 40px;
+  line-height: 1;
+  color: #c8f322;
+}
+.mp__ptba strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.mp__ptba-en {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  opacity: 0.6;
+}
+
+.mp__pmeta {
+  display: grid;
+  gap: 2px;
+}
+.mp__pmeta-no {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #c8f322;
+}
+.mp__pmeta h3 {
+  font-family: 'Times New Roman', 'Songti SC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 1px 0 0;
+}
+.mp__pmeta-en {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(251, 250, 246, 0.4);
+}
+.mp__pmeta-area {
+  margin: 5px 0 0;
+  font-size: 11px;
+  color: rgba(251, 250, 246, 0.56);
+}
+
+/* ── 窄屏：地图在上，海报横向排 ─────────────────────── */
+@media (max-width: 1040px) {
+  .mp__body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.1fr) auto;
+    overflow-y: auto;
+  }
+  .mp__poster {
+    grid-template-rows: auto;
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+  }
+  .mp__pframe {
+    height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm__route { animation: none; }
 }

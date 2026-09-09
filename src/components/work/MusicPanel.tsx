@@ -1,62 +1,99 @@
 /**
- * 「MUSIC」乐队手记面板
+ * 「MY TIME」个人爱好面板
  *
- * 第一个 demo 是 demo 视频（暂占位），后续会接入：
- *   - demo：现场 / 排练录像
- *   - 收藏：按专辑 / 单曲组织的专辑墙
- *   - 演出地图：手工 SVG 演出轨迹
- *   - 随笔：4 年乐队的成长笔记
+ * 2026-09-09 重做：原来 4 个栏目（现场 demo / 专辑收藏 / 演出地图 / 随笔）
+ * 全是占位，现在先把演出地图做实 —— 6 个场地 + 20 多场，其余栏目等素材到位再加。
+ * 所以这里没有 tab 栏，整屏就是地图 + 海报夹。
  *
- * 与 ThinkingPanel 共用同一套 .mp__head / .mp__tabs / .mp__body 骨架，
- * 后续要复用就提一个 .mp 共享命名空间，这里先把样式独立出来，
- * 后续结构稳定后再合并。
+ * 骨架（.mp__head / .mp__body）沿用 ThinkingPanel 那套，样式在 music.css。
  */
 import { useState } from 'react'
+import { GIGS, GIG_STATS, MYTIME_HEAD } from '../../data/content'
 import BackToFolders from './BackToFolders'
+import GigMap from './GigMap'
+import { SIZES, workImage } from './imageSources'
 import './music.css'
 
-type TabKey = 'demo' | 'collection' | 'tour' | 'journal'
-
-const TABS: Array<{ key: TabKey; cn: string; en: string; hint: string }> = [
-  { key: 'demo',       cn: '现场 · demo',  en: 'DEMO',       hint: '排练 / 演出录像（暂占位）' },
-  { key: 'collection', cn: '收藏 · 专辑',  en: 'COLLECTION', hint: '按 J-rock / 流派组织的专辑墙' },
-  { key: 'tour',       cn: '演出 · 地图',  en: 'TOUR MAP',   hint: '手工 SVG 的演出轨迹' },
-  { key: 'journal',    cn: '随笔 · 乐队',  en: 'JOURNAL',    hint: '4 年乐队成长笔记' },
-]
-
 export default function MusicPanel() {
-  const [tab, setTab] = useState<TabKey>('demo')
+  const [no, setNo] = useState(GIGS[0].no)
+  const [hover, setHover] = useState<string | null>(null)
+  const gig = GIGS.find((g) => g.no === no) ?? GIGS[0]
+  const img = gig.poster ? workImage('gig', gig.poster) : null
+
   return (
     <div className="mp">
       <BackToFolders />
       <header className="mp__head">
-        <span className="mp__eyebrow">BAND · GUITAR · VJ</span>
-        <h2 className="mp__title">乐队手记</h2>
-        <p className="mp__desc">4 年乐队经历：吉他 / 主唱 / VJ 视觉编程。从排练到 Live，从演出地图到专辑收藏。</p>
-        <nav className="mp__tabs" role="tablist">
-          {TABS.map((t) => (
-            <button key={t.key}
-              role="tab"
-              aria-selected={tab === t.key}
-              className={tab === t.key ? 'is-on' : ''}
-              onClick={() => setTab(t.key)}>
-              <span className="mp__tab-cn">{t.cn}</span>
-              <span className="mp__tab-en">{t.en}</span>
-            </button>
+        <span className="mp__eyebrow">{MYTIME_HEAD.kicker}</span>
+        <h2 className="mp__title">
+          {MYTIME_HEAD.cn}
+          <span className="mp__title-en">{MYTIME_HEAD.en}</span>
+        </h2>
+        <p className="mp__desc">{MYTIME_HEAD.desc}</p>
+        <ul className="mp__stats">
+          {GIG_STATS.map((s) => (
+            <li key={s.v}>
+              <span className="mp__stat-k">{s.k}</span>
+              <span className="mp__stat-v">{s.v}</span>
+            </li>
           ))}
-        </nav>
+        </ul>
       </header>
+
       <div className="mp__body">
-        {TABS.map((t) => tab === t.key && (
-          <section key={t.key} className="mp__pane" role="tabpanel">
-            <div className="mp__placeholder">
-              <span className="mp__placeholder-mark">♪</span>
-              <h3>{t.cn}</h3>
-              <p>{t.hint}</p>
-              <p className="mp__placeholder-note">素材到位后接入（demo 视频 / 专辑封面 / 演出地图 SVG / 随笔 Markdown）。</p>
-            </div>
-          </section>
-        ))}
+        <section className="mp__map">
+          <div className="mp__map-head">
+            <span className="mp__map-cn">演出地图</span>
+            <span className="mp__map-en">TOUR MAP</span>
+            <span className="mp__map-note">城市按真实方位，同城场地环形示意排布</span>
+          </div>
+          <GigMap active={no} hover={hover} onPick={setNo} onHover={setHover} />
+          <ul className="mp__chips">
+            {GIGS.map((g) => (
+              <li key={g.no}>
+                <button
+                  className={g.no === no ? 'is-on' : ''}
+                  onClick={() => setNo(g.no)}
+                  onMouseEnter={() => setHover(g.no)}
+                  onMouseLeave={() => setHover(null)}
+                >
+                  <span className="mp__chip-no">{g.no}</span>
+                  <span className="mp__chip-name">{g.venue}</span>
+                  <span className="mp__chip-area">{g.area}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <aside className="mp__poster">
+          <div className="mp__pframe">
+            {img ? (
+              <img
+                src={img.src}
+                srcSet={img.srcSet}
+                sizes={SIZES.gig}
+                alt={`${gig.venue} 演出海报`}
+                width="1000"
+                height="1778"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div className="mp__ptba">
+                <span className="mp__ptba-mark">♪</span>
+                <strong>海报待补</strong>
+                <span className="mp__ptba-en">POSTER TBA</span>
+              </div>
+            )}
+          </div>
+          <div className="mp__pmeta">
+            <span className="mp__pmeta-no">{gig.no}</span>
+            <h3>{gig.venue}</h3>
+            <p className="mp__pmeta-en">{gig.en}</p>
+            <p className="mp__pmeta-area">{gig.area}</p>
+          </div>
+        </aside>
       </div>
     </div>
   )

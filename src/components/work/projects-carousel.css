@@ -65,7 +65,8 @@
   grid-template-columns: minmax(0, 44%) minmax(0, 56%);
   align-items: center;
   gap: clamp(28px, 4.5vw, 64px);
-  padding: clamp(84px, 11vh, 120px) clamp(96px, 8vw, 168px) clamp(36px, 6vh, 64px) clamp(28px, 5vw, 72px);
+  /* 右侧 padding 给「项目名锚点导航 + 右箭头」留位，避免挡文案 */
+  padding: clamp(84px, 11vh, 120px) clamp(220px, 22vw, 280px) clamp(36px, 6vh, 64px) clamp(28px, 5vw, 72px);
   max-width: 1320px;
   margin: 0 auto;
 }
@@ -259,8 +260,9 @@
   left: clamp(16px, 2vw, 36px);
   transform: translateY(-50%);
 }
+/* 右箭头避开右侧锚点导航，往左挪 */
 .pcr__arrow--next {
-  right: clamp(16px, 2vw, 36px);
+  right: clamp(140px, 14vw, 200px);
   transform: translateY(-50%);
 }
 .pcr__arrow--prev:hover {
@@ -278,7 +280,7 @@
 .pcr__nav {
   position: absolute;
   top: 50%;
-  right: clamp(60px, 6vw, 88px);
+  right: clamp(20px, 2.4vw, 40px);
   transform: translateY(-50%);
   z-index: 5;
   display: flex;
@@ -354,6 +356,6 @@
   }
   /* 窄屏箭头避开右侧锚点导航 */
   .pcr__arrow--next {
-    right: 88px;
+    right: 96px;
   }
 }

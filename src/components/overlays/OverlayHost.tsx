@@ -32,7 +32,7 @@ const TITLES = {
   contact: 'CONTACT 软木板留言',
   gephi: '东方快车谋杀案 社会网络分析',
   jrock: 'J-Rock 歌词 60 年表现特征研究',
-  music: 'MUSIC 乐队手记',
+  music: 'MY TIME 个人爱好',
 } as const
 
 const TITLE_ID = 'overlay-title'

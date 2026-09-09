@@ -108,12 +108,13 @@ export const HOTSPOTS: readonly HotspotSpec[] = [
      顶部导航 + 3D 文件夹上的入口同步删除；ThinkingFolderModel 仍作为
      柜内装饰保留（不在 hotspotSpecs 注册 = 不可点），用户想看可视化
      请走 SELECTED WORK → 详情页的「查看可视化」按钮。 */
-  /* MUSIC 入口：吉他上沿偏中，靠机位正面取景。hotspotOffset 在
-     Props.tsx 的 FrontProps 里再调到琴颈/琴身的视觉中心。 */
+  /* MY TIME 入口：吉他上沿偏中，靠机位正面取景。hotspotOffset 在
+     Props.tsx 的 FrontProps 里再调到琴颈/琴身的视觉中心。
+     面板内容 2026-09-09 改为「个人爱好」，第一个栏目是演出地图。 */
   {
     id: 'music',
-    label: 'MUSIC 乐队手记',
-    caption: '乐队手记',
+    label: 'MY TIME 个人爱好',
+    caption: '个人爱好',
     at: [1.77, 0.55, 0.38],
     frame: 'world',
     size: [0.42, 0.42],

@@ -10,7 +10,7 @@ const ProjectsCarousel = lazy(() => import('../work/ProjectsCarousel'))
 
 /* 两个文件夹的版位（相对 1320×724 底稿换算成百分比）：
    实习 → 偏左大位；个人项目 → 右侧偏上。
-   思考手记 (THINKING) 和 乐队手记 (MUSIC) 已升级为独立 overlay，
+   思考手记 (THINKING) 和 个人爱好 (MY TIME) 已升级为独立 overlay，
    各自有 3D 柜子上的文件夹 / 吉他作为入口，不再经过 SELECTED WORK。 */
 
 /* 两个栏目用的不是同一个组件：

@@ -23,7 +23,7 @@ export const NAV = [
   { id: 'about', label: 'ABOUT' },
   { id: 'skills', label: 'SKILLS' },
   { id: 'work', label: 'SELECTED WORK' },
-  { id: 'music', label: 'MUSIC' },
+  { id: 'music', label: 'MY TIME' },
   { id: 'contact', label: 'CONTACT' },
 ] as const
 
@@ -371,6 +371,129 @@ export const THINKING_HEAD = {
   kicker: 'SOCIAL NETWORK · LITERATURE · MARKETS',
   desc: '把零散的阅读、鉴赏、随想沉淀成可视化与分析。第一个 demo 是《东方快车谋杀案》社会网络分析。',
 }
+
+/* ── MY TIME：个人爱好 › 演出地图 ──────────────────────────
+ * 2026-09-09：第一个栏目是乐队演出地图。
+ *
+ * 地图是**示意图**，不是测绘成果：
+ *   - 城市节点用真实经纬度（GCJ-02）投影，上海 / 杭州 / 安吉 的相对方位是真的；
+ *   - 同一城市里多个场地（上海 4 个）改按「方位 + 固定半径」摆在城市节点周围，
+ *     否则真坐标下它们会挤在 20px 内互相压住 —— 半径内只有方位有意义。
+ *   - 没有画任何行政边界、海岸线，只有经纬网和比例尺。
+ *
+ * poster 对应 public/assets/gig/<slug>.webp，由 scripts/gen-gig-posters.mjs 生成；
+ * 没有海报的场地（上海交通大学）组件会画占位框。 */
+export const MYTIME_HEAD = {
+  cn: '个人爱好',
+  en: 'MY TIME',
+  kicker: 'BAND · GUITAR · VOCAL · VJ',
+  desc: '4 年乐队：吉他 / 主唱 / VJ 视觉编程。从校园礼堂到 Livehouse，这张图是这四年演过的地方。',
+}
+
+/** 地图投影范围：经纬度 → SVG 视图坐标（viewBox 0 0 660 470 内作图区） */
+export const GIG_MAP_BOX = { x0: 70, y0: 60, w: 520, h: 349 }
+export const GIG_MAP_RANGE = { lon: [119.3, 121.9], lat: [30.05, 31.55] }
+
+/** 城市节点（真实经纬度） */
+export const GIG_CITIES: {
+  cn: string
+  en: string
+  lat: number
+  lon: number
+  /** 城市名的摆放偏移，躲开压在上面的场地 pin */
+  dx: number
+  dy: number
+  anchor: 'start' | 'middle' | 'end'
+}[] = [
+  { cn: '上海', en: 'SHANGHAI', lat: 31.23, lon: 121.47, dx: 14, dy: -30, anchor: 'middle' },
+  { cn: '杭州', en: 'HANGZHOU', lat: 30.274, lon: 120.155, dx: 22, dy: 34, anchor: 'start' },
+  { cn: '安吉', en: 'ANJI', lat: 30.63, lon: 119.68, dx: -18, dy: -22, anchor: 'end' },
+]
+
+export type Gig = {
+  no: string
+  /** 场地名 */
+  venue: string
+  /** 场地英文名 / 拼音，卡片副标题 */
+  en: string
+  /** 城市 + 区，卡片与地图标签共用 */
+  area: string
+  lat: number
+  lon: number
+  /** 同城 pin 的方位角（屏幕坐标：0 = 正右，顺时针为正）与半径。
+   *  只对同一个城市有多个场地时用；单场地的城市留空，pin 直接落在真坐标上。 */
+  bearing?: number
+  /** public/assets/gig 下的 slug；缺省 = 海报待补 */
+  poster?: string
+}
+
+export const GIGS: Gig[] = [
+  {
+    no: '01',
+    venue: '华东师范大学',
+    en: 'EAST CHINA NORMAL UNIVERSITY',
+    area: '上海 · 普陀',
+    lat: 31.229,
+    lon: 121.405,
+    bearing: 205,
+    poster: 'ecnu',
+  },
+  {
+    no: '02',
+    venue: '上海交通大学',
+    en: 'SHANGHAI JIAO TONG UNIVERSITY',
+    area: '上海 · 徐汇',
+    lat: 31.203,
+    lon: 121.437,
+    bearing: 120,
+  },
+  {
+    no: '03',
+    venue: '边角料咖啡酒馆',
+    en: 'LEFT CORNER COFFEE & BARS',
+    area: '杭州 · 拱墅',
+    lat: 30.323,
+    lon: 120.137,
+    poster: 'hangzhou',
+  },
+  {
+    no: '04',
+    venue: 'Sandbar',
+    en: 'SANDBAR 柏沙吧',
+    area: '上海 · 长宁',
+    lat: 31.201,
+    lon: 121.431,
+    bearing: 160,
+    poster: 'sandbar',
+  },
+  {
+    no: '05',
+    venue: '麓 Livehouse',
+    en: 'LU LIVEHOUSE',
+    area: '湖州 · 安吉',
+    lat: 30.587,
+    lon: 119.655,
+    poster: 'anji',
+  },
+  {
+    no: '06',
+    venue: '奶油俱乐部',
+    en: 'CREAM CLUB',
+    area: '上海 · 浦东',
+    lat: 31.21,
+    lon: 121.51,
+    bearing: 25,
+    poster: 'cream',
+  },
+]
+
+/** 顶部计数条。场次只给总量：每场地的场次没有单独统计，先不编数字 */
+export const GIG_STATS = [
+  { k: '20+', v: '场次 SHOWS' },
+  { k: '06', v: '场地 VENUES' },
+  { k: '03', v: '城市 CITIES' },
+  { k: '4', v: '年 YEARS' },
+]
 
 /* ── CONTACT：软木板便签 ───────────────────────────────
  * 三张种子便签 + 用户可自己钉新的。位置/旋转用软木板百分比，组件会钳在软木板范围内。
