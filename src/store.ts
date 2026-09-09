@@ -11,8 +11,14 @@ import {
   CAPABILITIES,
 } from './experience/experienceMachine'
 
-/** 主场景之上叠加的模态层 */
-export type Overlay = null | 'about' | 'skills' | 'work' | 'contact'
+/** 主场景之上叠加的模态层
+ *
+ * 关于 thinking 这个独立入口：
+ *   THINKING 原来的内容（gephi + jrock）已并入 PERSONAL PROJECTS，
+ *   顶部导航与 3D 文件夹上的入口同步删除；这两个面板现在作为独立的
+ *   「站内可视化查看器」通过 PROJECTS 详情里的 VIEW 按钮打开。
+ *   所以 'thinking' 这个值不再用，'gephi' / 'jrock' 独立出现。 */
+export type Overlay = null | 'about' | 'skills' | 'work' | 'contact' | 'gephi' | 'jrock' | 'music'
 
 /** SELECTED WORK 内部的子视图 */
 export type WorkView = null | 'intern' | 'projects'

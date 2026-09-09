@@ -1,0 +1,148 @@
+/* SELECTED WORK › INTERNSHIP —— 静态卡片网格 */
+
+.ig {
+  /* .wv 已经是 fixed + overflow:hidden，这里接管纵向滚动 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ig__wrap {
+  max-width: 1210px;
+  margin: 0 auto;
+  padding: clamp(64px, 9vh, 104px) clamp(24px, 4vw, 44px) clamp(40px, 7vh, 76px);
+}
+
+/* ── 标题行 ── */
+.ig__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(22px, 3.4vh, 38px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(20, 22, 26, 0.12);
+}
+
+.ig__head h1 {
+  margin: 0;
+  font-family: var(--font-slab);
+  font-weight: 400;
+  font-size: clamp(26px, 4vw, 46px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.ig__count {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(20, 22, 26, 0.5);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── 网格：宽屏三列，中屏两列，窄屏单列 ── */
+.ig__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.4vw, 30px);
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .ig__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .ig__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 卡片 ── */
+.ig__card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 封面：16:9 + 一圈主色光晕（glow 由数据里的 glow 字段喂进来） */
+.ig__cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #efece2;
+  box-shadow: 0 8px 26px -10px var(--glow, rgba(20, 22, 26, 0.3));
+}
+
+.ig__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 与轮播卡一致的底部信息条 */
+.ig__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 11px;
+  background: rgba(20, 22, 26, 0.62);
+  backdrop-filter: blur(3px);
+  color: #fff;
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+}
+.ig__bar > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ig__bar > span:last-child {
+  flex: none;
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 卡片文字 ── */
+.ig__body {
+  padding-top: 15px;
+}
+
+.ig__kicker {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  color: rgba(20, 22, 26, 0.52);
+  margin-bottom: 7px;
+}
+
+.ig__title {
+  margin: 0 0 9px;
+  font-family: var(--font-slab);
+  font-weight: 400;
+  font-size: clamp(17px, 1.6vw, 21px);
+  letter-spacing: 0.035em;
+  line-height: 1.18;
+  color: var(--ink);
+}
+.ig__title span {
+  display: block;
+}
+
+.ig__desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.72;
+  color: rgba(20, 22, 26, 0.72);
+}

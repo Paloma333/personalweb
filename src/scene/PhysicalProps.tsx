@@ -129,7 +129,7 @@ function configurePaperTexture(texture: Texture) {
   texture.needsUpdate = true
 }
 
-function usePrintedLabel(kind: 'selected-work' | 'contact' | 'skills') {
+function usePrintedLabel(kind: 'selected-work' | 'contact' | 'skills' | 'thinking') {
   const texture = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = 768
@@ -138,10 +138,16 @@ function usePrintedLabel(kind: 'selected-work' | 'contact' | 'skills') {
     if (!context) return new CanvasTexture(canvas)
 
     context.fillStyle =
-      kind === 'selected-work' ? '#fff1c6' : kind === 'skills' ? '#f8fbf7' : '#fffdf6'
+      kind === 'selected-work' ? '#fff1c6'
+      : kind === 'skills' ? '#f8fbf7'
+      : kind === 'thinking' ? '#1d1410'
+      : '#fffdf6'
     context.fillRect(0, 0, canvas.width, canvas.height)
     context.strokeStyle =
-      kind === 'selected-work' ? '#dc9a40' : kind === 'skills' ? '#9bd9dc' : '#cabfb1'
+      kind === 'selected-work' ? '#dc9a40'
+      : kind === 'skills' ? '#9bd9dc'
+      : kind === 'thinking' ? '#c24545'
+      : '#cabfb1'
     context.lineWidth = 14
     context.strokeRect(18, 18, canvas.width - 36, canvas.height - 36)
 
@@ -171,6 +177,19 @@ function usePrintedLabel(kind: 'selected-work' | 'contact' | 'skills') {
       context.moveTo(150, 382)
       context.lineTo(618, 382)
       context.stroke()
+    } else if (kind === 'thinking') {
+      context.textAlign = 'center'
+      context.textBaseline = 'middle'
+      context.font = '900 96px Georgia, serif'
+      context.fillStyle = '#fbfaf6'
+      context.fillText('THINKING', canvas.width / 2, 130)
+      context.font = '800 76px sans-serif'
+      context.fillStyle = '#c8f322'
+      context.fillText('思考手记', canvas.width / 2, 240)
+      context.font = '500 24px monospace'
+      context.fillStyle = '#8a7a76'
+      context.fillText('SOCIAL NETWORK · LITERATURE · MARKETS', canvas.width / 2, 320)
+      context.fillText('VOL. 01', canvas.width / 2, 370)
     } else {
       context.textAlign = 'left'
       context.textBaseline = 'alphabetic'
@@ -446,6 +465,59 @@ export function SelectedWorkModel() {
         end={[0.16, 0.46, 0.124]}
         radius={0.006}
         color="#9d6c32"
+        roughness={0.7}
+      />
+    </group>
+  )
+}
+
+/** Red, dark-tinted document pouch — THINKING folder variant. */
+export function ThinkingFolderModel() {
+  const label = usePrintedLabel('thinking')
+
+  return (
+    <group name="ThinkingFolderModel">
+      <RoundedPart
+        name="ThinkingFolder_Case"
+        size={[0.42, 0.36, 0.12]}
+        at={[0, 0.18, 0]}
+        color="#3a1614"
+        radius={0.04}
+        roughness={0.82}
+      />
+      {[-0.03, 0, 0.03].map((z, index) => (
+        <RoundedPart
+          key={z}
+          name={`ThinkingFolder_Page_${index + 1}`}
+          size={[0.35 - index * 0.008, 0.022, 0.08]}
+          at={[0, 0.332 + index * 0.014, z]}
+          color={index === 2 ? '#fbfaf6' : '#ebe6d8'}
+          radius={0.006}
+          roughness={0.94}
+        />
+      ))}
+      <RoundedPart
+        name="ThinkingFolder_Flap"
+        size={[0.39, 0.09, 0.04]}
+        at={[0, 0.32, 0.075]}
+        color="#7d2424"
+        rotation={[-0.08, 0, 0]}
+        radius={0.018}
+        roughness={0.78}
+      />
+      <mesh {...SHADOWS} name="ThinkingFolder_Label" position={[0, 0.18, 0.062]}>
+        <planeGeometry args={[0.34, 0.26]} />
+        <meshStandardMaterial map={label} roughness={0.92} />
+      </mesh>
+      <mesh {...SHADOWS} position={[0.14, 0.295, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.025, 0.025, 0.02, 20]} />
+        <meshStandardMaterial color="#9d3232" roughness={0.5} />
+      </mesh>
+      <RodBetween
+        start={[0.14, 0.295, 0.114]}
+        end={[0.1, 0.345, 0.114]}
+        radius={0.005}
+        color="#7a2424"
         roughness={0.7}
       />
     </group>
@@ -1329,3 +1401,4 @@ export function IdCardHookModel() {
     </group>
   )
 }
+

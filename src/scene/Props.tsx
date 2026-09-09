@@ -24,14 +24,13 @@ import {
 import {
   BackpackModel,
   BooksModel,
-  DoorTrayModel,
   FindAWordBoardModel,
   GuitarModel,
   IdCardModel,
   POLAROID_CROPS,
   PolaroidCardModel,
-  PosterCardModel,
   SelectedWorkModel,
+  ThinkingFolderModel,
   TurntableModel,
   TypewriterModel,
 } from './PhysicalProps'
@@ -84,35 +83,6 @@ const BACKPACK = findSpec('Prop_Backpack')
 const SELECTED_WORK = findSpec('Prop_SelectedWork')
 const TYPEWRITER = findSpec('Prop_Typewriter')
 const GUITAR = findSpec('Prop_Guitar')
-
-const POSTER: PropSpec = {
-  name: 'Prop_Door01_Poster',
-  url: '/assets/obj/posterwall.webp',
-  at: [0, 0, 0],
-  width: 0.53,
-  from: { dz: -0.045, scale: 0.94 },
-  at_ms: 1040,
-  dur: 300,
-  ease: 'outSine',
-}
-
-const TRAY_A: PropSpec = {
-  name: 'Prop_Door01_TrayA',
-  url: '',
-  at: [0, 0, 0],
-  width: 0.48,
-  from: { dz: -0.08, scale: 0.9 },
-  at_ms: 1360,
-  dur: 300,
-  ease: 'outCubic',
-}
-
-const TRAY_B: PropSpec = {
-  ...TRAY_A,
-  name: 'Prop_Door01_TrayB',
-  from: { dy: -0.08, scale: 0.9 },
-  at_ms: 1480,
-}
 
 /**
  * ABOUT 工牌。原来是贴花图集里的一张平面，现在是有厚度的实体（IdCardModel）。
@@ -396,46 +366,37 @@ export function DoorTwoMountedProps() {
 }
 
 /**
- * 第一扇门的海报与两个磁吸托盘：托盘、侧挡和承载物全部有真实深度。
- * 与第四扇门同理，三件都以整扇门面为活动范围（见 DOOR_FACE_BOUNDS）。
+ * 第一扇门上只挂 THINKING 文件夹：
+ *   - 海报 / 横幅 / 托盘都已移除，让位给门上拍立得
+ *   - ThinkingFolderModel 的红色封面在第一扇门上作为思考手记的 3D 入口
+ *
+ * 位置选择：原海报位置 (0.035, 0.32) 改为靠门面右下 (0.18, -0.18)，
+ * 避开现有 5 张拍立得（左侧中腰三张），整体画面更平衡。
  */
+const THINKING_FOLDER: PropSpec = {
+  name: 'Prop_Door01_ThinkingFolder',
+  url: '',
+  at: [0, 0, 0],
+  width: 0.42,
+  from: { dy: -0.06, scale: 0.92 },
+  at_ms: 880,
+  dur: 240,
+  ease: 'outSine',
+}
+
 export function DoorOneMountedProps() {
   const caps = useSceneCapabilities()
   return (
-    <>
-      <PhysicalItem
-        spec={POSTER}
-        plane="xy"
-        position={[0.035, 0.32, 0.016]}
-        bounds={DOOR_FACE_BOUNDS}
-        footprint={[0.53, 0.74]}
-        enabled={caps.drag}
-        rotation={[0, 0, -0.035]}
-        scale={0.88}
-      >
-        <PosterCardModel />
-      </PhysicalItem>
-      <PhysicalItem
-        spec={TRAY_A}
-        plane="xy"
-        position={[0.075, 0.13, 0.018]}
-        bounds={DOOR_FACE_BOUNDS}
-        footprint={[0.48, 0.31]}
-        enabled={caps.drag}
-      >
-        <DoorTrayModel content="paper" />
-      </PhysicalItem>
-      <PhysicalItem
-        spec={TRAY_B}
-        plane="xy"
-        position={[0.075, -0.62, 0.018]}
-        bounds={DOOR_FACE_BOUNDS}
-        footprint={[0.48, 0.27]}
-        enabled={caps.drag}
-      >
-        <DoorTrayModel content="stationery" />
-      </PhysicalItem>
-    </>
+    <PhysicalItem
+      spec={THINKING_FOLDER}
+      plane="xy"
+      position={[0.18, -0.16, 0.018]}
+      bounds={DOOR_FACE_BOUNDS}
+      footprint={[0.42, 0.36]}
+      enabled={caps.drag}
+    >
+      <ThinkingFolderModel />
+    </PhysicalItem>
   )
 }
 
@@ -503,7 +464,7 @@ export function DoorFourMountedProps() {
   )
 }
 
-/** 柜外只保留真正落地并靠柜的吉他；打字机已经移到第二扇门的子节点。 */
+/** 柜外只保留真正落地并靠柜的吉他（现在带 MUSIC hotspot）。 */
 export function FrontProps() {
   const caps = useSceneCapabilities()
   return (
@@ -516,6 +477,9 @@ export function FrontProps() {
       enabled={caps.drag}
       rotation={[0, -0.16, 0.16]}
       scale={0.83}
+      hotspot="music"
+      // 把反馈圆环的锚点提到琴体中央（琴颈靠上的视觉重心）
+      hotspotOffset={[-0.02, 0.55, 0.04]}
     >
       <GuitarModel />
     </PhysicalItem>

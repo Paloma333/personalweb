@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "title": "《东方快车谋杀案》社会网络分析",
+    "subtitle": "Murder on the Orient Express · Agatha Christie, 1934",
+    "case": "完全图：N=20, E=190",
+    "layers": ["truth", "conspiracy", "complete"]
+  },
+  "nodes": [
+    { "id": "poirot",      "name": "Hercule Poirot",        "cn": "赫尔克里·波洛", "role": "detective", "knife": null, "note": "站在一切之外的小个子比利时人，唯一的红线。" },
+    { "id": "ratchett",    "name": "Samuel Ratchett",       "cn": "塞缪尔·雷切尔", "role": "victim",    "knife": null, "note": "本名 Cassetti，绑架并杀害 Daisy Armstrong 后隐姓埋名。" },
+    { "id": "hubbard",     "name": "Mrs. Hubbard",          "cn": "哈伯德太太",     "role": "suspect",   "knife": 1,    "note": "真名 Linda Arden，黛西的外婆，舞台上最疯狂的母亲。" },
+    { "id": "macqueen",    "name": "Hector MacQueen",       "cn": "麦昆",           "role": "suspect",   "knife": 2,    "note": "雷切特的秘书，知晓一切的影子。" },
+    { "id": "arbuthnot",   "name": "Colonel Arbuthnot",     "cn": "阿巴斯诺特上校", "role": "suspect",   "knife": 3,    "note": "索尼亚·阿姆斯特朗的父亲，三刀中两刀来自他手。" },
+    { "id": "debenham",    "name": "Mary Debenham",         "cn": "德贝纳姆",       "role": "suspect",   "knife": 4,    "note": "英国家庭教师，与 Arbuthnot 的关系在第 12 章被波洛点破。" },
+    { "id": "dragomiroff", "name": "Princess Dragomiroff",  "cn": "德拉戈米罗夫公主","role": "suspect",   "knife": 5,    "note": "俄国流亡贵族，护着 Schmidt，是上一代 Dossier 的持有者。" },
+    { "id": "counta",      "name": "Count Andrenyi",        "cn": "安德烈尼伯爵",   "role": "suspect",   "knife": 6,    "note": "英国外交官，伯爵夫人的丈夫，沉默而坚定。" },
+    { "id": "countessa",   "name": "Countess Andrenyi",     "cn": "安德烈尼伯爵夫人","role": "suspect", "knife": 7,    "note": "手持那支未装子弹的手枪，全书最关键的女配。" },
+    { "id": "foscarelli",  "name": "Antonio Foscarelli",    "cn": "福斯卡雷利",     "role": "suspect",   "knife": 8,    "note": "意大利裔美国车夫，开过黛西被拐走的汽车。" },
+    { "id": "ohlsson",     "name": "Greta Ohlsson",         "cn": "奥尔森",         "role": "suspect",   "knife": 9,    "note": "瑞典传教士，护理过 Daisy 的护士。" },
+    { "id": "schmidt",     "name": "Hildegarde Schmidt",    "cn": "施密特",         "role": "suspect",   "knife": 10,   "note": "公主的贴身侍女，今夜守在门外的女人。" },
+    { "id": "michel",      "name": "Pierre Michel",         "cn": "米歇尔",         "role": "suspect",   "knife": 11,   "note": "列车员，阿姆斯特朗家当年的男仆。" },
+    { "id": "hardman",     "name": "Cyrus Hardman",         "cn": "哈德曼",         "role": "suspect",   "knife": 12,   "note": "复仇者里唯一公开持枪的人。" },
+    { "id": "constantine", "name": "Dr. Constantine",       "cn": "康斯坦丁医生",   "role": "other",     "knife": null, "note": "口袋里有空药瓶的对症医生，波洛在发现尸体的清晨与他下棋。" },
+    { "id": "sarah",       "name": "Sarah (Linda Arden)",   "cn": "琳达·阿登",      "role": "other",     "knife": null, "note": "Linda Arden 是其本名，舞台上最伟大的女演员之一。" },
+    { "id": "sonia",       "name": "Sonia Armstrong",       "cn": "索尼亚·阿姆斯特朗","role": "other",   "knife": null, "note": "Linda 之女，阿巴斯诺特的女儿，被 Cassetti 绑架并杀害。" },
+    { "id": "daisy",       "name": "Daisy Armstrong",       "cn": "黛西·阿姆斯特朗","role": "other",     "knife": null, "note": "案件的起点。三岁的黛西被绑架、撕票。" },
+    { "id": "coljohnson",  "name": "Colonel Johnson",       "cn": "约翰逊上校",     "role": "other",     "knife": null, "note": "Sonia 的丈夫，Daisy 的父亲，悲痛中死于军营。" },
+    { "id": "cassetti",    "name": "Cassetti (true id)",    "cn": "卡西蒂",         "role": "other",     "knife": null, "note": "Ratchett 的真实身份，受害者的另一面。" }
+  ],
+  "quotes": [
+    { "src": "Agatha Christie", "text": "One of us did it. We are all guilty." },
+    { "src": "波洛对乘客们",    "text": "这是十二个人对一个人的审判。" },
+    { "src": "波洛",            "text": "我有两个选择 —— 把它交给警方，让他们看到真相；或者让我消失。" }
+  ]
+}

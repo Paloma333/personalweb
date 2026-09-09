@@ -1,5 +1,4 @@
 import { ABOUT } from '../../data/content'
-import Avatar from './Avatar'
 import CloseButton from './CloseButton'
 import './overlay.css'
 import './about.css'
@@ -40,7 +39,12 @@ export default function AboutCard() {
 
             <div className="idc__body">
               <div className="idc__photo">
-                <Avatar className="idc__avatar" />
+                <img
+                  className="idc__avatar"
+                  src="/assets/portrait/id-avatar.png"
+                  alt="刘雨姗 证件照"
+                  draggable={false}
+                />
               </div>
 
               <div className="idc__main">
@@ -66,31 +70,6 @@ export default function AboutCard() {
               </div>
             </div>
 
-            {/* 淡蓝色钢印 */}
-            <div className="idc__stamp" aria-hidden>
-              <svg viewBox="0 0 220 220">
-                <defs>
-                  <path id="stampArc" d="M110,110 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" />
-                </defs>
-                <circle cx="110" cy="110" r="96" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                <circle
-                  cx="110"
-                  cy="110"
-                  r="84"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeDasharray="3 5"
-                />
-                <text className="idc__stampRing">
-                  <textPath href="#stampArc" startOffset="50%" textAnchor="middle">
-                    {ABOUT.stampRing}
-                  </textPath>
-                </text>
-              </svg>
-              <span className="idc__stampWord">{ABOUT.stampTop}</span>
-              <span className="idc__stampMid">{ABOUT.stampMid}</span>
-            </div>
           </div>
 
           <div className="idc__lower">
@@ -106,10 +85,6 @@ export default function AboutCard() {
             <div className="idc__contact idc__contact--mid">
               <span className="idc__ck">PHONE</span>
               <span className="idc__cv">{ABOUT.phone}</span>
-            </div>
-            <div className="idc__tag" aria-hidden>
-              <span className="idc__tagTop">xxx</span>
-              <span className="idc__tagBody">xxx</span>
             </div>
           </div>
 

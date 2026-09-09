@@ -29,14 +29,44 @@ export type DecalSpec = {
   draggable?: boolean
 }
 
-/** 第 1 扇门（关着）外表面 */
-// 海报与两个托盘已经换成独立、有厚度的实体组件（Props.tsx）；这里不再保留
-// 透明平面副本，否则会与实体重叠并重新产生穿过通风槽的视觉问题。
-export const DOOR1_DECALS: readonly DecalSpec[] = []
+/**
+ * 第 1 扇门（关着）外表面 —— 散落 3 张拍立得。
+ *
+ * 这扇门的左侧已经被 Props.tsx 里的海报（卡通人物）占满，左下还有
+ * 物理托盘 trayA，所以拍立得只放在「海报右侧」的中腰竖排 + 「右上
+ * 海报上方」的窄位，避开海报（left ≤ 0.55）和托盘（y ≥ 0.85）。
+ * 三张都用 draggable，用户可以挪到海报上下沿做「找照片墙」的味道。
+ */
+export const DOOR1_DECALS: readonly DecalSpec[] = [
+  // 海报右上：东北塔（个人生活）
+  { id: 'polaroid-d1-tokyo', url: '/assets/polaroid/p1.webp',
+    left: 0.66, top: 0.07, width: 0.30, rot: -7, draggable: true },
+  // 海报右下：日语 + 演出（语言 + 爱好）
+  { id: 'polaroid-d1-jpshow', url: '/assets/polaroid/p3.webp',
+    left: 0.68, top: 0.42, width: 0.28, rot: 6, draggable: true },
+  // 海报右下靠下：海边 + 吉他（音乐）
+  { id: 'polaroid-d1-beach', url: '/assets/polaroid/p4.webp',
+    left: 0.66, top: 0.72, width: 0.30, rot: -4, draggable: true },
+]
 
-/** 第 4 扇门（关着）外表面 */
-// 原先一张复合 polaroids.webp 已拆成五张可单独拖动的实体磁吸卡。
-export const DOOR4_DECALS: readonly DecalSpec[] = []
+/**
+ * 第 4 扇门（关着）外表面 —— 散落 2 张实习拍立得。
+ *
+ * 这扇门的中部已经被 Props.tsx 里的 3 张 PolaroidCardModel（人像 / 海边 /
+ * 相机）占满（中心 y ∈ [0.19, 0.56]）+ 一把吉他从中央伸出来。门面顶部
+ * 会被柜顶 line 切掉，所以新拍立得放在 PolaroidCardModel 下方两侧：
+ *   - i6 in 左下角（y ≈ 0.65），避开 3 张 polaroid 和吉他
+ *   - i7 in 右下角（y ≈ 0.66），同样位置对称
+ * 两张都用 draggable。
+ */
+export const DOOR4_DECALS: readonly DecalSpec[] = [
+  // PolaroidCardModel 下方左侧：得物内容社区实习
+  { id: 'polaroid-d4-dewu', url: '/assets/polaroid/i6.webp',
+    left: 0.05, top: 0.62, width: 0.26, rot: -7, draggable: true },
+  // PolaroidCardModel 下方右侧：麦当劳 AI Agent 实习
+  { id: 'polaroid-d4-mcd', url: '/assets/polaroid/i7.webp',
+    left: 0.69, top: 0.63, width: 0.26, rot: 7, draggable: true },
+]
 
 /**
  * 第 2 扇门的内侧 —— 翻开后正对观众的那一面，贴纸最密的地方。
@@ -45,22 +75,39 @@ export const DOOR4_DECALS: readonly DecalSpec[] = []
  * 实体挂钩上、还要被钩尖穿过吊环，做成实体才成立。现在它是 PhysicalProps
  * 的 IdCardModel，由 Props.tsx 按 ID_CARD_AT 装到门上。
  *
- * 这里的 7 张拍立得围着工牌散落（左右各一排），每张都可拖动；
- * 偏移 / 旋转 / 尺寸都按"避免规则重复、有照片墙的呼吸感"设计。
- * 拍立得源图见 /public/assets/polaroid/{p1..p5,i6,i7}.webp，
- * 由 scripts/gen-polaroid-decals.mjs 从素材/02 + 素材/06 批量生成。
+ * 这一面的贴花密度是用户的"贴纸墙"还原——和 init 仓库保持一致：
+ * 上半屏两张文字贴纸 + 中段 9 张主贴花 + 下半屏 7 张二组拼贴，绕开
+ * 物理打字机与工牌的占地。0.85 以下给打字机留位，0.18 左右给工牌留位。
+ * 19 张贴纸全部 draggable，鼠标进入这张贴纸会"摆动一下"作为视觉提示。
  */
 export const DOOR2_INNER_DECALS: readonly DecalSpec[] = [
-  // 左侧一列（4 张，自上而下：东京塔 → 海边吉他 → 滑雪 → 得物实习）
-  { id: 'photo-tokyo',    url: '/assets/polaroid/p1.webp', left: 0.02, top: 0.04, width: 0.22, rot: -6, draggable: true },
-  { id: 'photo-beach-guitar', url: '/assets/polaroid/p4.webp', left: 0.05, top: 0.30, width: 0.20, rot: 5, draggable: true },
-  { id: 'photo-ski',      url: '/assets/polaroid/p5.webp', left: 0.02, top: 0.56, width: 0.22, rot: -3, draggable: true },
-  { id: 'photo-intern-dewu', url: '/assets/polaroid/i6.webp', left: 0.06, top: 0.79, width: 0.20, rot: 4, draggable: true },
+  // 门顶那两张文字贴纸，在参考里左右框住工牌、占满上半屏。
+  // 位置按门面 x 657–800 / y 35–665 线性反解给出，同一套反解在工牌上
+  // 与参考逐像素吻合。倾角（−3°/+4°）已烘进贴图，不再给 rot。
+  { id: 'stk-jad', url: '/assets/obj2/stk10.webp', left: 0.06, top: 0.1, width: 0.34, draggable: true },
+  { id: 'stk-nowadays', url: '/assets/obj2/stk11.webp', left: 0.49, top: 0.09, width: 0.34, draggable: true },
+  { id: 'tapes', url: '/assets/obj/tapes.webp', left: 0.03, top: 0.46, width: 0.26, draggable: true },
+  { id: 'stk-love', url: '/assets/obj2/stk6.webp', left: 0.04, top: 0.14, width: 0.21, rot: -4, draggable: true },
+  { id: 'stk-wizard', url: '/assets/obj2/stk5.webp', left: 0.72, top: 0.18, width: 0.18, rot: 6, draggable: true },
+  { id: 'stk-girl', url: '/assets/obj2/stk1.webp', left: 0.04, top: 0.29, width: 0.17, rot: -2, draggable: true },
+  { id: 'stk-cat', url: '/assets/obj2/stk3.webp', left: 0.71, top: 0.3, width: 0.17, rot: 3, draggable: true },
+  { id: 'stk-photo', url: '/assets/obj2/stk4.webp', left: 0.13, top: 0.45, width: 0.14, rot: -5, draggable: true },
+  { id: 'stk-duo', url: '/assets/obj2/stk2.webp', left: 0.42, top: 0.435, width: 0.25, rot: 2, draggable: true },
+  { id: 'stk-red', url: '/assets/obj2/stk7.webp', left: 0.49, top: 0.57, width: 0.24, rot: -3, draggable: true },
+  { id: 'stk-omg', url: '/assets/obj2/stk8.webp', left: 0.26, top: 0.605, width: 0.23, rot: 4, draggable: true },
+  { id: 'stk-flower', url: '/assets/obj2/stk9.webp', left: 0.73, top: 0.54, width: 0.13, rot: -6, draggable: true },
 
-  // 右侧一列（3 张：日语+演出 → 乐队排练 → 麦当劳实习）
-  { id: 'photo-jp-show',  url: '/assets/polaroid/p3.webp', left: 0.75, top: 0.04, width: 0.20, rot: 5, draggable: true },
-  { id: 'photo-band-rehearsal', url: '/assets/polaroid/p2.webp', left: 0.78, top: 0.30, width: 0.20, rot: -5, draggable: true },
-  { id: 'photo-intern-mcd', url: '/assets/polaroid/i7.webp', left: 0.74, top: 0.56, width: 0.20, rot: 4, draggable: true },
+  // 原版的门内侧从中段一直铺到打字机上沿。现有资源没有那些手写纸条和
+  // 破碎爱心的独立纹理，因此复用同一图集里的小贴纸做第二组拼贴；尺寸、
+  // 倾角和疏密都刻意错开，避免看起来像规则重复的贴纸墙。0.85 以下留给
+  // 吸附在门板底部的实体打字机，拖动时也不会被这些默认位置挡住。
+  { id: 'stk-love-lower', url: '/assets/obj2/stk6.webp', left: 0.06, top: 0.69, width: 0.16, rot: 7, draggable: true },
+  { id: 'stk-photo-lower', url: '/assets/obj2/stk4.webp', left: 0.25, top: 0.72, width: 0.11, rot: 5, draggable: true },
+  { id: 'stk-duo-lower', url: '/assets/obj2/stk2.webp', left: 0.4, top: 0.735, width: 0.2, rot: -5, draggable: true },
+  { id: 'stk-wizard-lower', url: '/assets/obj2/stk5.webp', left: 0.69, top: 0.7, width: 0.15, rot: -8, draggable: true },
+  { id: 'stk-girl-lower', url: '/assets/obj2/stk1.webp', left: 0.04, top: 0.775, width: 0.13, rot: 4, draggable: true },
+  { id: 'stk-omg-lower', url: '/assets/obj2/stk8.webp', left: 0.59, top: 0.79, width: 0.18, rot: 6, draggable: true },
+  { id: 'stk-flower-lower', url: '/assets/obj2/stk9.webp', left: 0.82, top: 0.79, width: 0.1, rot: -8, draggable: true },
 ]
 
 /* ============================================================================

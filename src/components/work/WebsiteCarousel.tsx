@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { WEBSITES, type WebsiteEntry } from '../../data/content'
+import { useStore } from '../../store'
 import BackToFolders from './BackToFolders'
 import { releaseImages, SIZES, workImage } from './imageSources'
 import './website.css'
@@ -23,6 +24,7 @@ export default function WebsiteCarousel({ items = WEBSITES, head = 'WEBSITE & WR
   const [pos, setPos] = useState(0)
   const [open, setOpen] = useState(false)
   const [drift, setDrift] = useState(0)
+  const openOverlay = useStore((s) => s.openOverlay)
   const [dragging, setDragging] = useState(false)
   const drag = useRef({ on: false, x: 0, base: 0, moved: false })
   const wheelLock = useRef(0)
@@ -139,12 +141,13 @@ export default function WebsiteCarousel({ items = WEBSITES, head = 'WEBSITE & WR
               }}
             >
               <img
-                {...workImage('cover', s.w.cover)}
-                sizes={SIZES.website}
+                {...(s.w.portrait ? workImage('portrait', s.w.cover) : workImage('cover', s.w.cover))}
+                sizes={s.w.portrait ? SIZES.portrait : SIZES.website}
                 alt={s.w.slug}
                 loading="lazy"
                 decoding="async"
                 draggable={false}
+                className={s.w.portrait ? 'wsc__img wsc__img--portrait' : 'wsc__img'}
               />
               <span className="wsc__bar">
                 <span>{s.w.slug}</span>
@@ -162,17 +165,57 @@ export default function WebsiteCarousel({ items = WEBSITES, head = 'WEBSITE & WR
             ))}
           </h2>
           <p className="wsc__desc">{cur.desc}</p>
-          {/* 真正的出口按钮。href 为 '#' 时表示暂无公开链接，标 aria-disabled */}
-          <a
-            className="wsc__open"
-            href={cur.href}
-            target="_blank"
-            rel="noreferrer"
-            aria-disabled={cur.href === '#' ? 'true' : undefined}
-            tabIndex={open ? 0 : -1}
-          >
-            OPEN PROJECT ↗
-          </a>
+
+          {/* 详情正文：有 body 时优先显示（小屋那段引言式文案） */}
+          {cur.body && <p className="wsc__body">{cur.body}</p>}
+
+          {/* 功能列表：小屋那段核心功能 */}
+          {cur.features && cur.features.length > 0 && (
+            <ul className="wsc__features">
+              {cur.features.map((f) => (
+                <li key={f}>{f}</li>
+              ))}
+            </ul>
+          )}
+
+          {/* 故事段落：放在最后，与上面区分 */}
+          {cur.story && <p className="wsc__story">{cur.story}</p>}
+
+          {/* 主出口：viewer 走站内 overlay（按钮）；其他走外链或占位 */}
+          {cur.viewer ? (
+            <button
+              type="button"
+              className="wsc__open wsc__open--viewer"
+              onClick={() => openOverlay(cur.viewer as 'gephi' | 'jrock')}
+              tabIndex={open ? 0 : -1}
+            >
+              查看可视化 ↗
+            </button>
+          ) : (
+            <a
+              className="wsc__open"
+              href={cur.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-disabled={cur.href === '#' ? 'true' : undefined}
+              tabIndex={open ? 0 : -1}
+            >
+              OPEN PROJECT ↗
+            </a>
+          )}
+
+          {/* 次级入口：与 OPEN PROJECT 平级但更深入（子页面 / 附件 / 源码） */}
+          {cur.links && cur.links.length > 0 && (
+            <ul className="wsc__links" data-show={open}>
+              {cur.links.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} target="_blank" rel="noreferrer" tabIndex={open ? 0 : -1}>
+                    {l.label} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </aside>
       </div>
 

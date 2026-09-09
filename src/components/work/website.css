@@ -132,6 +132,12 @@
   object-fit: cover;
 }
 
+/* 竖屏图（如小屋手机截图）在横屏卡里用 contain 避免被裁到看不见 */
+.wsc__img--portrait {
+  object-fit: contain !important;
+  background: #1a1c20;
+}
+
 .wsc__bar {
   position: absolute;
   left: 0;
@@ -208,6 +214,51 @@
   color: var(--ink-soft);
 }
 
+/* ── 详情区：body / features / story（小屋的引言+功能+故事三段） ── */
+.wsc__body {
+  margin: 0.9em 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 1.04vw, 13.5px);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  font-style: italic;
+  /* 跟 desc 视觉上分开：左右两小段竖线 */
+  border-left: 1px solid rgba(20, 22, 26, 0.18);
+  padding-left: 11px;
+}
+
+.wsc__features {
+  list-style: none;
+  margin: 0.95em 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: clamp(11.5px, 1vw, 12.5px);
+  line-height: 1.62;
+  color: var(--ink-soft);
+}
+.wsc__features li {
+  padding-left: 12px;
+  position: relative;
+}
+.wsc__features li::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: rgba(20, 22, 26, 0.45);
+  font-weight: 700;
+}
+
+.wsc__story {
+  margin: 1em 0 0;
+  font-size: clamp(11.5px, 1vw, 12.5px);
+  line-height: 1.72;
+  color: rgba(20, 22, 26, 0.72);
+  padding-top: 9px;
+  border-top: 1px dashed rgba(20, 22, 26, 0.18);
+}
+
 /* 面板里的出口按钮，取代原来那句「CLICK THE IMAGE…」的静态说明。
    胶囊样式沿用原先贴在封面上那一颗（已删，避免同一动作出现两个入口），
    去掉绝对定位改成随文流；深底白字，在白面板上才是真正的主按钮。
@@ -223,6 +274,35 @@
   letter-spacing: 0.14em;
   white-space: nowrap;
   text-decoration: none;
+}
+
+/* 次级入口列表：与 OPEN PROJECT 同级，比主按钮更克制 */
+.wsc__links {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 320px;
+}
+.wsc__links li {
+  margin: 0;
+}
+.wsc__links a {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  padding: 4px 0;
+  opacity: 0.78;
+  transition: opacity 0.18s, border-color 0.18s;
+}
+.wsc__links a:hover {
+  opacity: 1;
+  border-bottom-color: var(--ink);
 }
 
 /* 下方文字与控件 */
@@ -289,4 +369,19 @@
   .wsc__panel {
     display: none;
   }
+}
+
+/* ── 独立可视化查看器（gephi / jrock）────────────────────────────────
+   原来是 ThinkingPanel 的 tab 内容；现在两个面板直接作为独立 overlay。
+   .wv 已经给了 fixed + paper 背景 + wvIn 动画，vizview 只需要把高度链
+   接好：自身 grid auto/1fr，让 inner 占满剩下的高度给 .gph/.jrk 的 100%。 */
+.vizview {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.vizview__inner {
+  min-height: 0;
+  height: 100%;
+  /* 给 BackToFolders (top 22px) + vizview 自身的小呼吸留 14px 上 padding */
+  padding: 0 0 0 0;
 }

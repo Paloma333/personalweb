@@ -103,4 +103,20 @@ export const HOTSPOTS: readonly HotspotSpec[] = [
     // 工牌贴在门内侧：正对那面推近，而不是从当前角度斜着怼上去
     focusFacing: 'surface',
   },
+  /* THINKING 文件夹：原来作为独立 overlay 入口存在。
+     2026-09-08 改造后，THINKING 内容（gephi + jrock）已并入 PERSONAL PROJECTS，
+     顶部导航 + 3D 文件夹上的入口同步删除；ThinkingFolderModel 仍作为
+     柜内装饰保留（不在 hotspotSpecs 注册 = 不可点），用户想看可视化
+     请走 SELECTED WORK → 详情页的「查看可视化」按钮。 */
+  /* MUSIC 入口：吉他上沿偏中，靠机位正面取景。hotspotOffset 在
+     Props.tsx 的 FrontProps 里再调到琴颈/琴身的视觉中心。 */
+  {
+    id: 'music',
+    label: 'MUSIC 乐队手记',
+    caption: '乐队手记',
+    at: [1.77, 0.55, 0.38],
+    frame: 'world',
+    size: [0.42, 0.42],
+    focusHeight: 0.7,
+  },
 ]

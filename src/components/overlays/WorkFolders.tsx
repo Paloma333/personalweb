@@ -5,24 +5,32 @@ import CloseButton from './CloseButton'
 import './overlay.css'
 import './folders.css'
 
-const WebsiteCarousel = lazy(() => import('../work/WebsiteCarousel'))
+const InternshipGrid = lazy(() => import('../work/InternshipGrid'))
+const ProjectsScroll = lazy(() => import('../work/ProjectsScroll'))
 
 /* 两个文件夹的版位（相对 1320×724 底稿换算成百分比）：
-   实习占中间大位，个人项目右侧偏上 */
+   实习 → 偏左大位；个人项目 → 右侧偏上。
+   思考手记 (THINKING) 和 乐队手记 (MUSIC) 已升级为独立 overlay，
+   各自有 3D 柜子上的文件夹 / 吉他作为入口，不再经过 SELECTED WORK。 */
+
+/* 两个栏目用的不是同一个组件：
+   - intern  → 静态卡片网格（没有可打开的成品，不做翻封面的交互）
+   - projects → 纵向滚动陈列（2026-09-08 重做：3D 环形轮播把封面转成不可读的
+     立边、简介藏在点击后面；改成每项目一屏、左视觉右文案全部平铺） */
 const POS: Record<string, { l: number; t: number; w: number; h: number; rot: number }> = {
-  intern: { l: 33.0, t: 27.6, w: 29.2, h: 44.2, rot: -7 },
-  projects: { l: 58.0, t: 18.0, w: 23.0, h: 36.0, rot: 3 },
+  intern:    { l: 30.0, t: 30.0, w: 32.0, h: 44.0, rot: -7 },
+  projects:  { l: 64.0, t: 18.0, w: 24.0, h: 38.0, rot: 3 },
 }
 
 export default function WorkFolders() {
   const workView = useStore((s) => s.workView)
   const setWorkView = useStore((s) => s.setWorkView)
 
-  if (workView) {
+  if (workView === 'intern' || workView === 'projects') {
     return (
       <Suspense fallback={<div className="wv wv--loading" />}>
-        {workView === 'intern' && <WebsiteCarousel items={INTERNSHIPS} head="INTERNSHIP" />}
-        {workView === 'projects' && <WebsiteCarousel items={PROJECTS} head="PERSONAL PROJECTS" />}
+        {workView === 'intern' && <InternshipGrid items={INTERNSHIPS} head="INTERNSHIP" />}
+        {workView === 'projects' && <ProjectsScroll items={PROJECTS} head="PERSONAL PROJECTS" />}
       </Suspense>
     )
   }

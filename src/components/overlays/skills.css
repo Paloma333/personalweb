@@ -41,8 +41,9 @@
     0 2px 4px rgba(30, 44, 70, 0.08);
 }
 
-/* 堆叠 / 展开切换。放在卡组下方居中，和右上角的关闭按钮分开 */
-.sk__mode {
+/* 左右箭头切换。放在卡组下方居中，和右上角的关闭按钮分开
+   （2026-09-09：取代原来的「展开全部 / 收回卡组」模式按钮） */
+.sk__nav {
   position: fixed;
   left: 50%;
   bottom: clamp(18px, 4vh, 40px);
@@ -50,19 +51,13 @@
   z-index: 60;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(12px, 2vw, 22px);
   height: 40px;
-  padding: 0 16px;
+  padding: 0 10px;
   border-radius: 999px;
   background: #16181c;
   color: #fff;
-  font-family: var(--font-cn);
-  font-size: 13px;
-  letter-spacing: 0.04em;
   box-shadow: 0 6px 20px rgba(20, 24, 32, 0.24);
-  transition:
-    background-color 0.3s var(--ease-out),
-    transform 0.3s var(--ease-out);
   animation: skModeIn 0.46s var(--ease-out) backwards 0.14s;
 }
 
@@ -73,34 +68,66 @@
   }
 }
 
-.sk__mode:hover {
-  background: var(--cyan);
-  transform: translateX(-50%) translateY(-2px);
-}
-
-/* 三根小竖条：堆叠时叠在一起，展开时分开 */
-.sk__mode i {
+.sk__arrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  width: 18px;
   justify-content: center;
+  transition: background-color 0.22s var(--ease-out), transform 0.22s var(--ease-out);
+}
+.sk__arrow:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.sk__arrow--next:hover {
+  transform: translateX(2px);
+}
+.sk__arrow:not(.sk__arrow--next):hover {
+  transform: translateX(-2px);
+}
+.sk__arrow:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
 }
 
-.sk__mode i span {
-  width: 3px;
-  height: 13px;
+.sk__count {
+  font-family: var(--font-cn);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.72;
+  white-space: nowrap;
+}
+
+/* 卡内跳转入口（AI 卡的「具体作品」→ 作品展示）。
+   卡片本身是 button，这里用带 role=button 的 span，样式做成下划线小字。 */
+.sk__link {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: 2px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  opacity: 0.82;
+  transition: opacity 0.18s;
+}
+.sk__link:hover {
+  opacity: 1;
+}
+.sk__link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
   border-radius: 2px;
-  background: currentColor;
-  transition: transform 0.32s var(--ease-out);
-}
-
-.sk__mode i:not([data-spread]) span:first-child {
-  transform: translateX(5px);
-}
-
-.sk__mode i:not([data-spread]) span:last-child {
-  transform: translateX(-5px);
 }
 
 /* 只给屏幕阅读器的说明与状态播报 */

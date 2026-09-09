@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f8f7fa" />
     <title>LIU YUSHAN — PORTFOLIO '26</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ultra&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Archivo+Black&family=Alfa+Slab+One&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap"
-      rel="stylesheet"
-    />
+    <!--
+      字体自托管（2026-09-09）：原来这段是 Google Fonts 的 preconnect + css2。
+      fonts.googleapis.com / fonts.gstatic.com 在国内会被墙或极慢，
+      首屏会被这两个请求阻塞数秒、字体还会回退。现在拉丁字体下载到
+      public/fonts/（latin + latin-ext 子集），中文字体走系统栈 —— 零外部依赖。
+    -->
+    <link rel="preload" as="style" href="/fonts/fonts.css" />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
 
     <!--
       资源请求失败报告（整改方案 §4.3）：

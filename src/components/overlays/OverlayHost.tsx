@@ -10,12 +10,18 @@ const AboutCard = lazy(() => import('./AboutCard'))
 const SkillsDeck = lazy(() => import('./SkillsDeck'))
 const WorkFolders = lazy(() => import('./WorkFolders'))
 const ContactBoard = lazy(() => import('./ContactBoard'))
+const GephiView = lazy(() => import('../work/GephiView'))
+const JrockView = lazy(() => import('../work/JrockView'))
+const MusicPanel = lazy(() => import('../work/MusicPanel'))
 
 const BODIES = {
   about: AboutCard,
   skills: SkillsDeck,
   work: WorkFolders,
   contact: ContactBoard,
+  gephi: GephiView,
+  jrock: JrockView,
+  music: MusicPanel,
 } as const
 
 /** 屏幕阅读器读到的浮层标题，供 aria-labelledby 引用 */
@@ -24,6 +30,9 @@ const TITLES = {
   skills: 'SKILLS 技能卡',
   work: 'SELECTED WORK 作品文件夹',
   contact: 'CONTACT 软木板留言',
+  gephi: '东方快车谋杀案 社会网络分析',
+  jrock: 'J-Rock 歌词 60 年表现特征研究',
+  music: 'MUSIC 乐队手记',
 } as const
 
 const TITLE_ID = 'overlay-title'
@@ -119,6 +128,12 @@ export default function OverlayHost() {
   // Escape：作品子页面先退回文件夹，再按一次才关闭整个浮层
   const onEscape = useCallback(() => {
     const st = useStore.getState()
+    // 可视化弹窗（gephi / jrock）：与 × / 点遮罩一致，回到 PROJECTS 陈列页
+    if (st.overlay === 'gephi' || st.overlay === 'jrock') {
+      st.openOverlay('work')
+      st.setWorkView('projects')
+      return
+    }
     if (st.workView) st.setWorkView(null)
     else st.closeOverlay()
   }, [])

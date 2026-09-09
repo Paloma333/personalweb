@@ -1,0 +1,500 @@
+/* ── 整体：黑底悬疑氛围 ───────────────────────── */
+.gph {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  background: #0a0a0f;
+  color: #fbfaf6;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--app-font, -apple-system, sans-serif);
+  border: 1px solid #2a1f1f;
+  position: relative;
+}
+/* 暗角 + 颗粒让背景更有 vintage 感 */
+.gph::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%);
+  z-index: 1;
+}
+.gph > * { position: relative; z-index: 2; }
+
+.gph__loading {
+  padding: 40px;
+  font-size: 14px;
+  color: #8a7a76;
+}
+
+/* ── 左侧：stage ──────────────────────────── */
+.gph__stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 0;
+  height: 100%;
+  background: #0e0a14;
+  border-right: 1px solid #2a1f1f;
+}
+.gph__topbar {
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid #2a1f1f;
+  background: linear-gradient(180deg, #14101a 0%, #0e0a14 100%);
+}
+.gph__eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #c83434;
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(200, 52, 52, 0.45);
+}
+.gph__title {
+  font-family: 'Times New Roman', 'Songti SC', serif;
+  font-size: 22px;
+  margin: 4px 0 2px;
+  font-weight: 700;
+  color: #fbfaf6;
+  letter-spacing: 0.02em;
+}
+.gph__subtitle {
+  font-size: 12px;
+  color: #8a7a76;
+  margin: 0 0 10px;
+  font-style: italic;
+}
+.gph__toggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 999px;
+  border: 1px solid #2a1f1f;
+}
+.gph__toggle button {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #b3aaa0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.gph__toggle button small {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  opacity: 0.55;
+}
+.gph__toggle button.is-on {
+  background: #c83434;
+  color: #fbfaf6;
+}
+.gph__toggle button:hover:not(.is-on) {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fbfaf6;
+}
+
+/* ── 基础信息 / 方法论（折叠） ────────────── */
+.gph__intro {
+  margin-top: 10px;
+  border-top: 1px dashed #2a1f1f;
+  padding-top: 8px;
+}
+.gph__intro summary {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: #b3aaa0;
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  list-style: none;
+}
+.gph__intro summary::-webkit-details-marker { display: none; }
+.gph__intro summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 0.18s;
+}
+.gph__intro[open] summary::before { transform: rotate(90deg); }
+.gph__intro-body {
+  padding: 8px 0 4px;
+  display: grid;
+  gap: 4px;
+}
+.gph__intro-body p {
+  margin: 0;
+  font-size: 11px;
+  color: #d5cfc5;
+  line-height: 1.55;
+}
+.gph__intro-body p b {
+  color: #c8f322;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.gph__layers {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: grid;
+  gap: 2px;
+}
+.gph__layers li {
+  font-size: 11px;
+  color: #d5cfc5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gph__layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── reactflow overrides ───────────────── */
+.gph .react-flow { background: #0a0a0f; width: 100%; height: 100%; }
+.gph .react-flow__attribution { display: none; }
+.gph .react-flow__handle {
+  background: transparent;
+  border: none;
+  width: 4px;
+  height: 4px;
+}
+.gph .react-flow__controls {
+  background: rgba(10, 10, 15, 0.7);
+  border-radius: 6px;
+  border: 1px solid #2a1f1f;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+.gph .react-flow__controls button {
+  background: rgba(20, 16, 26, 0.85);
+  color: #d5cfc5;
+  border-bottom-color: #2a1f1f;
+}
+.gph .react-flow__controls button:hover { background: rgba(60, 30, 30, 0.85); }
+.gph .react-flow__minimap {
+  background: #14101a;
+  border: 1px solid #2a1f1f;
+  border-radius: 6px;
+}
+
+/* ── 自定义节点 ──────────────────────────── */
+.gpn {
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+  transition: opacity 0.32s, transform 0.32s;
+}
+.gpn__dot {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  border-radius: 50%;
+  border: 2px solid #0a0a0f;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  font-size: 18px;
+  position: relative;
+  transition: box-shadow 0.32s;
+}
+.gpn__role { line-height: 1; }
+.gpn__knife {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #c8f322;
+  color: #1b1422;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  border: 2px solid #0a0a0f;
+}
+.gpn__cn {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #fbfaf6;
+  background: rgba(20, 16, 26, 0.92);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #2a1f1f;
+  font-family: var(--font-cn, inherit);
+}
+/* 故事线命中节点：放大 + 暖光 */
+.gpn--hot .gpn__dot {
+  box-shadow:
+    0 0 0 2px #c8f322,
+    0 0 18px rgba(200, 245, 34, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: scale(1.18);
+}
+.gpn--hot .gpn__cn {
+  color: #c8f322;
+  border-color: #c8f322;
+}
+.gpn--dim {
+  opacity: 0.32;
+  filter: saturate(0.4);
+}
+
+/* ── 故事线章节条（底部） ────────────────── */
+.gph__chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 18px;
+  border-top: 1px solid #2a1f1f;
+  background: #14101a;
+}
+.gph__chapter {
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #2a1f1f;
+  color: #b3aaa0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  text-align: left;
+  line-height: 1.15;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.gph__chapter-no {
+  font-family: 'Times New Roman', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #c83434;
+}
+.gph__chapter-cn {
+  font-size: 11px;
+  font-weight: 600;
+}
+.gph__chapter.is-on {
+  background: #c83434;
+  color: #fbfaf6;
+  border-color: #c83434;
+}
+.gph__chapter.is-on .gph__chapter-no {
+  color: #fbfaf6;
+}
+.gph__chapter:hover:not(.is-on) {
+  background: rgba(200, 52, 52, 0.12);
+  border-color: #c83434;
+  color: #fbfaf6;
+}
+
+/* ── 右侧 sidebar ──────────────────────── */
+.gph__sidebar {
+  background: #14101a;
+  padding: 16px 18px 22px;
+  overflow-y: auto;
+  border-left: 1px solid #2a1f1f;
+}
+.gph__aside-title {
+  font-family: 'Times New Roman', 'Songti SC', serif;
+  font-size: 18px;
+  margin: 0 0 4px;
+  color: #fbfaf6;
+}
+.gph__aside-meta {
+  font-size: 11px;
+  color: #8a7a76;
+  margin: 0 0 14px;
+}
+.gph__aside-hint {
+  font-size: 11px;
+  color: #8a7a76;
+  font-style: italic;
+  margin: 0 0 18px;
+  padding: 12px;
+  border: 1px dashed #2a1f1f;
+  border-radius: 6px;
+}
+.gph__chapter-read {
+  margin-bottom: 18px;
+  padding: 14px 14px 12px;
+  background: rgba(200, 52, 52, 0.08);
+  border-left: 3px solid #c83434;
+  border-radius: 0 6px 6px 0;
+}
+.gph__chapter-read h4 {
+  font-family: 'Songti SC', 'Times New Roman', serif;
+  font-size: 13px;
+  margin: 0 0 6px;
+  color: #fbfaf6;
+  line-height: 1.4;
+}
+.gph__chapter-read p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #d5cfc5;
+  margin: 0;
+}
+
+.gph__aside-h4 {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #8a7a76;
+  text-transform: uppercase;
+  margin: 18px 0 8px;
+  border-top: 1px dashed #2a1f1f;
+  padding-top: 14px;
+}
+.gph__quotes {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.gph__quote {
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.32);
+  border-left: 3px solid #c83434;
+  font-size: 12px;
+  line-height: 1.45;
+  border-radius: 0 6px 6px 0;
+  color: #d5cfc5;
+}
+.gph__quote p { margin: 0 0 4px; font-style: italic; }
+.gph__quote footer {
+  font-size: 10px;
+  color: #8a7a76;
+  font-style: normal;
+}
+.gph__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.gph__cell {
+  display: grid;
+  place-items: center;
+  padding: 8px 4px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid #2a1f1f;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: #d5cfc5;
+  position: relative;
+  transition: all 0.18s;
+}
+.gph__cell-num {
+  position: absolute;
+  font-size: 9px;
+  background: #3b4ed8;
+  color: #fbfaf6;
+  padding: 1px 4px;
+  border-radius: 4px;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+.gph__cell-cn { font-size: 11px; }
+.gph__cell-stars {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  background: #c8f322;
+  color: #1b1422;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  border: 1px solid #14101a;
+}
+.gph__cell:hover, .gph__cell.is-on {
+  background: #c83434;
+  color: #fbfaf6;
+  border-color: #c83434;
+}
+
+/* ── 详情 modal ─────────────────────────── */
+.gph__modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: grid;
+  place-items: center;
+  z-index: 30;
+  backdrop-filter: blur(4px);
+}
+.gph__panel {
+  position: relative;
+  width: min(440px, 90%);
+  background: #14101a;
+  border-radius: 14px;
+  border: 1px solid #2a1f1f;
+  padding: 24px 28px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  color: #fbfaf6;
+}
+.gph__close {
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #8a7a76;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.gph__close:hover { background: rgba(255, 255, 255, 0.06); color: #fbfaf6; }
+.gph__panel-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.gph__panel-cn {
+  font-family: 'Times New Roman', 'Songti SC', serif;
+  font-size: 22px;
+  margin: 0 0 10px;
+  color: #fbfaf6;
+}
+.gph__panel-note {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #d5cfc5;
+  margin: 0 0 12px;
+}
+.gph__panel-foot {
+  border-top: 1px dashed #2a1f1f;
+  padding-top: 10px;
+  font-size: 11px;
+  font-style: italic;
+  color: #8a7a76;
+}

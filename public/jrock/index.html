@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J-Rock歌詞における表現特徴の研究｜60年の可視化</title>
+<!-- 依赖说明：原页面的 tailwind / gsap / ScrollTrigger CDN 已移除。
+     页面样式实际由下方 1000+ 行自定义 CSS 提供（class 均为语义化命名，无 tailwind utility），
+     动画全部是 CSS transition/keyframes，JS 中 gsap 零调用 —— 两个 CDN 均为僵尸依赖。
+     仅保留 echarts（本地 vendor，避免 CDN 不可用）。 -->
+<script src="./echarts.min.js"></script>
+<!-- 2026-09-09：原来这里拉 Google Fonts 的 Noto Serif JP / Noto Sans JP。
+     国内到不了 fonts.googleapis.com，会白等几秒再回退。
+     日文字体改用系统栈（Hiragino / Yu Gothic / Meiryo），见下方 CSS。 -->
+<style>
+  :root {
+    --bg-0: #0a0a0c;
+    --bg-1: #15151a;
+    --bg-2: #1f1f28;
+    --border: #2a2a35;
+    --border-light: #3a3a48;
+    --text-0: #f0f0f0;
+    --text-1: #b8b8c5;
+    --text-2: #6a8a95;
+    --akane: #C8334E;
+    --gunjou: #4A6FE3;
+    --kohaku: #E8A53C;
+    --sakura: #F4C7D2;
+    --midori: #4A9D7E;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    /* 日语字体兜底链：Google Fonts 不可用时依次降级到系统明朝/黑体，排版不塌 */
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+
+  /* 噪点纹理 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06' /%3E%3C/svg%3E");
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-weight: 700;
+  }
+
+  .num-display {
+    font-family: 'Times New Roman', serif;
+    font-feature-settings: 'tnum';
+    letter-spacing: -0.02em;
+  }
+
+  /* 顶部导航 */
+  nav.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 18px 32px;
+    background: linear-gradient(180deg, rgba(10,10,12,0.95), rgba(10,10,12,0.7) 70%, transparent);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s;
+  }
+  nav.top-nav .logo {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--akane);
+    letter-spacing: 0.05em;
+  }
+  nav.top-nav .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 13px;
+    color: var(--text-1);
+  }
+  nav.top-nav .nav-links a {
+    color: var(--text-1);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav.top-nav .nav-links a:hover { color: var(--akane); }
+
+  /* 通用章节样式 */
+  section.chapter {
+    padding: 120px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+  }
+  section.chapter .ch-num {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: var(--akane);
+    letter-spacing: 0.3em;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  section.chapter h2 {
+    font-size: 56px;
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    letter-spacing: 0.02em;
+  }
+  section.chapter h2 .jp {
+    font-size: 36px;
+    color: var(--text-1);
+    display: block;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  section.chapter .lead {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-1);
+    max-width: 720px;
+    margin-bottom: 48px;
+  }
+
+  .divider {
+    width: 64px;
+    height: 2px;
+    background: var(--akane);
+    margin: 32px 0;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 64px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -10%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(ellipse, rgba(200,51,78,0.15), transparent 60%);
+    transform: translateY(-50%);
+  }
+  .hero .pre {
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    color: var(--akane);
+    margin-bottom: 24px;
+    opacity: 0;
+  }
+  .hero h1 {
+    font-size: 88px;
+    line-height: 1;
+    margin: 0 0 8px 0;
+    font-weight: 900;
+  }
+  .hero h1 .accent {
+    color: var(--akane);
+    display: block;
+  }
+  .hero .sub-jp {
+    font-size: 28px;
+    color: var(--text-1);
+    margin-top: 16px;
+    margin-bottom: 48px;
+    font-weight: 400;
+    line-height: 1.4;
+    max-width: 700px;
+  }
+  .hero .stats {
+    display: flex;
+    gap: 56px;
+    margin-top: 40px;
+  }
+  .hero .stat {
+    border-left: 2px solid var(--akane);
+    padding-left: 16px;
+  }
+  .hero .stat .num {
+    font-family: 'Times New Roman', serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--text-0);
+    line-height: 1;
+  }
+  .hero .stat .label {
+    font-size: 13px;
+    color: var(--text-2);
+    letter-spacing: 0.15em;
+    margin-top: 8px;
+  }
+  .hero .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 64px;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero .scroll-hint::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: var(--akane);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50% { transform: translateX(20px); opacity: 0.5; }
+  }
+
+  /* 时间轴 */
+  .timeline {
+    padding: 80px 32px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline h3 {
+    font-size: 24px;
+    margin: 0 0 40px 0;
+    color: var(--text-1);
+    text-align: center;
+  }
+  .timeline-axis {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .timeline-node {
+    text-align: center;
+    padding: 32px 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .timeline-node:hover {
+    background: var(--bg-0);
+    border-color: var(--akane);
+    transform: translateY(-4px);
+  }
+  .timeline-node.active {
+    background: var(--akane);
+    color: white;
+    border-color: var(--akane);
+  }
+  .timeline-node .decade {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 32px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .timeline-node .info {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+  .timeline-node.active .info { color: rgba(255,255,255,0.8); }
+
+  /* 项目介绍徽章 (Hero) */
+  .project-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 22px;
+    border: 1px solid var(--border-light);
+    background: rgba(0,0,0,0.35);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--text-1);
+    margin-bottom: 36px;
+    backdrop-filter: blur(6px);
+  }
+  .project-meta .pm-dot {
+    width: 6px; height: 6px;
+    background: var(--akane);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--akane);
+  }
+  .project-meta .pm-sep {
+    color: var(--text-2);
+    opacity: 0.5;
+  }
+
+  /* 时间轴简注 */
+  .timeline-lead {
+    max-width: 720px;
+    margin: 0 auto 48px;
+    color: var(--text-1);
+    font-size: 14.5px;
+    line-height: 1.9;
+    text-align: center;
+  }
+  .timeline-axis { cursor: default; }
+
+  /* Ch5 关键词解释块 */
+  .kw-explain {
+    margin: 28px 0 24px;
+    padding: 22px 28px;
+    background: var(--bg-1);
+    border-left: 3px solid var(--gunjou);
+    color: var(--text-1);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .kw-explain .kw-h {
+    display: block;
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 16px;
+    color: var(--gunjou);
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .kw-explain code {
+    background: rgba(74,111,227,0.12);
+    color: #a4b8ff;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+  }
+
+  /* 紧凑主题卡 (替代大卡) */
+  .topic-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    margin-top: -1px;
+    transition: background 0.2s;
+  }
+  .topic-row:hover {
+    background: var(--bg-2);
+  }
+  .topic-row .tr-num {
+    font-family: 'Times New Roman', serif;
+    font-size: 24px;
+    color: var(--akane);
+    text-align: center;
+  }
+  .topic-row .tr-body .tr-name {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-0);
+  }
+  .topic-row .tr-body .tr-jp {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 2px;
+  }
+  .topic-row .tr-body .tr-kw {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .topic-row .tr-body .tr-kw .kw-chip {
+    font-size: 11.5px;
+    padding: 2px 8px;
+    background: rgba(74,111,227,0.12);
+    color: #a4b8ff;
+    border-left: 2px solid var(--gunjou);
+  }
+  .topic-row .tr-pct {
+    font-family: 'Times New Roman', serif;
+    font-size: 22px;
+    color: var(--kohaku);
+    min-width: 70px;
+    text-align: right;
+  }
+  .topic-row .tr-pct small {
+    display: block;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    font-size: 9px;
+    color: var(--text-2);
+    letter-spacing: 0.2em;
+    margin-top: 4px;
+  }
+
+  /* 论文洞察块 (大義名分) */
+  .insight-block {
+    margin-top: 56px;
+    padding: 36px 40px;
+    background: linear-gradient(135deg, rgba(200,51,78,0.08), rgba(232,165,60,0.06));
+    border: 1px solid rgba(200,51,78,0.25);
+    position: relative;
+  }
+  .insight-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--akane), var(--kohaku));
+  }
+  .insight-block .ib-num {
+    font-family: 'Times New Roman', serif;
+    color: var(--akane);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    margin-bottom: 12px;
+  }
+  .insight-block h4 {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 22px;
+    margin: 0 0 6px 0;
+    color: var(--text-0);
+  }
+  .insight-block .ib-jp {
+    color: var(--text-2);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .insight-block .ib-body {
+    color: var(--text-1);
+    font-size: 14.5px;
+    line-height: 2.0;
+  }
+  .insight-block .ib-body strong {
+    color: var(--kohaku);
+    font-weight: 600;
+  }
+
+  /* 折叠按钮 (当て字・Q12) */
+  .expand-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding: 14px 28px;
+    background: transparent;
+    border: 1px solid var(--border-light);
+    color: var(--text-1);
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .expand-btn:hover {
+    background: var(--akane);
+    border-color: var(--akane);
+    color: white;
+  }
+  .expand-btn .arrow {
+    transition: transform 0.3s;
+  }
+  .expand-btn.open .arrow { transform: rotate(180deg); }
+  .expand-btn .count-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  /* 折叠内容控制 */
+  .collapse-hidden { display: none; }
+
+  /* 图表容器 */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .chart-grid .full { grid-column: 1 / -1; }
+  .chart-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    padding: 32px;
+    transition: all 0.3s;
+  }
+  .chart-card:hover {
+    border-color: var(--border-light);
+  }
+  .chart-card .ch-title {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: var(--text-0);
+  }
+  .chart-card .ch-subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+    letter-spacing: 0.1em;
+  }
+  .chart-card .chart {
+    width: 100%;
+    height: 360px;
+  }
+  .chart-card .chart.tall { height: 480px; }
+
+  /* 关键字 chips */
+  .keyword-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .chip {
+    padding: 4px 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-1);
+    border-radius: 0;
+  }
+  .chip:hover { background: var(--akane); color: white; }
+
+  /* 当て字卡片网格 */
+  .ateji-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .ateji-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .ateji-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--akane);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .ateji-card:hover {
+    border-color: var(--akane);
+    transform: translateY(-4px);
+  }
+  .ateji-card:hover::before { transform: scaleX(1); }
+  .ateji-card .rank {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: var(--akane);
+    font-weight: 700;
+  }
+  .ateji-card .kanji {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text-0);
+    margin: 8px 0 4px 0;
+    line-height: 1;
+  }
+  .ateji-card .freq {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-bottom: 12px;
+  }
+  .ateji-card .rubies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .ateji-card .ruby-tag {
+    padding: 2px 8px;
+    background: rgba(200,51,78,0.15);
+    color: var(--sakura);
+    font-size: 13px;
+    border-left: 2px solid var(--akane);
+  }
+  .ateji-card .ruby-tag .count {
+    color: var(--text-2);
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  /* 模态 */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--bg-1);
+    border: 1px solid var(--border-light);
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 40px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-1);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .modal-close:hover { background: var(--akane); color: white; border-color: var(--akane); }
+  .modal h3 {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 32px;
+    margin: 0 0 8px 0;
+  }
+  .modal h3 .small {
+    font-size: 18px;
+    color: var(--text-2);
+    margin-left: 8px;
+  }
+  .modal .context {
+    background: var(--bg-0);
+    padding: 16px;
+    margin: 12px 0;
+    border-left: 3px solid var(--akane);
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .modal .context .label {
+    display: block;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+  }
+  .modal .context.highlight { border-left-color: var(--kohaku); }
+  .modal .meta {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 8px;
+  }
+  .modal .meta strong { color: var(--text-1); }
+
+  /* Topic 卡片墙 */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .topic-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .topic-card:hover {
+    border-color: var(--akane);
+    transform: translateY(-2px);
+  }
+  .topic-card .topic-id {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: var(--akane);
+    letter-spacing: 0.2em;
+  }
+  .topic-card .topic-label {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 8px 0 0 0;
+  }
+  .topic-card .topic-label-en {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 16px;
+  }
+  .topic-card .topic-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-1);
+    margin: 16px 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .topic-card .topic-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .topic-card .keyword {
+    padding: 3px 10px;
+    font-size: 12px;
+    background: rgba(74,111,227,0.15);
+    color: #a4b8ff;
+    border-left: 2px solid var(--gunjou);
+  }
+  .topic-card .topic-stats {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .topic-card .topic-stats .count {
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    color: var(--kohaku);
+    display: block;
+  }
+
+  /* Phase 动画 */
+  .phase-section {
+    margin-top: 64px;
+    padding: 48px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--akane), var(--kohaku));
+  }
+  .phase-section .phase-num {
+    font-family: 'Times New Roman', serif;
+    color: var(--akane);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+  }
+  .phase-section h3 {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 32px;
+    margin: 8px 0;
+  }
+  .phase-section .jp {
+    color: var(--text-1);
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .phase-section p {
+    color: var(--text-1);
+    line-height: 1.8;
+    font-size: 15px;
+    max-width: 720px;
+  }
+
+  /* アンケート章 */
+  .survey-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 56px;
+    margin-bottom: 72px;
+  }
+  .sv-stat {
+    border: 1px solid var(--border);
+    background: var(--bg-1);
+    padding: 28px 16px;
+    text-align: center;
+  }
+  .sv-stat .num {
+    font-family: 'Times New Roman', serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--akane);
+    line-height: 1;
+  }
+  .sv-stat .label {
+    margin-top: 10px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text-2);
+  }
+  .survey-block {
+    margin-top: 88px;
+  }
+  .survey-block .sv-h {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 26px;
+    color: var(--text-0);
+    font-weight: 600;
+    border-left: 3px solid var(--akane);
+    padding-left: 18px;
+    line-height: 1.4;
+  }
+  .survey-block .sv-h span {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--text-2);
+    letter-spacing: 0.2em;
+    font-weight: 400;
+  }
+  .survey-block .sv-note {
+    margin: 18px 0 8px 21px;
+    max-width: 780px;
+    color: var(--text-1);
+    font-size: 14.5px;
+    line-height: 1.95;
+  }
+  .chart-card .chart.sq { height: 300px; }
+
+  /* Persona 紧凑画像 (Q1/Q2/Q3) */
+  .persona-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .ps-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+  .ps-card .ps-label {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 14px;
+    color: var(--text-0);
+    margin-bottom: 4px;
+    letter-spacing: 0.06em;
+  }
+  .ps-card .ps-bars {
+    margin-top: 16px;
+  }
+  .ps-card .ps-row {
+    display: grid;
+    grid-template-columns: 1fr 36px;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+  .ps-card .ps-row .ps-name {
+    color: var(--text-1);
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+  }
+  .ps-card .ps-row .ps-val {
+    font-family: 'Times New Roman', serif;
+    color: var(--kohaku);
+    font-size: 13px;
+    text-align: right;
+  }
+  .ps-card .ps-bar {
+    margin-top: 4px;
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    overflow: hidden;
+    position: relative;
+  }
+  .ps-card .ps-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gunjou), var(--akane));
+    transition: width 1.2s ease-out;
+  }
+
+  /* Q12 引用墙 */
+  .quote-wall {
+    column-count: 3;
+    column-gap: 20px;
+    margin-top: 40px;
+  }
+  .quote-card {
+    break-inside: avoid;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 26px 24px 22px;
+    margin-bottom: 20px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .quote-card:hover {
+    border-color: var(--akane);
+    transform: translateY(-2px);
+  }
+  .quote-card .q-idx {
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--text-2);
+    margin-bottom: 14px;
+  }
+  .quote-card .q-mark {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    font-family: 'Times New Roman', serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--akane);
+    opacity: 0.35;
+  }
+  .quote-card .q-text {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 14.5px;
+    line-height: 2.0;
+    color: var(--text-0);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Footer */
+  footer {
+    padding: 80px 32px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  footer .quote {
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 36px;
+    line-height: 1.5;
+    color: var(--text-0);
+    margin-bottom: 32px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  footer .quote .accent {
+    color: var(--akane);
+  }
+  footer .cite {
+    color: var(--text-2);
+    font-size: 14px;
+    margin-bottom: 64px;
+  }
+  footer .end {
+    color: var(--text-2);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+  }
+  footer .end .name {
+    color: var(--akane);
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-bar .tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    color: var(--text-2);
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-bar .tab.active {
+    color: var(--akane);
+    border-bottom-color: var(--akane);
+  }
+  .tab-bar .tab:hover { color: var(--text-0); }
+
+  @media (max-width: 1024px) {
+    section.chapter { padding: 80px 20px; }
+    .hero { padding: 0 24px; }
+    .hero h1 { font-size: 56px; }
+    .hero .stats { gap: 32px; flex-wrap: wrap; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .ateji-grid { grid-template-columns: repeat(2, 1fr); }
+    .topic-grid { grid-template-columns: 1fr; }
+    .timeline-axis { grid-template-columns: repeat(3, 1fr); }
+    .survey-stats { grid-template-columns: repeat(2, 1fr); }
+    .persona-strip { grid-template-columns: 1fr; }
+    .quote-wall { column-count: 2; }
+    nav.top-nav .nav-links { display: none; }
+    section.chapter h2 { font-size: 40px; }
+    section.chapter h2 .jp { font-size: 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .ateji-grid { grid-template-columns: 1fr; }
+    .timeline-axis { grid-template-columns: repeat(2, 1fr); }
+    .quote-wall { column-count: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="logo">J-ROCK · 60年</div>
+  <div class="nav-links">
+    <a href="#hero">序幕</a>
+    <a href="#chapter3">形式</a>
+    <a href="#chapter4">二重表記</a>
+    <a href="#chapter5">主題</a>
+    <a href="#survey">アンケート</a>
+    <a href="#conclusion">結語</a>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<section class="hero" id="hero">
+  <div class="project-meta reveal">
+    <span class="pm-dot"></span>
+    ECNU · 日本語学科
+    <span class="pm-sep">·</span>
+    2026 年度優秀卒業論文
+    <span class="pm-sep">·</span>
+    視覚化プレゼンテーション
+  </div>
+  <div class="pre reveal">1960s — 2010s · 1,061 SONGS · 45 ARTISTS</div>
+  <h1 class="reveal">
+    J-Rock歌詞における<br>
+    <span class="accent">表現特徴の研究</span>
+  </h1>
+  <div class="sub-jp reveal">
+    計量言語学で読み解く、60年の通時的変遷<br>
+    <span style="color: var(--text-2); font-size: 18px;">——從世界的觀看到自身存在的探問</span>
+  </div>
+  <div class="stats reveal">
+    <div class="stat">
+      <div class="num" data-count="1061">0</div>
+      <div class="label">SONGS / 曲</div>
+    </div>
+    <div class="stat">
+      <div class="num" data-count="45">0</div>
+      <div class="label">ARTISTS / アーティスト</div>
+    </div>
+    <div class="stat">
+      <div class="num" data-count="242128">0</div>
+      <div class="label">TOKENS / 形態素数</div>
+    </div>
+    <div class="stat">
+      <div class="num">6</div>
+      <div class="label">DECADES / 年代</div>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL TO EXPLORE</div>
+</section>
+
+<!-- ============== TIMELINE ============== -->
+<section class="timeline">
+  <h3>60 年のコンテキスト · A SIX-DECADE CONTEXT</h3>
+  <p class="timeline-lead reveal">
+    本研究が対象とする1960s — 2010sの6つの年代区分。J-Rockの語彙・主題・表記は、下の年代的背景と共振しながら変容してきた。<br>
+    下の年代カードを押すと、その年代の語彙データへスクロールします。
+  </p>
+  <div class="timeline-axis">
+    <div class="timeline-node reveal" data-decade="1960s">
+      <span class="decade">1960s</span>
+      <div class="info">グループサウンズ全盛 · ザ・フォーク・クルセダーズ · 日本語ロック論争の萌芽</div>
+    </div>
+    <div class="timeline-node reveal" data-decade="1970s">
+      <span class="decade">1970s</span>
+      <div class="info">フォークロック → バンドサウンド · はっぴいえんど · 洋楽と日本語の折衝</div>
+    </div>
+    <div class="timeline-node reveal" data-decade="1980s">
+      <span class="decade">1980s</span>
+      <div class="info">バンドブーム · BOØWY / ユニコーン · 「自分探し」世代の勃興</div>
+    </div>
+    <div class="timeline-node reveal" data-decade="1990s">
+      <span class="decade">1990s</span>
+      <div class="info">J-POPへの反骨 · バンド黄金時代 · 椎名林檎・凛として時雨</div>
+    </div>
+    <div class="timeline-node reveal" data-decade="2000s">
+      <span class="decade">2000s</span>
+      <div class="info">メディア多元化 · エモ・メロコア · サブカルチャー浸透</div>
+    </div>
+    <div class="timeline-node reveal" data-decade="2010s">
+      <span class="decade">2010s</span>
+      <div class="info">ヨルシカ・ずっと真夜中でいいのに。 · SNS発バンド · 抽象表現の一般化</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CHAPTER 3: 形式的变遷 ============== -->
+<section class="chapter" id="chapter3">
+  <div class="ch-num reveal">CHAPTER 03 · 語彙的特徵</div>
+  <h2 class="reveal">
+    形式の変遷
+    <span class="jp">從信息密度到词汇多样性的逆U型</span>
+  </h2>
+  <div class="lead reveal">
+    J-Rock歌词的形式经历了从「静态描写」到「动态表达」再到「信息高密度」的演变。
+    歌词体量的扩张并不总是带来文学性的提升——TTR的倒U型揭示了1990年代作为词汇多样性巅峰的特殊地位。
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card reveal full">
+      <div class="ch-title">延べ語数・異なり語数・TTR の推移</div>
+      <div class="ch-subtitle">総語数（実線）· Unique Types（点線）· TTR 中位数（軸右）</div>
+      <div id="chart-3-1" class="chart tall"></div>
+    </div>
+    <div class="chart-card reveal">
+      <div class="ch-title">TTR 分布 (箱線図)</div>
+      <div class="ch-subtitle">1960s の両極化 → 2010s の収束</div>
+      <div id="chart-3-2" class="chart"></div>
+    </div>
+    <div class="chart-card reveal">
+      <div class="ch-title">N/V Ratio の推移</div>
+      <div class="ch-subtitle">名詞 / 動詞 — 静から動への移行</div>
+      <div id="chart-3-3" class="chart"></div>
+    </div>
+    <div class="chart-card reveal">
+      <div class="ch-title">品詞構成比 (堆積)</div>
+      <div class="ch-subtitle">四大実詞の年代別構成</div>
+      <div id="chart-3-4" class="chart"></div>
+    </div>
+    <div class="chart-card reveal">
+      <div class="ch-title">語種 Goshu 構成比</div>
+      <div class="ch-subtitle">和語 1990s 巅峰 → 2010s 漢語爆发</div>
+      <div id="chart-3-5" class="chart"></div>
+    </div>
+  </div>
+
+  <div class="chart-grid" style="margin-top: 64px;">
+    <div class="chart-card reveal full">
+      <div class="ch-title">各年代 高頻出語彙 Top 15</div>
+      <div class="ch-subtitle">名詞 / 動詞 / 形容詞 — 點擊下方年代切換</div>
+      <div class="tab-bar" id="tab-words">
+        <div class="tab active" data-decade="1960s">1960s</div>
+        <div class="tab" data-decade="1970s">1970s</div>
+        <div class="tab" data-decade="1980s">1980s</div>
+        <div class="tab" data-decade="1990s">1990s</div>
+        <div class="tab" data-decade="2000s">2000s</div>
+        <div class="tab" data-decade="2010s">2010s</div>
+      </div>
+      <div id="chart-3-6" class="chart tall"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CHAPTER 4: 二重表記 ============== -->
+<section class="chapter" id="chapter4">
+  <div class="ch-num reveal">CHAPTER 04 · 二重表記</div>
+  <h2 class="reveal">
+    漢字と音の位相ズレ
+    <span class="jp">視覺與聽覺的意義錯位</span>
+  </h2>
+  <div class="lead reveal">
+    歌詞における「「「宇宙(そら)」」」のような二重表記 — 主表記（視覚）と副表記（聴覚）のズレが、
+    日常言語の文脈を再構築するする重層的表現手法。全234例、上位20件を可視化。
+  </div>
+
+  <div class="chart-card reveal full" style="margin-top: 48px;">
+    <div class="ch-title">二重表記 漢字 → 読音 フロー図</div>
+    <div class="ch-subtitle">Top 20 高頻度当て字 · 234例 · Sankey diagram</div>
+    <div id="chart-4-1" class="chart" style="height: 520px;"></div>
+  </div>
+
+  <div class="chart-grid" style="margin-top: 48px;">
+    <div class="chart-card reveal">
+      <div class="ch-title">1曲あたり二重表記数 (年代別)</div>
+      <div class="ch-subtitle">延べ（実線）· 異なり（点線）</div>
+      <div id="chart-4-2" class="chart"></div>
+    </div>
+    <div class="chart-card reveal">
+      <div class="ch-title">3 つのクロス集計表</div>
+      <div class="ch-subtitle">二重表記の構造的パターン — 年代別の重なり</div>
+      <p style="color: var(--text-1); font-size: 12.5px; line-height: 1.85; margin: 8px 0 16px;">
+        二重表記を <strong>「主表記 × 副表記」</strong> のペアと捉え、品詞・語種・文字数の3軸で集計。ヒートマップの濃いセルほど「そのペアが多く出現した年代」を示す——例えば 1990s の「名詞 × 副詞」セルが濃いのは、抽象概念の当て字化が進んだ時代背景と符合する。
+      </p>
+      <div class="tab-bar" id="tab-crosstab">
+        <div class="tab active" data-key="pos">品詞</div>
+        <div class="tab" data-key="goshu">語種</div>
+        <div class="tab" data-key="character">文字</div>
+      </div>
+      <div id="chart-4-3" class="chart"></div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top: 64px;">
+    <h3 style="font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif; font-size: 32px; margin-bottom: 8px;">
+      当て字 TOP 20
+    </h3>
+    <p style="color: var(--text-1); font-size: 14px; margin-bottom: 32px;">
+      點擊任意漢字カード，查看該表記的實際歌詞上下文。
+    </p>
+
+    <!-- 論文洞察 -->
+    <div class="insight-block">
+      <div class="ib-num">INSIGHT · 論文からの読みどころ</div>
+      <h4>「大義名分」の不在 ── 歌詞は<strong>イデオロギー装置ではない</strong></h4>
+      <div class="ib-jp">二重表記の機能的考察：日常の言語的逸脱を<em>可視化する</em>装置として</div>
+      <div class="ib-body">
+        政治的・社会的な <strong>「大義名分」</strong> を背負う記号表現は、本コーパスでは確認されない。代わりに当て字が果たすのは、社会運動のスローガン化ではなく、<strong>日常言語のテクスチャを可視化する</strong>機能——たとえば「宇宙（そら）」は宇宙の語義を「そら」という <em>身体化された音</em> で再提示する。
+      </div>
+    </div>
+
+    <div class="ateji-grid" id="ateji-grid"></div>
+    <button class="expand-btn" id="btn-ateji">
+      <span class="arrow">▼</span>
+      残り <span class="count-badge">14</span> 件を展開
+    </button>
+  </div>
+</section>
+
+<!-- ============== CHAPTER 5: 主题变迁 ============== -->
+<section class="chapter" id="chapter5">
+  <div class="ch-num reveal">CHAPTER 05 · 主題変遷</div>
+  <h2 class="reveal">
+    外部の風景から内部の実存へ
+    <span class="jp">三個フェーズの通時的パラダイムシフト</span>
+  </h2>
+  <div class="lead reveal">
+    BERTopic が抽出した 7 つの主題類型が、60年の中でどうせめぎ合い、最終的に「存在認知型」が頂点に上り詰めたのか。
+    流動的な frequency の流れと、各主題の核心を示す。
+  </div>
+
+  <div class="chart-card reveal full" style="margin-top: 48px;">
+    <div class="ch-title">7 Topic Frequency Streamgraph</div>
+    <div class="ch-subtitle">1960s → 2010s · Topic 1 (存在認知型) の台頭を視る</div>
+    <div id="chart-5-1" class="chart" style="height: 480px;"></div>
+  </div>
+
+  <div class="reveal" style="margin-top: 80px;">
+    <h3 style="font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif; font-size: 32px; margin-bottom: 8px;">
+      7 つの主題類型
+    </h3>
+    <p style="color: var(--text-1); font-size: 14px; margin-bottom: 16px;">
+      計量抽出された 7 つのトピック · それぞれの核心と意味
+    </p>
+    <div class="kw-explain">
+      <span class="kw-h">「キーワード」とは何か ──</span>
+      BERTopic の <code>c-TF-IDF スコア</code> によって抽出された、<strong>その主題に固有の特徴語</strong>。
+      つまり「<strong>「僕」が突出する主題</strong>」「<strong>「世界」が突出する主題</strong>」のような意味のまとまりを可視化したもの。
+    </div>
+    <div class="topic-list" id="topic-grid"></div>
+  </div>
+
+  <div class="reveal" style="margin-top: 80px;">
+    <h3 style="font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif; font-size: 32px; margin-bottom: 8px;">
+      三つのフェーズ
+    </h3>
+    <p style="color: var(--text-1); font-size: 14px; margin-bottom: 32px;">
+      主題頻度の変遷が語る、J-Rock の通時的パラダイムシフト
+    </p>
+    <div class="phase-section">
+      <div class="phase-num">PHASE 01 · 1960s → 1970s</div>
+      <h3>日常情景型の早期消滅</h3>
+      <div class="jp">トピック6 (日常情景型) の衰退</div>
+      <p>フォークソング的な牧歌的風景描写は初期の一部楽曲に残ったのみ。ビートが先鋭化するにつれ、日常的で穏やかな主題は早期に放棄された。</p>
+    </div>
+    <div class="phase-section">
+      <div class="phase-num">PHASE 02 · 1970s</div>
+      <h3>マクロ叙事型の一時的突出</h3>
+      <div class="jp">トピック2 (マクロ叙事型) · 全年代最高値 Freq.50</div>
+      <p>1970年代中盤〜後半の急上昇。「明日」「世界」と英語（my等）の混在は、洋楽サウンドと日本語の折衝期を示している。</p>
+    </div>
+    <div class="phase-section">
+      <div class="phase-num">PHASE 03 · 1980s → 2010s</div>
+      <h3>存在認知型の主導権確立</h3>
+      <div class="jp">トピック1 (存在認知型) の永続的支配</div>
+      <p>
+        1980年代中盤に首位に達して以来30年以上、全トピックを大きく引き離し続けている。J-Rockが<strong>外部の風景を描く段階から、自身の存在を問う段階</strong>へ成熟した証左。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CHAPTER 6 · アンケート調査 ============== -->
+<section class="chapter" id="survey">
+  <div class="ch-num reveal">CHAPTER 06 · アンケート調査</div>
+  <h2 class="reveal">
+    101人の「聴く」理由
+    <span class="jp">歌词之外 · 来自听众的声音</span>
+  </h2>
+  <div class="lead reveal">
+    コーパスは歌詞の60年を語る。しかし、その歌詞が誰に、どのように受容されているのか——。<br>
+    論文の分析を「聴き手」の側から照らし出すため、101人のリスナーにアンケートを実施した。
+  </div>
+
+  <div class="survey-stats reveal">
+    <div class="sv-stat"><div class="num">101</div><div class="label">回答者 / RESPONDENTS</div></div>
+    <div class="sv-stat"><div class="num">12</div><div class="label">設問 / QUESTIONS</div></div>
+    <div class="sv-stat"><div class="num">234</div><div class="label">論文収録 二重表記</div></div>
+    <div class="sv-stat"><div class="num">42</div><div class="label">「歌詞の声」/ Q12</div></div>
+  </div>
+
+  <!-- 6-1 WHO — 紧凑画像紹介代替大柱状图 -->
+  <div class="survey-block reveal">
+    <h3 class="sv-h">Ⅰ. 誰が聴いているのか <span>· WHO IS LISTENING</span></h3>
+    <p class="sv-note">回答者 101 人の内訳。19〜22歳（57.4%）が中心、日本語能力は「零基础〜简单问候」が過半数を占め、日本語を解さなくてもJ-Rockは聴かれている。</p>
+    <div class="persona-strip">
+      <div class="ps-card">
+        <div class="ps-label">Q1 · 年齢層</div>
+        <div class="ps-bars" id="persona-q1"></div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-label">Q2 · 日本語能力</div>
+        <div class="ps-bars" id="persona-q2"></div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-label">Q3 · 普段聴くロック中のJ-Rock比率</div>
+        <div class="ps-bars" id="persona-q3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6-2 ENTRY + ATTRACTION + EXPERIENCE 一组 -->
+  <div class="survey-block reveal">
+    <h3 class="sv-h">Ⅱ. 入口・惹かれ・得るもの <span>· ENTRY · ATTRACTION · EXPERIENCE</span></h3>
+    <p class="sv-note">「アニメ・ゲーム主題歌」（72.3%）が最初の入口。「旋律与编曲」（90.1%）に次いで「歌词的世界观」（57.4%）が上位——歌詞はサウンドに次ぐ核心的要素。そして聴くことで得られるのは「カタルシス」（53.5%）と「共感・癒やし」（39.6%）。</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="ch-title">Q4 · 聴き始めた「きっかけ」</div>
+        <div class="ch-subtitle">複数回答 · アニメ・ゲーム主題歌が首位</div>
+        <div id="chart-q4" class="chart sq"></div>
+      </div>
+      <div class="chart-card">
+        <div class="ch-title">Q6 · 最も惹かれる要素</div>
+        <div class="ch-subtitle">複数回答 · 歌詞は2位</div>
+        <div id="chart-q6" class="chart sq"></div>
+      </div>
+      <div class="chart-card">
+        <div class="ch-title">Q7 · 得ている体験・感情</div>
+        <div class="ch-subtitle">複数回答 · 感情の解放と共感</div>
+        <div id="chart-q7" class="chart sq"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6-3 LANGUAGE -->
+  <div class="survey-block reveal">
+    <h3 class="sv-h">Ⅲ. 日本語との距離 <span>· DISTANCE FROM THE LANGUAGE</span></h3>
+    <p class="sv-note">J-Rockを好きになったことで日本文化・日本語への関心が「変化した」人は83%（Q5）。日本語学習経験者66人のうち「教科書とのギャップを感じる」人は46人、実に<strong>69.7%</strong>に達する（Q8）——歌詞の日本語は、学習者の教科書体験と確かにズレている。</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="ch-title">Q5 · 関心の変化</div>
+        <div class="ch-subtitle">日本文化・日本語学習への影響</div>
+        <div id="chart-q5" class="chart sq"></div>
+      </div>
+      <div class="chart-card">
+        <div class="ch-title">Q8 · 教科書とのギャップ</div>
+        <div class="ch-subtitle">学習経験者のみ（66人）に聞いた</div>
+        <div id="chart-q8" class="chart sq"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6-4 LYRICS -->
+  <div class="survey-block reveal">
+    <h3 class="sv-h">Ⅳ. 歌詞の「難しさ」と「共感」 <span>· DIFFICULTY &amp; RESONANCE</span></h3>
+    <p class="sv-note">難しさの1位は「文法が崩れている」（46.5%）、2位「抽象的・詩的すぎる」（41.6%）——第3章で計測した<strong>N/V比の低下（動詞的・口語化）と二重表記の拡大</strong>は、聴き手の「難しさ」の実感と一致する。共感の上位は「人生哲学」（58.4%）「感情の吐露」（57.4%）「生存・実存」（49.5%）——第5章の<strong>自己叙事型トピックの上昇</strong>と、聴き手の感じ方はここで交差する。</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="ch-title">Q9 · 歌詞理解の難所</div>
+        <div class="ch-subtitle">複数回答</div>
+        <div id="chart-q9" class="chart sq"></div>
+      </div>
+      <div class="chart-card">
+        <div class="ch-title">Q10 · 共感するテーマ</div>
+        <div class="ch-subtitle">複数回答 · 第5章の主題分析と対応</div>
+        <div id="chart-q10" class="chart sq"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6-5 VOICES — 折叠 8/42 -->
+  <div class="survey-block reveal">
+    <h3 class="sv-h">Ⅴ. 「歌詞がすごい」と思う瞬間 <span>· VOICES FROM THE LISTENERS</span></h3>
+    <p class="sv-note">Q12の自由回答から42件収録。解釈も言語もばらばらな42人の声——彼らは皆、同じ瞬間に歌詞に「救われている」。翻訳も整形もせず、そのまま掲載する。</p>
+    <div class="quote-wall" id="quote-wall"></div>
+    <button class="expand-btn" id="btn-quotes">
+      <span class="arrow">▼</span>
+      残り <span class="count-badge">34</span> 件を展開
+    </button>
+  </div>
+</section>
+
+<!-- ============== CONCLUSION ============== -->
+<section class="chapter" id="conclusion" style="padding-top: 0;">
+  <div class="ch-num reveal">CONCLUSION · 結語</div>
+  <h2 class="reveal">
+    「何を見ているか」から<br>
+    「誰がいかに生きているか」へ
+    <span class="jp">The Paradigm Shift of J-Rock Lyrics</span>
+  </h2>
+  <div class="lead reveal">
+    本研究は、計量言語学的手法と主題分析を併用することで、J-Rock歌詞の形式と主題の通時的変遷を実証的に考察した。
+    歌詞は単なる「大衆音楽の一部」ではなく、日本語による現代的思想的・文学的表現の一形態として成熟してきた。
+  </div>
+</section>
+
+<footer>
+  <div class="quote">
+    外部の風景を描く段階から、<br>
+    自身の存在への問いかけと叫びへと<br>
+    <span class="accent">最終的には転換していく過程</span>
+  </div>
+  <div class="cite">—— 『J-Rock歌詞における表現特徴の研究』結び (ウサン, 2026)</div>
+  <div class="end">
+    <div class="name">ウサン</div>
+    ECNU · 外国語学院 · 日語専攻 · 2026<br>
+    指導教員：呉 先生<br><br>
+    © 2026 · 可視化データ展示
+  </div>
+</footer>
+
+<!-- ============== MODAL ============== -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ============== JAVASCRIPT ============== -->
+<script>
+// ============== DATA LOAD ==============
+let DATA = null;
+let SURVEY = null;
+fetch('./data.json').then(r => r.json()).then(d => {
+  DATA = d;
+  return fetch('./survey.json');
+}).then(r => r.json()).then(s => {
+  SURVEY = s;
+  initHero();
+  renderChapter3();
+  renderChapter4();
+  renderChapter5();
+  renderSurvey();
+  initReveal();
+});
+
+const AKANE = '#C8334E';
+const GUNJOU = '#4A6FE3';
+const KOHAKU = '#E8A53C';
+const SAKURA = '#F4C7D2';
+const MIDORI = '#4A9D7E';
+const TEXT = '#f0f0f0';
+const TEXT1 = '#b8b8c5';
+const TEXT2 = '#6a8a95';
+const BORDER = '#2a2a35';
+
+const TOPIC_COLORS = {
+  '0': '#C8334E',  // 存在认知型 - 红
+  '1': '#4A6FE3',  // 宏观叙事型 - 蓝
+  '2': '#E8A53C',  // 自我叙事型 - 黄
+  '3': '#4A9D7E',  // 意象抒情型 - 绿
+  '4': '#F4C7D2',  // 情感流露型 - 樱
+  '5': '#9D7E4A',  // 日常情景型 - 茶
+  '6': '#8a6ae3',  // 人生哲学型 - 紫
+};
+
+// ============== HERO COUNT ==============
+function initHero() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const duration = 2000;
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.floor(target * eased).toLocaleString();
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// ============== REVEAL ANIMATION ==============
+function initReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ============== TIMELINE CLICK → SCROLL ==============
+document.querySelectorAll('.timeline-node').forEach(node => {
+  node.addEventListener('click', () => {
+    const decade = node.dataset.decade;
+    // 跳转到第 3 章 高频词 tab (点击对应年代)
+    document.getElementById('chapter3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const tab = document.querySelector(`#tab-words .tab[data-decade="${decade}"]`);
+      if (tab) tab.click();
+    }, 700);
+  });
+});
+
+// ============== CHAPTER 3 ==============
+function renderChapter3() {
+  const decades = DATA.meta.decades;
+  const totalTokens = DATA.chapter3.total_tokens_per_decade;
+  const uniqueTypes = DATA.chapter3.unique_types_per_decade;
+  const ttrData = DATA.chapter3.ttr_per_decade;
+  const nvData = DATA.chapter3.nv_per_decade;
+  const posPct = DATA.chapter3.pos_pct;
+  const goshu = DATA.chapter3.goshu_per_decade;
+
+  // 3-1: 总词数/Unique/TTR 联动折线
+  const chart31 = echarts.init(document.getElementById('chart-3-1'), null, { renderer: 'canvas' });
+  chart31.setOption({
+    backgroundColor: 'transparent',
+    legend: { data: ['平均総語数 (Total Tokens)', '平均異なり語数 (Unique Types)', 'TTR 中央値'], textStyle: { color: TEXT1 }, top: 0 },
+    grid: { left: 60, right: 70, top: 50, bottom: 40 },
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    xAxis: { type: 'category', data: decades, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: [
+      { type: 'value', name: '词数', nameTextStyle: { color: TEXT2 }, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+      { type: 'value', name: 'TTR', min: 0, max: 1, nameTextStyle: { color: TEXT2 }, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '平均総語数 (Total Tokens)', type: 'line', data: totalTokens.map(d => d.mean), smooth: true, lineStyle: { color: AKANE, width: 3 }, itemStyle: { color: AKANE }, symbolSize: 10 },
+      { name: '平均異なり語数 (Unique Types)', type: 'line', data: uniqueTypes.map(d => d.mean), smooth: true, lineStyle: { color: GUNJOU, width: 3 }, itemStyle: { color: GUNJOU }, symbolSize: 10 },
+      { name: 'TTR 中央値', type: 'line', yAxisIndex: 1, data: ttrData.map(d => d.median), smooth: true, lineStyle: { color: KOHAKU, width: 3, type: 'dashed' }, itemStyle: { color: KOHAKU }, symbolSize: 10 }
+    ]
+  });
+
+  // 3-2: TTR 箱线图
+  const chart32 = echarts.init(document.getElementById('chart-3-2'));
+  const boxData = ttrData.map(d => {
+    const sorted = d.values.slice().sort((a,b) => a-b);
+    const min = sorted[0];
+    const max = sorted[sorted.length - 1];
+    const q1 = d.q1;
+    const q3 = d.q3;
+    const med = d.median;
+    return [min, q1, med, q3, max];
+  });
+  chart32.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'item', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    grid: { left: 60, right: 30, top: 30, bottom: 40 },
+    xAxis: { type: 'category', data: decades, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', min: 0.2, max: 1.0, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: [{
+      name: 'TTR', type: 'boxplot', data: boxData,
+      itemStyle: { color: 'rgba(200,51,78,0.3)', borderColor: AKANE, borderWidth: 2 }
+    }]
+  });
+
+  // 3-3: N/V Ratio
+  const chart33 = echarts.init(document.getElementById('chart-3-3'));
+  chart33.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    grid: { left: 60, right: 30, top: 30, bottom: 40 },
+    xAxis: { type: 'category', data: decades, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: [{
+      name: 'N/V Ratio', type: 'line', data: nvData.map(d => d.ratio), smooth: true,
+      lineStyle: { color: AKANE, width: 3 },
+      itemStyle: { color: AKANE },
+      symbolSize: 12,
+      symbol: 'diamond',
+      label: { show: true, position: 'top', color: TEXT, formatter: '{c}', fontSize: 12 },
+      areaStyle: { color: 'rgba(200,51,78,0.1)' }
+    }]
+  });
+
+  // 3-4: POS 占比堆叠
+  const chart34 = echarts.init(document.getElementById('chart-3-4'));
+  chart34.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    legend: { data: ['名詞', '動詞', '形容詞', '副詞'], textStyle: { color: TEXT1 }, top: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: { type: 'category', data: decades, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', axisLabel: { formatter: '{value}%', color: TEXT1 }, axisLine: { lineStyle: { color: BORDER } }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: [
+      { name: '名詞', type: 'bar', stack: 'pos', data: posPct.map(d => d['名詞']), itemStyle: { color: AKANE } },
+      { name: '動詞', type: 'bar', stack: 'pos', data: posPct.map(d => d['動詞']), itemStyle: { color: GUNJOU } },
+      { name: '形容詞', type: 'bar', stack: 'pos', data: posPct.map(d => d['形容詞']), itemStyle: { color: KOHAKU } },
+      { name: '副詞', type: 'bar', stack: 'pos', data: posPct.map(d => d['副詞']), itemStyle: { color: MIDORI } }
+    ]
+  });
+
+  // 3-5: Goshu 堆叠
+  const chart35 = echarts.init(document.getElementById('chart-3-5'));
+  chart35.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    legend: { data: ['和語', '漢語', '外来語', '混種語'], textStyle: { color: TEXT1 }, top: 0 },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: { type: 'category', data: decades, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', axisLabel: { formatter: '{value}%', color: TEXT1 }, axisLine: { lineStyle: { color: BORDER } }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: [
+      { name: '和語', type: 'bar', stack: 'goshu', data: goshu.map(d => d['和語']), itemStyle: { color: MIDORI } },
+      { name: '漢語', type: 'bar', stack: 'goshu', data: goshu.map(d => d['漢語']), itemStyle: { color: GUNJOU } },
+      { name: '外来語', type: 'bar', stack: 'goshu', data: goshu.map(d => d['外来語']), itemStyle: { color: KOHAKU } },
+      { name: '混種語', type: 'bar', stack: 'goshu', data: goshu.map(d => d['混種語']), itemStyle: { color: '#7a7a8a' } }
+    ]
+  });
+
+  // 3-6: 各年代高频词
+  const chart36 = echarts.init(document.getElementById('chart-3-6'));
+  function renderWords(dec) {
+    const tw = DATA.chapter3.top_words_per_decade[dec];
+    chart36.setOption({
+      backgroundColor: 'transparent',
+      tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+      legend: { data: ['名詞', '動詞', '形容詞'], textStyle: { color: TEXT1 }, top: 0 },
+      grid: { left: 60, right: 30, top: 40, bottom: 100 },
+      xAxis: [
+        { type: 'category', data: tw.nouns.map(n => n.word), gridIndex: 0, axisLabel: { color: TEXT1, rotate: 45, fontSize: 11 }, axisLine: { lineStyle: { color: BORDER } } },
+      ],
+      yAxis: { gridIndex: 0, axisLabel: { color: TEXT1 }, axisLine: { lineStyle: { color: BORDER } }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+      series: [
+        { name: '名詞', type: 'bar', data: tw.nouns.map(n => n.freq), itemStyle: { color: AKANE } },
+        { name: '動詞', type: 'bar', data: tw.verbs.map(n => n.freq), itemStyle: { color: GUNJOU } },
+        { name: '形容詞', type: 'bar', data: tw.adjs.map(n => n.freq), itemStyle: { color: KOHAKU } }
+      ]
+    });
+  }
+  renderWords('1960s');
+  document.querySelectorAll('#tab-words .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#tab-words .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderWords(tab.dataset.decade);
+    });
+  });
+
+  // resize
+  window.addEventListener('resize', () => {
+    [chart31, chart32, chart33, chart34, chart35, chart36].forEach(c => c.resize());
+  });
+}
+
+// ============== CHAPTER 4 ==============
+function renderChapter4() {
+  // 4-1: Sankey 图
+  const chart41 = echarts.init(document.getElementById('chart-4-1'));
+  // 构造 Sankey data
+  const top20 = DATA.chapter4.top20_struct;
+  const nodes = [];
+  const links = [];
+  top20.forEach(item => {
+    nodes.push({ name: item.base, itemStyle: { color: AKANE }, label: { fontSize: 14, fontWeight: 700 } });
+    item.ruby_list.forEach(rl => {
+      const nodeName = item.base + '|' + rl.ruby;
+      if (!nodes.find(n => n.name === nodeName)) {
+        nodes.push({ name: nodeName, itemStyle: { color: KOHAKU }, label: { fontSize: 12 } });
+      }
+      links.push({
+        source: item.base,
+        target: nodeName,
+        value: rl.examples.length,
+      });
+    });
+  });
+  chart41.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'item', triggerOn: 'mousemove', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT },
+      formatter: p => p.dataType === 'edge' ? `${p.data.source} → ${p.data.target.split('|')[1]}<br/>${p.data.value} 例` : p.name },
+    series: [{
+      type: 'sankey',
+      data: nodes,
+      links: links,
+      emphasis: { focus: 'adjacency' },
+      label: {
+        color: TEXT, fontFamily: 'Hiragino Mincho ProN',
+        formatter: n => n.name.includes('|') ? n.name.split('|')[1] : n.name
+      },
+      lineStyle: { color: 'gradient', curveness: 0.5, opacity: 0.45 },
+      nodeGap: 14,
+      nodeWidth: 18,
+      left: 24, right: 90, top: 20, bottom: 20,
+    }]
+  });
+
+  // 4-2: 二重表記 年代趋势
+  const chart42 = echarts.init(document.getElementById('chart-4-2'));
+  const ateji = DATA.chapter4.ateji_per_decade;
+  chart42.setOption({
+    backgroundColor: 'transparent',
+    legend: { data: ['延べ (Total)', '異なり (Unique)'], textStyle: { color: TEXT1 }, top: 0 },
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    grid: { left: 60, right: 30, top: 40, bottom: 40 },
+    xAxis: { type: 'category', data: ateji.map(d => d.decade), axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: [
+      { name: '延べ (Total)', type: 'line', data: ateji.map(d => d.total_mean), smooth: true, lineStyle: { color: AKANE, width: 3 }, itemStyle: { color: AKANE }, symbolSize: 10 },
+      { name: '異なり (Unique)', type: 'line', data: ateji.map(d => d.unique_mean), smooth: true, lineStyle: { color: GUNJOU, width: 3, type: 'dashed' }, itemStyle: { color: GUNJOU }, symbolSize: 10 }
+    ]
+  });
+
+  // 4-3: 交叉表 heatmap
+  const chart43 = echarts.init(document.getElementById('chart-4-3'));
+  function renderCross(keyKey) {
+    const ct = DATA.chapter4.crosstabs[keyKey];
+    const data = [];
+    for (let i = 0; i < ct.rows.length; i++) {
+      for (let j = 0; j < ct.cols.length; j++) {
+        if (ct.values[i][j] > 0) {
+          data.push([j, i, ct.values[i][j]]);
+        }
+      }
+    }
+    chart43.setOption({
+      backgroundColor: 'transparent',
+      tooltip: { position: 'top', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT },
+        formatter: p => `${ct.rows[p.value[1]]} × ${ct.cols[p.value[0]]}<br/>${p.value[2]} 例` },
+      grid: { left: 100, right: 30, top: 30, bottom: 80 },
+      xAxis: { type: 'category', data: ct.cols, splitArea: { show: false }, axisLabel: { color: TEXT1, rotate: 30, fontSize: 11 }, axisLine: { lineStyle: { color: BORDER } } },
+      yAxis: { type: 'category', data: ct.rows, splitArea: { show: false }, axisLabel: { color: TEXT1 }, axisLine: { lineStyle: { color: BORDER } } },
+      visualMap: { min: 0, max: 200, calculable: true, orient: 'horizontal', left: 'center', bottom: 0,
+        textStyle: { color: TEXT1 }, inRange: { color: ['#15151a', AKANE] } },
+      series: [{ name: '頻度', type: 'heatmap', data: data, label: { show: true, color: TEXT, fontSize: 11 }, itemStyle: { borderColor: BORDER } }]
+    });
+  }
+  renderCross('pos');
+  document.querySelectorAll('#tab-crosstab .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#tab-crosstab .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderCross(tab.dataset.key);
+    });
+  });
+
+  // 4-4: 当て字卡片网格 (默认显示 6 张, 折叠其余 14)
+  const grid = document.getElementById('ateji-grid');
+  const VISIBLE_ATJI = 6;
+  top20.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'ateji-card reveal' + (idx >= VISIBLE_ATJI ? ' collapse-hidden' : '');
+    const rubiesHtml = item.ruby_list.map(r => `
+      <span class="ruby-tag">${r.ruby}<span class="count">${r.examples.length}例</span></span>
+    `).join('');
+    card.innerHTML = `
+      <div class="rank">No.${String(item.rank).padStart(2, '0')}</div>
+      <div class="kanji">${item.base}</div>
+      <div class="freq">総出現数：${item.total_freq}回</div>
+      <div style="font-size: 12px; color: var(--text-2); margin-bottom: 4px;">主要副表記：${item.primary_ruby}</div>
+      <div class="rubies">${rubiesHtml}</div>
+    `;
+    card.addEventListener('click', () => openAtejiModal(item));
+    grid.appendChild(card);
+  });
+
+  // 折叠按钮
+  const btnAt = document.getElementById('btn-ateji');
+  if (btnAt && top20.length > VISIBLE_ATJI) {
+    btnAt.style.display = '';
+    btnAt.addEventListener('click', () => {
+      const hidden = grid.querySelectorAll('.collapse-hidden');
+      const isOpen = btnAt.classList.toggle('open');
+      hidden.forEach(el => {
+        el.classList.toggle('collapse-hidden', !isOpen);
+      });
+      btnAt.querySelector('.arrow').textContent = isOpen ? '▲' : '▼';
+      btnAt.innerHTML = isOpen
+        ? '<span class="arrow">▲</span> 折叠'
+        : '<span class="arrow">▼</span> 残り <span class="count-badge">' + (top20.length - VISIBLE_ATJI) + '</span> 件を展開';
+    });
+  } else if (btnAt) {
+    btnAt.style.display = 'none';
+  }
+
+  window.addEventListener('resize', () => {
+    [chart41, chart42, chart43].forEach(c => c.resize());
+  });
+}
+
+// ============== CHAPTER 5 ==============
+function renderChapter5() {
+  const chart51 = echarts.init(document.getElementById('chart-5-1'));
+  const timestamps = DATA.chapter5.timestamps;
+  const series = DATA.chapter5.topics;
+  const streamData = series.map(topic => {
+    return {
+      name: topic.label_jp,
+      type: 'line',
+      smooth: true,
+      showSymbol: false,
+      stack: 'total',
+      areaStyle: { opacity: 0.7 },
+      emphasis: { focus: 'series' },
+      lineStyle: { width: 1 },
+      itemStyle: { color: TOPIC_COLORS[topic.id] },
+      data: DATA.chapter5.topic_time_series[topic.id].map(d => [d.timestamp, d.frequency])
+    };
+  });
+  // 转换 x 轴
+  const labelTs = ['1960s', '1970s', '1980s', '1990s', '2000s', '2010s'];
+  chart51.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis', backgroundColor: '#15151a', borderColor: BORDER, textStyle: { color: TEXT } },
+    legend: { data: series.map(t => t.label_jp), textStyle: { color: TEXT1, fontSize: 11 }, top: 0, type: 'scroll' },
+    grid: { left: 60, right: 30, top: 40, bottom: 50 },
+    xAxis: { type: 'category', boundaryGap: false, data: labelTs, axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 } },
+    yAxis: { type: 'value', axisLine: { lineStyle: { color: BORDER } }, axisLabel: { color: TEXT1 }, splitLine: { lineStyle: { color: BORDER, type: 'dashed' } } },
+    series: streamData.map(s => ({...s, data: s.data.map(d => d[1])}))
+  });
+
+  // Topic 紧凑行式リスト
+  const tg = document.getElementById('topic-grid');
+  const totalSongs = series.reduce((sum, t) => sum + t.count, 0) || 1;
+  series.forEach(topic => {
+    const row = document.createElement('div');
+    row.className = 'topic-row reveal';
+    const kwHtml = topic.keywords.slice(0, 5).map(k => `<span class="kw-chip">${k}</span>`).join('');
+    const pct = ((topic.count / totalSongs) * 100).toFixed(1);
+    row.innerHTML = `
+      <div class="tr-num">${topic.id}</div>
+      <div class="tr-body">
+        <div class="tr-name">${topic.label_zh} · ${topic.label_jp}</div>
+        <div class="tr-jp">${topic.core}</div>
+        <div class="tr-kw">${kwHtml}</div>
+      </div>
+      <div class="tr-pct">${pct}%<small>OF CORPUS</small></div>
+    `;
+    tg.appendChild(row);
+  });
+
+  window.addEventListener('resize', () => chart51.resize());
+}
+
+// ============== SURVEY (Chapter 6) ==============
+const SV_COLORS = [AKANE, GUNJOU, KOHAKU, MIDORI, '#9A6FE3', SAKURA];
+
+function shortenLabel(ja) {
+  return ja.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').trim();
+}
+
+function svBar(id, qnum, opts) {
+  const el = document.getElementById(id);
+  if (!el || !SURVEY) return null;
+  const q = SURVEY.questions.find(x => x.id === qnum);
+  if (!q) return null;
+  let data = (opts && opts.filter) ? q.options.filter(opts.filter) : q.options;
+  data = data.slice().reverse(); // bar 由下往上，reverse 后首位在顶部
+  const chart = echarts.init(el);
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: '#15151a',
+      borderColor: BORDER,
+      textStyle: { color: TEXT, fontSize: 12 },
+      formatter: p => {
+        const d = data[p.dataIndex];
+        return `<b>${d.ja}</b><br>${d.zh}<br>${d.count} 人 · ${d.pct}%`;
+      }
+    },
+    grid: { left: 8, right: 56, top: 8, bottom: 8, containLabel: true },
+    xAxis: { type: 'value', show: false, max: v => Math.ceil(v.max * 1.12) },
+    yAxis: {
+      type: 'category',
+      data: data.map(d => shortenLabel(d.ja)),
+      axisLine: { lineStyle: { color: BORDER } },
+      axisTick: { show: false },
+      axisLabel: { color: TEXT1, fontSize: 11, fontFamily: 'Hiragino Mincho ProN' }
+    },
+    series: [{
+      type: 'bar',
+      data: data.map((d, i) => ({
+        value: d.count,
+        itemStyle: { color: (opts && opts.colorFn) ? opts.colorFn(d, i) : SV_COLORS[i % SV_COLORS.length] }
+      })),
+      barWidth: 15,
+      label: {
+        show: true,
+        position: 'right',
+        color: TEXT2,
+        fontSize: 11,
+        fontFamily: 'Times New Roman',
+        formatter: p => `${p.value}人`
+      }
+    }]
+  });
+  return chart;
+}
+
+function renderSurvey() {
+  if (!SURVEY) return;
+  const charts = [];
+
+  // Q1/Q2/Q3: persona-strip (紧凑画像)
+  [1, 2, 3].forEach(qid => {
+    const q = SURVEY.questions.find(x => x.id === qid);
+    const wrap = document.getElementById('persona-q' + qid);
+    if (!q || !wrap) return;
+    const max = Math.max(...q.options.map(o => o.count)) || 1;
+    wrap.innerHTML = q.options.map(o => `
+      <div class="ps-row">
+        <span class="ps-name">${shortenLabel(o.ja)}<br><span style="color: var(--text-2); font-size: 11px;">${o.zh}</span></span>
+        <span class="ps-val">${o.pct}%</span>
+      </div>
+      <div class="ps-bar"><div class="ps-bar-fill" style="width: 0%"></div></div>
+    `).join('');
+    // 填充动画
+    requestAnimationFrame(() => {
+      wrap.querySelectorAll('.ps-bar-fill').forEach((el, i) => {
+        const pct = (q.options[i].count / max) * 100;
+        el.style.width = pct + '%';
+      });
+    });
+  });
+
+  // 其余 Q 全部用小型柱状图
+  charts.push(svBar('chart-q4', 4));
+  charts.push(svBar('chart-q5', 5));
+  charts.push(svBar('chart-q6', 6));
+  charts.push(svBar('chart-q7', 7));
+  charts.push(svBar('chart-q8', 8));
+  charts.push(svBar('chart-q9', 9));
+  charts.push(svBar('chart-q10', 10));
+
+  // Q11 アーティスト言及は本文注として記録・チャートは省略
+
+  // Q12 引用墙 (默认显示 8 条, 折叠其余 34)
+  const wall = document.getElementById('quote-wall');
+  const VISIBLE_Q = 8;
+  if (wall) {
+    SURVEY.q12.quotes.forEach((text, i) => {
+      const card = document.createElement('div');
+      card.className = 'quote-card' + (i >= VISIBLE_Q ? ' collapse-hidden' : '');
+      const safe = text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+      card.innerHTML = `
+        <div class="q-idx">VOICE ${String(i + 1).padStart(2, '0')} / ${String(SURVEY.q12.quotes.length).padStart(2, '0')}</div>
+        <div class="q-mark">&ldquo;</div>
+        <div class="q-text">${safe}</div>
+      `;
+      wall.appendChild(card);
+    });
+
+    const btnQ = document.getElementById('btn-quotes');
+    if (btnQ && SURVEY.q12.quotes.length > VISIBLE_Q) {
+      btnQ.style.display = '';
+      btnQ.addEventListener('click', () => {
+        const hidden = wall.querySelectorAll('.collapse-hidden');
+        const isOpen = btnQ.classList.toggle('open');
+        hidden.forEach(el => el.classList.toggle('collapse-hidden', !isOpen));
+        btnQ.innerHTML = isOpen
+          ? '<span class="arrow">▲</span> 折叠'
+          : '<span class="arrow">▼</span> 残り <span class="count-badge">' + (SURVEY.q12.quotes.length - VISIBLE_Q) + '</span> 件を展開';
+      });
+    } else if (btnQ) {
+      btnQ.style.display = 'none';
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    charts.forEach(c => c && c.resize());
+  });
+}
+
+// ============== MODAL ==============
+function openAtejiModal(item) {
+  const modal = document.getElementById('modal');
+  const content = document.getElementById('modal-content');
+  let examplesHtml = '';
+  item.ruby_list.forEach(rl => {
+    examplesHtml += `<div style="margin-bottom: 32px;">
+      <h4 style="font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif; font-size: 22px; margin: 16px 0 4px 0;">
+        ${item.base}<span style="color: var(--akane);">(${rl.ruby})</span>
+        <span class="small">${rl.examples.length} 例</span>
+      </h4>`;
+    rl.examples.forEach(ex => {
+      examplesHtml += `
+        <div style="margin-bottom: 24px;">
+          ${ex.prev ? `<div class="context"><span class="label">前の句</span>${ex.prev}</div>` : ''}
+          <div class="context highlight"><span class="label">所在句 · 《${ex.title}》 · ${ex.artist} · ${ex.decade}</span>${ex.current}</div>
+          ${ex.next ? `<div class="context"><span class="label">次の句</span>${ex.next}</div>` : ''}
+        </div>
+      `;
+    });
+    examplesHtml += '</div>';
+  });
+  content.innerHTML = `
+    <div style="font-family: 'Times New Roman'; color: var(--akane); letter-spacing: 0.2em; font-size: 14px;">No.${String(item.rank).padStart(2, '0')}</div>
+    <h3>${item.base}<span class="small">総出現数：${item.total_freq}回</span></h3>
+    <div class="meta">主要副表記：<strong>${item.primary_ruby}</strong></div>
+    <div class="meta">全副表記：${item.all_rubies}</div>
+    <div class="divider"></div>
+    ${examplesHtml}
+  `;
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') closeModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Timeline 节点点击联动
+document.querySelectorAll('.timeline-node').forEach(node => {
+  node.addEventListener('click', () => {
+    document.querySelectorAll('.timeline-node').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

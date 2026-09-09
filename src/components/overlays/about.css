@@ -124,10 +124,13 @@
   padding-bottom: 4%;
 }
 
+/* 工牌照片：从动森形象抠出的人物（透明 PNG，4:5） */
 .idc__avatar {
   width: 100%;
   max-width: 158px;
   height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 7px rgba(40, 55, 80, 0.18));
 }
 
 .idc__main {
@@ -202,54 +205,10 @@
   letter-spacing: 0.02em;
 }
 
-/* 钢印 */
-.idc__stamp {
-  position: absolute;
-  left: 50%;
-  top: 52%;
-  width: clamp(96px, 24cqw, 224px);
-  aspect-ratio: 1;
-  transform: translate(6%, -42%) rotate(-6deg);
-  color: rgba(112, 136, 176, 0.26);
-  pointer-events: none;
-  display: grid;
-  place-items: center;
-}
-
-.idc__stamp svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.idc__stampRing {
-  font-size: 12px;
-  letter-spacing: 0.34em;
-  fill: currentColor;
-  font-family: var(--font-ui);
-}
-
-.idc__stampWord {
-  font-family: var(--font-poster);
-  font-size: clamp(15px, 3.9cqw, 36px);
-  color: rgba(112, 136, 176, 0.3);
-  letter-spacing: 0.01em;
-  transform: translateY(-14%);
-}
-
-.idc__stampMid {
-  position: absolute;
-  font-size: clamp(8px, 1.75cqw, 16px);
-  font-weight: 700;
-  color: rgba(112, 136, 176, 0.32);
-  transform: translateY(115%);
-}
-
-/* 下半：条码 / 联系方式 / 标签 */
+/* 下半：条码 / 邮箱 / 电话（原右下角红标签已移除） */
 .idc__lower {
   display: grid;
-  grid-template-columns: minmax(120px, 24%) 1fr 1fr minmax(110px, 20%);
+  grid-template-columns: minmax(120px, 24%) 1fr 1fr;
   align-items: center;
   gap: clamp(8px, 1.4vw, 22px);
   padding: clamp(6px, 1vw, 13px) clamp(12px, 1.6vw, 22px) clamp(6px, 1vw, 12px);
@@ -279,31 +238,6 @@
 .idc__cv {
   font-size: clamp(7px, 1.36cqw, 13px);
   font-weight: 700;
-}
-
-.idc__tag {
-  border-radius: 3px;
-  overflow: hidden;
-  border: 1px solid rgba(30, 34, 40, 0.16);
-  background: #f7f5f0;
-  text-align: center;
-}
-
-.idc__tagTop {
-  display: block;
-  background: #9d2b28;
-  color: #fff;
-  font-size: clamp(4.6px, 0.86cqw, 8px);
-  letter-spacing: 0.16em;
-  padding: 2px 0;
-}
-
-.idc__tagBody {
-  display: block;
-  padding: clamp(4px, 0.7vw, 9px) 0;
-  font-size: clamp(7px, 1.36cqw, 13px);
-  font-weight: 700;
-  font-style: italic;
 }
 
 .idc__foot {

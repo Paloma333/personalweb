@@ -192,13 +192,14 @@ const HERO_DECALS: AssetEntry[] = [
 ]
 
 /**
- * 字体阶段。Google Fonts 由 <link rel="stylesheet"> 拉取，
+ * 字体阶段。字体由 <link rel="stylesheet" href="/fonts/fonts.css"> 拉取
+ * （2026-09-09 起全部本地自托管，不再走 Google Fonts），
  * 这里只把「字体是否可用」作为一个可计量的阶段接进进度条。
  * 超时后直接放行，字体失败绝不阻塞站点。
  */
 const TYPE_STAGE: AssetEntry = {
   id: 'type.display',
-  url: 'https://fonts.googleapis.com/css2?family=Ultra…',
+  url: '/fonts/fonts.css',
   kind: 'font',
   group: 'type.display',
   blocking: true,

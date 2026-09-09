@@ -46,7 +46,15 @@ import sharp from 'sharp'
 
 sharp.cache(false)
 
-const ROOT = new URL('../..', import.meta.url).pathname.replace(/\/$/, '')
+// ── ROOT 的优先级 ─────────────────────────────────────────
+// 1) 环境变量 LOCKER_ROOT（CI 或显式传入时最稳）
+// 2) process.cwd()（从仓库根运行 node 时最稳，对中文路径不会 percent-encode）
+// 3) import.meta.url 反解（兜底，但中文路径会被 percent-encode 搞得跟磁盘对不上）
+const ROOT = (
+  process.env.LOCKER_ROOT
+  || process.cwd()
+  || new URL('../..', import.meta.url).pathname.replace(/\/$/, '')
+).replace(/\/$/, '')
 const DRY = process.argv.includes('--dry')
 /** --check：只校验磁盘上的图集与 UV 表是不是当前源图与配置的产物，不写文件 */
 const CHECK = process.argv.includes('--check')
@@ -98,6 +106,12 @@ const MEMBERS = [
   { url: '/assets/obj/trayA.webp', maxW: 230, why: '门宽 0.40 × 1.6 余量' },
   { url: '/assets/obj/trayB.webp', maxW: 230, why: '门宽 0.40 × 1.6 余量' },
   { url: '/assets/obj2/polaroids.webp', maxW: 379, why: '门宽 0.66 × 1.6 余量' },
+  // ── 个人拍立得：门 1 / 门 4 外表面散落（4 张：2 张个人 + 2 张实习） ──
+  { url: '/assets/polaroid/p1.webp', maxW: 200, why: '门宽 0.22 × 余量（东北塔）' },
+  { url: '/assets/polaroid/p3.webp', maxW: 200, why: '门宽 0.22 × 余量（日语演出）' },
+  { url: '/assets/polaroid/p4.webp', maxW: 200, why: '门宽 0.22 × 余量（海边吉他）' },
+  { url: '/assets/polaroid/i6.webp', maxW: 200, why: '门宽 0.22 × 余量（得物实习）' },
+  { url: '/assets/polaroid/i7.webp', maxW: 200, why: '门宽 0.22 × 余量（麦当劳实习）' },
 ]
 
 /** texture-report.mjs 判定必须走混合的块；其余全部 cutout */

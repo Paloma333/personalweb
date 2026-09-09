@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SKILLS } from '../../data/content'
+import { useStore } from '../../store'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import CloseButton from './CloseButton'
 import './overlay.css'
@@ -12,21 +13,6 @@ const SLOTS: Slot[] = [
   { x: 0, y: 0, s: 1, r: 0 },
   { x: 40, y: -48, s: 0.978, r: 0.9 },
   { x: 79, y: -95, s: 0.956, r: 1.9 },
-]
-
-/**
- * 展开模式：三张全摊开，都可读、都可点。
- *
- * 方向、间距、缩放全交给 CSS 变量（skills.css 按断点给）：宽屏左中右一字排开，
- * 窄屏改成上中下，一处都不用改这里。这里只按「第几层」决定它去正、去负 ——
- * 最前面那张留在中间，收回堆叠时不会突然换人。
- */
-const FAN = [
-  'translate(0, 0) scale(var(--sk-fan-front-s)) rotate(0deg)',
-  `translate(calc(var(--sk-fan-x) * -1), calc(var(--sk-fan-y) * -1))
-   scale(var(--sk-fan-s)) rotate(calc(var(--sk-fan-r) * -1))`,
-  `translate(var(--sk-fan-x), var(--sk-fan-y))
-   scale(var(--sk-fan-s)) rotate(var(--sk-fan-r))`,
 ]
 
 /* 前卡退出时的落点：向左下滑出，同时轻微缩小和反向倾斜 */
@@ -42,8 +28,8 @@ const FADE_MS = 150
 /** 退出中的卡片压在所有卡片之上，落回后层时才把层级降下去 */
 const EXIT_Z = 30
 
-/* 参考打开时最前面是 02，堆叠顺序 02 / 03 / 01；入场错峰也按这个初始层级固定 */
-const INITIAL_ORDER = [1, 2, 0]
+/* 2026-09-09：初始最前改回 01（AI 实践），不再沿用参考的 02 起手 */
+const INITIAL_ORDER = [0, 1, 2]
 
 type Moving = { card: number; stage: 'out' | 'back' }
 
@@ -54,15 +40,18 @@ function css(p: Slot) {
 /**
  * SKILLS —— 从唱片箱里抽出的三张技能卡。
  *
- * 两种排布：**堆叠**（点最前面一张把它放到最后）与**展开**（三张一字排开，
- * 点哪张哪张回到最前并收回堆叠）。两种排布共用同一套 DOM 与同一条 transform
- * 过渡，所以切换本身就是动画，不需要额外的进出场。
+ * 2026-09-09 简化：去掉「展开全部」，只保留左右箭头切换（外加键盘 ← →）。
+ * 展开态那套 FAN/pick/toggleSpread 全删 —— 三张卡一字排开在窄屏上反而读不了，
+ * 而且用户要的就是「翻卡」这一种动作。
+ *
+ * 下一张：前卡向左下滑出、落回最后一层（EXIT 动画）
+ * 上一张：最后一张直接升到最前，其余靠 SLOT 之间的 transition 自然下沉
  */
 export default function SkillsDeck() {
   const reduced = useReducedMotion()
+  const openOverlay = useStore((s) => s.openOverlay)
   const [order, setOrder] = useState(INITIAL_ORDER)
   const [moving, setMoving] = useState<Moving | null>(null)
-  const [spread, setSpread] = useState(false)
   // 入场动画只跑一次：播完（或用户提前换位）后彻底关掉，
   // 否则 slot 变化引起的 animation-delay 变化会让 skIn 重新触发并抢走 transform
   const [entered, setEntered] = useState(false)
@@ -80,7 +69,8 @@ export default function SkillsDeck() {
     timers.current.push(window.setTimeout(fn, ms))
   }, [])
 
-  const advance = useCallback(() => {
+  /** 下一张：当前前卡滑出画面，落回最后一层 */
+  const next = useCallback(() => {
     if (busy.current) return
     busy.current = true
     setEntered(true)
@@ -94,7 +84,6 @@ export default function SkillsDeck() {
     setOrder((o) => [...o.slice(1), o[0]])
 
     if (reduced) {
-      // Reduced Motion：直接切顺序，只留一次短淡化提示层级变了
       setMoving({ card: front, stage: 'back' })
       later(FADE_MS, done)
       return
@@ -102,26 +91,34 @@ export default function SkillsDeck() {
 
     setMoving({ card: front, stage: 'out' })
     later(OUT_MS, () => {
-      // 前卡已经滑出画面，这时候才把它的实际层级降到最后一层再淡入
       setMoving({ card: front, stage: 'back' })
       later(BACK_MS, done)
     })
   }, [order, reduced, later])
 
-  /** 展开态里点某一张：它成为最前面那张，并收回堆叠 */
-  const pick = useCallback((card: number) => {
-    setEntered(true)
-    setOrder((o) => [card, ...o.filter((i) => i !== card)])
-    setSpread(false)
-  }, [])
-
-  const toggleSpread = useCallback(() => {
+  /** 上一张：最后一张升到最前，剩下的靠 SLOT 位移过渡自然下沉 */
+  const prev = useCallback(() => {
     if (busy.current) return
+    busy.current = true
     setEntered(true)
-    setSpread((on) => !on)
-  }, [])
+    setOrder((o) => [o[o.length - 1], ...o.slice(0, -1)])
+    // 不需要 EXIT 动画：卡片自己会在 SLOTS 之间过渡，解锁即可
+    later(reduced ? FADE_MS : OUT_MS, () => {
+      busy.current = false
+    })
+  }, [reduced, later])
 
-  const frontCard = SKILLS[order[0]]
+  // 键盘 ← → 切换
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') next()
+      if (e.key === 'ArrowLeft') prev()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [next, prev])
+
+  const front = SKILLS[order[0]]
 
   return (
     <div className="ov">
@@ -129,27 +126,20 @@ export default function SkillsDeck() {
       <div
         className="sk"
         role="group"
-        data-spread={spread || undefined}
         aria-label={`技能卡组，共 ${SKILLS.length} 张`}
         data-entered={entered || undefined}
         onAnimationEnd={() => setEntered(true)}
       >
-        <p className="sk__sr">
-          {spread
-            ? '三张技能卡已展开，点击任意一张把它放到最前面并收回卡组。'
-            : '点击最前面的卡片或按 Enter，把它放到卡组最后一层。'}
-        </p>
+        <p className="sk__sr">用左右箭头切换技能卡。</p>
         <p className="sk__sr" aria-live="polite">
-          当前最前：{frontCard.no} {frontCard.title}
+          当前最前：{front.no} {front.title}
         </p>
 
         {SKILLS.map((c, i) => {
           const slot = order.indexOf(i)
           const isFront = slot === 0
           const stage = moving?.card === i ? moving.stage : null
-          // 层级由 slot 决定；只有正在滑出的那张临时压在最上面
           const zIndex = stage === 'out' ? EXIT_Z : 10 - slot
-          const active = spread || isFront
 
           return (
             <button
@@ -157,18 +147,16 @@ export default function SkillsDeck() {
               type="button"
               className="sk__card"
               data-stage={stage ?? undefined}
-              tabIndex={active ? 0 : -1}
-              onClick={spread ? () => pick(i) : isFront ? advance : undefined}
+              tabIndex={isFront ? 0 : -1}
+              onClick={isFront ? next : undefined}
               style={{
                 zIndex,
                 background: c.bg,
                 color: c.fg,
-                transform: spread
-                  ? FAN[slot] ?? FAN[2]
-                  : css(stage === 'out' ? EXIT : SLOTS[slot] ?? SLOTS[2]),
-                opacity: !spread && stage === 'out' ? 0 : 1,
+                transform: css(stage === 'out' ? EXIT : SLOTS[slot] ?? SLOTS[2]),
+                opacity: stage === 'out' ? 0 : 1,
                 transition: transitionFor(stage, reduced),
-                pointerEvents: active ? 'auto' : 'none',
+                pointerEvents: isFront ? 'auto' : 'none',
                 // 入场错峰按初始层级固定，换位时不能变，否则会重新触发入场动画
                 ['--in-delay' as string]: `${(SKILLS.length - 1 - INITIAL_ORDER.indexOf(i)) * 0.075}s`,
               }}
@@ -177,6 +165,30 @@ export default function SkillsDeck() {
               <span className="sk__kicker">{c.kicker}</span>
               <span className="sk__title">{c.title}</span>
               <span className="sk__desc">{c.desc}</span>
+
+              {/* 卡内跳转入口（AI 卡的「具体作品」→ 作品展示）。
+                  外层卡片本身是 button，这里只能用 span + role=button，
+                  不能嵌套真 button。 */}
+              {c.link && (
+                <span
+                  role="button"
+                  tabIndex={isFront ? 0 : -1}
+                  className="sk__link"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    openOverlay(c.link!.target)
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return
+                    e.preventDefault()
+                    e.stopPropagation()
+                    openOverlay(c.link!.target)
+                  }}
+                >
+                  {c.link.text} ↗
+                </span>
+              )}
+
               <span className="sk__spacer" />
               <span className="sk__rows">
                 {c.rows.map((r) => (
@@ -191,19 +203,23 @@ export default function SkillsDeck() {
         })}
       </div>
 
-      <button
-        type="button"
-        className="sk__mode"
-        onClick={toggleSpread}
-        aria-pressed={spread}
-      >
-        {spread ? '收回卡组' : '展开全部'}
-        <i aria-hidden data-spread={spread || undefined}>
-          <span />
-          <span />
-          <span />
-        </i>
-      </button>
+      {/* 左右箭头切换 —— 取代原来的「展开全部」 */}
+      <div className="sk__nav">
+        <button type="button" className="sk__arrow" onClick={prev} aria-label="上一张">
+          ←
+        </button>
+        <span className="sk__count">
+          {front.no} / {String(SKILLS.length).padStart(2, '0')}
+        </span>
+        <button
+          type="button"
+          className="sk__arrow sk__arrow--next"
+          onClick={next}
+          aria-label="下一张"
+        >
+          →
+        </button>
+      </div>
     </div>
   )
 }

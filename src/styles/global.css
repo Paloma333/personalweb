@@ -13,8 +13,11 @@
   --cork: #9c6338;
 
   --font-ui: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
-  --font-cn: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-cn-serif: 'Noto Serif SC', 'Songti SC', serif;
+  /* 中文字体走系统栈：Noto Sans SC / Noto Serif SC 原来从 Google Fonts 拉，
+     国内到不了，而且中文 woff2 分片多、体积大。PingFang SC（macOS/iOS）和
+     微软雅黑（Windows）都是系统自带的高质量中文字体，直接省掉这一路请求。 */
+  --font-cn: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-cn-serif: 'Songti SC', 'STSong', 'SimSun', serif;
   --font-display: 'Playfair Display', 'Bodoni Moda', serif;
   --font-poster: 'Ultra', 'Playfair Display', serif;
   --font-slab: 'Alfa Slab One', serif;

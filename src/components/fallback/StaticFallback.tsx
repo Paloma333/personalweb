@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { NAV, SITE } from '../../data/content'
+import type { Overlay } from '../../store'
 import { FALLBACK_REASON_TEXT, type FallbackReason } from './capabilities'
 import './fallback.css'
 
@@ -15,9 +16,11 @@ export type StaticFallbackProps = {
   image?: string
   imageAlt?: string
   /** 点击内容入口。不传时入口仍可聚焦，但不产生跳转 */
-  onSelect?: (id: NavId) => void
-  /** 当前已打开的入口，用于 aria-current 与选中态 */
-  activeId?: NavId | null
+  onSelect?: (id: Overlay) => void
+  /** 当前已打开的入口，用于 aria-current 与选中态。
+   *  比 NavId 宽：gephi/jrock 是 gephi/jrock overlay id，不是顶部导航项。
+   *  fallback 只在主导航命中时才显示选中态，非导航 id 会自然落到 activeId === n.id 比较失败。 */
+  activeId?: Overlay | null
   /** 额外插槽：可以把浮层宿主、表单或其它入口塞进来 */
   children?: ReactNode
 }

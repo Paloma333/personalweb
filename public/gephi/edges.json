@@ -1,0 +1,1334 @@
+{
+  "edges": [
+    {
+      "id": "e0",
+      "source": "poirot",
+      "target": "ratchett",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e1",
+      "source": "poirot",
+      "target": "hubbard",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e2",
+      "source": "poirot",
+      "target": "macqueen",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e3",
+      "source": "poirot",
+      "target": "arbuthnot",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e4",
+      "source": "poirot",
+      "target": "debenham",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e5",
+      "source": "poirot",
+      "target": "dragomiroff",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e6",
+      "source": "poirot",
+      "target": "counta",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e7",
+      "source": "poirot",
+      "target": "countessa",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e8",
+      "source": "poirot",
+      "target": "foscarelli",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e9",
+      "source": "poirot",
+      "target": "ohlsson",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e10",
+      "source": "poirot",
+      "target": "schmidt",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e11",
+      "source": "poirot",
+      "target": "michel",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e12",
+      "source": "poirot",
+      "target": "hardman",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e13",
+      "source": "poirot",
+      "target": "constantine",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e14",
+      "source": "poirot",
+      "target": "sarah",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e15",
+      "source": "poirot",
+      "target": "sonia",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e16",
+      "source": "poirot",
+      "target": "daisy",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e17",
+      "source": "poirot",
+      "target": "coljohnson",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e18",
+      "source": "poirot",
+      "target": "cassetti",
+      "weight": 0.9,
+      "layer": "truth"
+    },
+    {
+      "id": "e19",
+      "source": "ratchett",
+      "target": "hubbard",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e20",
+      "source": "ratchett",
+      "target": "macqueen",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e21",
+      "source": "ratchett",
+      "target": "arbuthnot",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e22",
+      "source": "ratchett",
+      "target": "debenham",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e23",
+      "source": "ratchett",
+      "target": "dragomiroff",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e24",
+      "source": "ratchett",
+      "target": "counta",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e25",
+      "source": "ratchett",
+      "target": "countessa",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e26",
+      "source": "ratchett",
+      "target": "foscarelli",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e27",
+      "source": "ratchett",
+      "target": "ohlsson",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e28",
+      "source": "ratchett",
+      "target": "schmidt",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e29",
+      "source": "ratchett",
+      "target": "michel",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e30",
+      "source": "ratchett",
+      "target": "hardman",
+      "weight": 1.2,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e31",
+      "source": "ratchett",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e32",
+      "source": "ratchett",
+      "target": "sarah",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e33",
+      "source": "ratchett",
+      "target": "sonia",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e34",
+      "source": "ratchett",
+      "target": "daisy",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e35",
+      "source": "ratchett",
+      "target": "coljohnson",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e36",
+      "source": "ratchett",
+      "target": "cassetti",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e37",
+      "source": "hubbard",
+      "target": "macqueen",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e38",
+      "source": "hubbard",
+      "target": "arbuthnot",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e39",
+      "source": "hubbard",
+      "target": "debenham",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e40",
+      "source": "hubbard",
+      "target": "dragomiroff",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e41",
+      "source": "hubbard",
+      "target": "counta",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e42",
+      "source": "hubbard",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e43",
+      "source": "hubbard",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e44",
+      "source": "hubbard",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e45",
+      "source": "hubbard",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e46",
+      "source": "hubbard",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e47",
+      "source": "hubbard",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e48",
+      "source": "hubbard",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e49",
+      "source": "hubbard",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e50",
+      "source": "hubbard",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e51",
+      "source": "hubbard",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e52",
+      "source": "hubbard",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e53",
+      "source": "hubbard",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e54",
+      "source": "macqueen",
+      "target": "arbuthnot",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e55",
+      "source": "macqueen",
+      "target": "debenham",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e56",
+      "source": "macqueen",
+      "target": "dragomiroff",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e57",
+      "source": "macqueen",
+      "target": "counta",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e58",
+      "source": "macqueen",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e59",
+      "source": "macqueen",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e60",
+      "source": "macqueen",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e61",
+      "source": "macqueen",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e62",
+      "source": "macqueen",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e63",
+      "source": "macqueen",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e64",
+      "source": "macqueen",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e65",
+      "source": "macqueen",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e66",
+      "source": "macqueen",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e67",
+      "source": "macqueen",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e68",
+      "source": "macqueen",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e69",
+      "source": "macqueen",
+      "target": "cassetti",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e70",
+      "source": "arbuthnot",
+      "target": "debenham",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e71",
+      "source": "arbuthnot",
+      "target": "dragomiroff",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e72",
+      "source": "arbuthnot",
+      "target": "counta",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e73",
+      "source": "arbuthnot",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e74",
+      "source": "arbuthnot",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e75",
+      "source": "arbuthnot",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e76",
+      "source": "arbuthnot",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e77",
+      "source": "arbuthnot",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e78",
+      "source": "arbuthnot",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e79",
+      "source": "arbuthnot",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e80",
+      "source": "arbuthnot",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e81",
+      "source": "arbuthnot",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e82",
+      "source": "arbuthnot",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e83",
+      "source": "arbuthnot",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e84",
+      "source": "arbuthnot",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e85",
+      "source": "debenham",
+      "target": "dragomiroff",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e86",
+      "source": "debenham",
+      "target": "counta",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e87",
+      "source": "debenham",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e88",
+      "source": "debenham",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e89",
+      "source": "debenham",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e90",
+      "source": "debenham",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e91",
+      "source": "debenham",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e92",
+      "source": "debenham",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e93",
+      "source": "debenham",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e94",
+      "source": "debenham",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e95",
+      "source": "debenham",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e96",
+      "source": "debenham",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e97",
+      "source": "debenham",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e98",
+      "source": "debenham",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e99",
+      "source": "dragomiroff",
+      "target": "counta",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e100",
+      "source": "dragomiroff",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e101",
+      "source": "dragomiroff",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e102",
+      "source": "dragomiroff",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e103",
+      "source": "dragomiroff",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e104",
+      "source": "dragomiroff",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e105",
+      "source": "dragomiroff",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e106",
+      "source": "dragomiroff",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e107",
+      "source": "dragomiroff",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e108",
+      "source": "dragomiroff",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e109",
+      "source": "dragomiroff",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e110",
+      "source": "dragomiroff",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e111",
+      "source": "dragomiroff",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e112",
+      "source": "counta",
+      "target": "countessa",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e113",
+      "source": "counta",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e114",
+      "source": "counta",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e115",
+      "source": "counta",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e116",
+      "source": "counta",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e117",
+      "source": "counta",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e118",
+      "source": "counta",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e119",
+      "source": "counta",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e120",
+      "source": "counta",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e121",
+      "source": "counta",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e122",
+      "source": "counta",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e123",
+      "source": "counta",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e124",
+      "source": "countessa",
+      "target": "foscarelli",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e125",
+      "source": "countessa",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e126",
+      "source": "countessa",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e127",
+      "source": "countessa",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e128",
+      "source": "countessa",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e129",
+      "source": "countessa",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e130",
+      "source": "countessa",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e131",
+      "source": "countessa",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e132",
+      "source": "countessa",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e133",
+      "source": "countessa",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e134",
+      "source": "countessa",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e135",
+      "source": "foscarelli",
+      "target": "ohlsson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e136",
+      "source": "foscarelli",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e137",
+      "source": "foscarelli",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e138",
+      "source": "foscarelli",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e139",
+      "source": "foscarelli",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e140",
+      "source": "foscarelli",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e141",
+      "source": "foscarelli",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e142",
+      "source": "foscarelli",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e143",
+      "source": "foscarelli",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e144",
+      "source": "foscarelli",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e145",
+      "source": "ohlsson",
+      "target": "schmidt",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e146",
+      "source": "ohlsson",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e147",
+      "source": "ohlsson",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e148",
+      "source": "ohlsson",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e149",
+      "source": "ohlsson",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e150",
+      "source": "ohlsson",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e151",
+      "source": "ohlsson",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e152",
+      "source": "ohlsson",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e153",
+      "source": "ohlsson",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e154",
+      "source": "schmidt",
+      "target": "michel",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e155",
+      "source": "schmidt",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e156",
+      "source": "schmidt",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e157",
+      "source": "schmidt",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e158",
+      "source": "schmidt",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e159",
+      "source": "schmidt",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e160",
+      "source": "schmidt",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e161",
+      "source": "schmidt",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e162",
+      "source": "michel",
+      "target": "hardman",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e163",
+      "source": "michel",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e164",
+      "source": "michel",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e165",
+      "source": "michel",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e166",
+      "source": "michel",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e167",
+      "source": "michel",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e168",
+      "source": "michel",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e169",
+      "source": "hardman",
+      "target": "constantine",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e170",
+      "source": "hardman",
+      "target": "sarah",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e171",
+      "source": "hardman",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e172",
+      "source": "hardman",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e173",
+      "source": "hardman",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "conspiracy"
+    },
+    {
+      "id": "e174",
+      "source": "hardman",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e175",
+      "source": "constantine",
+      "target": "sarah",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e176",
+      "source": "constantine",
+      "target": "sonia",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e177",
+      "source": "constantine",
+      "target": "daisy",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e178",
+      "source": "constantine",
+      "target": "coljohnson",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e179",
+      "source": "constantine",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e180",
+      "source": "sarah",
+      "target": "sonia",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e181",
+      "source": "sarah",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e182",
+      "source": "sarah",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e183",
+      "source": "sarah",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e184",
+      "source": "sonia",
+      "target": "daisy",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e185",
+      "source": "sonia",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e186",
+      "source": "sonia",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e187",
+      "source": "daisy",
+      "target": "coljohnson",
+      "weight": 1,
+      "layer": "truth"
+    },
+    {
+      "id": "e188",
+      "source": "daisy",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    },
+    {
+      "id": "e189",
+      "source": "coljohnson",
+      "target": "cassetti",
+      "weight": 0.35,
+      "layer": "truth"
+    }
+  ]
+}

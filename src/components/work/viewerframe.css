@@ -1,0 +1,104 @@
+/* ── 站内可视化查看器：大弹窗框架 ──
+   遮罩全屏（点空白关闭）+ 居中弹窗（圆角 + 顶部栏 + × 按钮）。
+   弹窗内的深色面板（gephi / jrock）由此获得明确的边界与回路。 */
+
+.vf {
+  position: fixed;
+  inset: 0;
+  z-index: 70; /* 高于 .wv(50)，压在下层 PROJECTS 页之上 */
+  display: grid;
+  place-items: center;
+  background: rgba(16, 14, 18, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: vfFade 0.28s ease-out;
+  cursor: zoom-out;
+}
+
+@keyframes vfFade {
+  from {
+    opacity: 0;
+  }
+}
+
+.vf__dialog {
+  width: min(94vw, 1560px);
+  height: min(92vh, 980px);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: #0a0a0c;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 120px -30px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  cursor: default;
+  animation: vfPop 0.34s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+
+@keyframes vfPop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+}
+
+/* ── 顶部栏：左标题右关闭 ── */
+.vf__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 16px 10px 20px;
+  background: #101014;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.vf__title {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(240, 240, 240, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vf__close {
+  font-family: inherit;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: #f0f0f0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.vf__close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── 弹窗主体：子面板（.gph / .jrk）撑满 ── */
+.vf__body {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+}
+.vf__body > * {
+  min-height: 0;
+}
+
+/* 窄屏：弹窗几乎全屏，圆角缩小 */
+@media (max-width: 720px) {
+  .vf__dialog {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+}

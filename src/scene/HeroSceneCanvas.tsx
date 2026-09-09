@@ -130,6 +130,7 @@ export default function HeroSceneCanvas() {
                     interactive={caps.drag}
                   />
                 </Suspense>
+                {/* THINKING 文件夹：取代原来的海报 + 托盘，作为思考手记的 3D 入口 */}
                 <Suspense fallback={null}>
                   <DoorOneMountedProps />
                 </Suspense>
@@ -146,9 +147,12 @@ export default function HeroSceneCanvas() {
                     interactive={caps.drag}
                   />
                 </Suspense>
-                <Suspense fallback={null}>
-                  <DoorFourMountedProps />
-                </Suspense>
+                {/* 原版 3 张人物拍立得已移除 — 用户选择用自己的拍立得装饰门面 */}
+                {false && (
+                  <Suspense fallback={null}>
+                    <DoorFourMountedProps />
+                  </Suspense>
+                )}
               </>
             ),
           }}

@@ -23,12 +23,13 @@ export const NAV = [
   { id: 'about', label: 'ABOUT' },
   { id: 'skills', label: 'SKILLS' },
   { id: 'work', label: 'SELECTED WORK' },
+  { id: 'music', label: 'MUSIC' },
   { id: 'contact', label: 'CONTACT' },
 ] as const
 
 /* ── ABOUT：工牌 ───────────────────────────────────────
- * 6 字段 + 印章 + 页脚。name 拼写（LIU YUSHAN / YUSHAN LIU）、印章 mid 字、出处声明
- * 三项你把关时若换了，这里只改这三处。stampMid 留 TBD，等你确认；stampRing 同步用 '2026' 占位。 */
+ * 6 字段 + 页脚。name 拼写（LIU YUSHAN / YUSHAN LIU）与出处声明待你把关。
+ * 背景钢印（原 CERTIFIED / 雨姗）已按 2026-09-08 要求整块移除。 */
 export const ABOUT = {
   cardNo: 'NO. 027',
   title: ['BASIC', 'INFORMATION'],
@@ -36,17 +37,14 @@ export const ABOUT = {
   sub: 'PERSONAL PORTFOLIO ID CARD',
   fields: [
     { k: 'NAME / 姓名', v: '刘雨姗 LIU YUSHAN' },
-    { k: 'EDUCATION / 教育', v: '香港中文大学 · 2027 届' /* ⚠️ 学院/专业待补 */ },
+    { k: 'EDUCATION / 教育', v: '香港中文大学 · Marketing 市场营销 · 2027 届' },
     { k: 'UNDERGRAD / 本科', v: '华东师范大学 · 日语 + 数字素养微专业' },
     { k: 'EXCHANGE / 交换', v: '日本神奈川大学 2024.9 – 2025.2' },
     { k: 'LANGUAGE / 语言', v: '日语 专八 · N1 ｜ 英语 IELTS 7.0' },
-    { k: 'FOCUS / 求职方向', v: 'AI 产品 · 策略 · 数据产品' },
+    { k: 'FOCUS / 求职方向', v: 'AI 产品 · 策略产品 · 数据产品' },
   ],
   email: 'paloma333@163.com',
-  phone: '', // 工牌不显示手机；留空避免误填
-  stampTop: 'CERTIFIED',
-  stampMid: '雨姗', // 印章中字（P0 文案确认：印中内容即本人名字）
-  stampRing: 'PERSONAL PORTFOLIO · 2026 ·',
+  phone: '+86 15159265131',
   footL: 'IN MY CREATIVE ERA',
   footR: 'PERSONAL PORTFOLIO · 2026',
 }
@@ -60,14 +58,32 @@ export type SkillCard = {
   rows: { k: string; v: string }[]
   bg: string
   fg: string
+  /** 卡内跳转入口。只支持站内 overlay（目前是 'work' = SELECTED WORK 作品展示），
+   *  走外链的话这里就该是 href 了；留空表示这张卡没有跳转。 */
+  link?: { text: string; target: 'work' }
 }
 
+/* 2026-09-09 重排：AI 提到最前（01），人文 / 数据顺延。
+   AI 卡末尾的「具体作品」是站内跳转到 SELECTED WORK 作品展示。 */
 export const SKILLS: SkillCard[] = [
   {
     no: '01',
-    kicker: '01 / HUMANITIES',
+    kicker: '01 / AI PRACTICE',
+    title: 'AI 实践',
+    desc: 'AI 实践：从 RAG 到 Copilot 到 Agent，我在实践中抓住 AI 的发展脉络；从 AI 赋能学科研究到 AI 结合生产领域，我用数个实践项目、产品实习，不断打磨 AI 时代 builder 的思维与能力。',
+    rows: [
+      { k: 'PRODUCT', v: 'AI Copilot · AI Summary Agent · Webapp · Skill' },
+      { k: 'BUILD', v: 'Next.js + Supabase + Qwen-VL · Vibe Coding' },
+    ],
+    bg: '#ffffff',
+    fg: '#14161a',
+    link: { text: '具体作品', target: 'work' },
+  },
+  {
+    no: '02',
+    kicker: '02 / HUMANITIES',
     title: '人文素养',
-    desc: '日语专八 · N1。文学计量方向：用数据方法重读《东方快车》《赤い部屋》；吉本芭娜娜 AI 辅助翻译实践。文科不是我的出身标签，是我的方法来源。',
+    desc: 'AI 时代更宝贵的是对「人」的回望。我在文学、艺术中汲取审美养分，在多文化求学历程中开拓视野，用商科思维对现实生活进一步洞察。善于与人合作交流、保持独立思考与判断，活跃创作之心与产品思维，是我相信「行远」的必需品质。',
     rows: [
       { k: 'LANGUAGES', v: '日语 专八 · N1 / 英语 IELTS 7.0' },
       { k: 'FIELDS', v: '文学计量 · 数字人文 · 数字媒体' },
@@ -76,8 +92,8 @@ export const SKILLS: SkillCard[] = [
     fg: '#ffffff',
   },
   {
-    no: '02',
-    kicker: '02 / DATA',
+    no: '03',
+    kicker: '03 / DATA',
     title: '数据能力',
     desc: 'Python / Pandas 文本处理、Gephi 社会网络分析、SQL 与看板搭建；也会把数据做成艺术——用 p5.js 给乐队写演出 VJ。',
     rows: [
@@ -87,22 +103,10 @@ export const SKILLS: SkillCard[] = [
     bg: '#c8f322',
     fg: '#12140f',
   },
-  {
-    no: '03',
-    kicker: '03 / AI PRACTICE',
-    title: 'AI 实践',
-    desc: '从 AI 辅助翻译到 AI Copilot / AI Agent 产品实习，再到用 Vibe Coding 上线「小屋」和这个网站本身——我对 AI 的兴趣一直是「用起来、做出来」。',
-    rows: [
-      { k: 'PRODUCT', v: 'AI Copilot · AI Summary Agent · Webapp · Skill' },
-      { k: 'BUILD', v: 'Next.js + Supabase + Qwen-VL · Vibe Coding' },
-    ],
-    bg: '#ffffff',
-    fg: '#14161a',
-  },
 ]
 
 /* ── SELECTED WORK：两个文件夹（实习 / 个人项目） ── */
-/* 摄影作为贴在柜门上的拍立得已退出作品区 */
+/* THINKING 和 MUSIC 已升级为独立 overlay（在 3D 柜子上的文件夹 / 吉他直接进）。 */
 export const FOLDERS = [
   {
     id: 'intern',
@@ -239,17 +243,38 @@ export const WEBSITES = [
 /* ── INTERNSHIP / PROJECTS：作品数据 ──
  * href 为 '#' 表示暂无公开链接（OPEN PROJECT 按钮 aria-disabled）。
  * glow 是封面主色光晕，取各自封面往饱和方向偏一点的浅色。
+ * links 是主链接之外的次级入口（如数字人文项目的多个子页面/附件/GitHub），
+ *   OPEN PROJECT 始终指向 href，下方列出 links 给访客更深的入口。
+ * viewer 是站内可视化查看器（'gephi' | 'jrock'）：
+ *   有这个字段的项目不展示 OPEN PROJECT 按钮，改成「查看可视化」打开站内 overlay。
+ * portrait 标记封面是竖屏（手机截图），不写表示横屏 16:9。
+ * body / features / story 是详情页附加内容：详情面板的 desc 之后展开这些。
  *
  * ⚠️ 三段实习的「数字归属」尚未与你最终核对：
- *   草稿里「发券千万级、UV +13.5%、3 人日」三个数字已按理解分布，
+ *   草稿里「发券千万级、UV +13.5%」两个数字已按理解分布，
  *   实际可能错位，发送前请回头核一遍。月份按你简历里的区间写。 */
-export type WebsiteEntry = (typeof WEBSITES)[number]
+export type WebsiteEntry = {
+  no: string
+  slug: string
+  title: string[]
+  kicker: string
+  desc: string
+  cover: string
+  glow: string
+  href: string
+  links?: { label: string; href: string }[]
+  viewer?: 'gephi' | 'jrock'
+  portrait?: boolean
+  body?: string
+  features?: string[]
+  story?: string
+}
 
 export const INTERNSHIPS: WebsiteEntry[] = [
   {
     no: '01',
     slug: 'MEITUAN / 策略中台',
-    title: ['Meituan /', 'Copilot'],
+    title: ['美团 · PM ·', '营销策略中台 × AI Copilot'],
     kicker: 'PRODUCT INTERNSHIP · 2026.01–06',
     desc: '营销策略引擎 0→1：沉淀可复用的策略模板，支撑发券、选品等场景规模化落地；引入 AI Copilot，把业务方的策略接入成本压缩到 3 人日，单次营销活动发券量级达千万级。',
     cover: 'meituan',
@@ -259,7 +284,7 @@ export const INTERNSHIPS: WebsiteEntry[] = [
   {
     no: '02',
     slug: 'DEWU / 内容流量分析',
-    title: ['Dewu /', 'Content Data'],
+    title: ['得物 · PM ·', '内容社区'],
     kicker: 'DATA PM INTERNSHIP · 2025.08–12',
     desc: '重构得物内容社区流量分析体系：从指标口径到看板架构整体重做，让运营与推荐团队自助读数，驱动核心页面 UV 增长 13.5%。',
     cover: 'dewu',
@@ -269,9 +294,9 @@ export const INTERNSHIPS: WebsiteEntry[] = [
   {
     no: '03',
     slug: "MCDONALD'S / GLOBAL DATA",
-    title: ["McDonald's /", 'AI Agent'],
+    title: ['麦当劳 · PM ·', '数据产品组'],
     kicker: 'DATA PM INTERNSHIP · 2025.04–07',
-    desc: 'Global 数据产品团队：负责 AI Summary Agent，聚合多源经营数据自动生成周期性业务洞察，服务多国市场团队的数据消费场景。',
+    desc: '在麦当劳数据产品组，我提出并落地了 BI 组的第一个 AI 项目：报表解读 Agent。针对不同业务问题设计多线 workflow，用 RAG 注入指标口径与业务规则，并给模型立规矩——必须引用具体指标变化、区分结构性变化与短期波动。完成 demo 与趋势分析，团队内测反馈正面，被列为部门可持续迭代方向。',
     cover: 'mcd',
     glow: '#ffb3a0',
     href: '#',
@@ -281,35 +306,71 @@ export const INTERNSHIPS: WebsiteEntry[] = [
 export const PROJECTS: WebsiteEntry[] = [
   {
     no: '01',
-    slug: '小屋日志 / HIM',
-    title: ['Him /', 'Home Inventory'],
+    slug: '小屋日志 / MY CABIN LOG',
+    title: ['小屋日志 /', 'My Cabin Log'],
     kicker: 'INDIE PROJECT · 2026',
-    desc: '家用物品清单 App「小屋」：拍照即录入，多模态 AI 自动识别与归档。Next.js + Supabase + Qwen-VL 全栈独立开发，已上线。',
+    desc: '一个帮你记录家里有什么的 AI 库存工具。买东西时拍张照，剩下的交给它——快用完的时候它会提醒你补货。',
     cover: 'him',
     glow: '#cfe3b8',
-    href: 'https://him-theta-nine.vercel.app',
+    portrait: true,
+    href: 'https://mycabinlog.edgeone.dev',
+    body: 'My Cabin Log：A little diary for your home stuff. 记录、整理买回家的物品；轻松、用心地过好今天的生活。爱是宜居的岛，欢迎回到温暖的家。',
+    features: [
+      '拍小票 / 截图 / 拍照识物，AI 自动识别物品入库',
+      '库存一览：搜索、分类、低库存与临期提醒',
+      '补货清单：已用完 / 快用完 / 快过期自动分组，一键勾选买回',
+      '购物清单可分享给家人，公开链接只读，token 可随时作废',
+    ],
+    story: '本科毕业清空宿舍时，我翻出大量闲置物品，很多买过便忘，甚至重复购入。问题不在消费，而在于「看不见自己拥有什么」。现阶段进入留学生活后，我开始学习从零经营一个最小单位的家：采购、做饭、收纳……物品清单不断变长，同样的遗忘再次发生。小屋日志由此而生——把每件物品登记成清单，让「拥有」被看见、被记得。它先服务于我自己，如今也在服务我的家人和朋友。',
   },
   {
     no: '02',
-    slug: '数字人文 / RESOURCE HUB',
-    title: ['Digital /', 'Humanities'],
-    kicker: 'CAMPUS PROJECT · 2024',
-    desc: '校级大创负责人：搭建数字人文学科资源汇总网站，编写 70 页《AI 驱动的数字人文教学与工具指南》；成果入选一桥大学 Linked Pasts 国际会议。',
-    cover: 'dh',
-    glow: '#b3c0ff',
-    href: 'https://github.com/Paloma333/DigitalHumanitiesHub',
+    slug: 'J-Rock 歌词 / 60 年的可视化',
+    title: ['J-Rock 歌词', '60 年表现特征研究'],
+    kicker: 'THESIS VISUALIZATION · 2026',
+    desc: '毕业论文长篇可视化：1965–2025 年 1,061 首 J-Rock 歌词，从词汇密度、句长分布到 11 张滚动叙事图表，一份把日语歌词当数据的读法。',
+    cover: 'jrock',
+    glow: '#c8334e',
+    href: '#',
+    viewer: 'jrock',
   },
   {
     no: '03',
-    slug: '雅思口语陪练 / AI COACH',
-    title: ['IELTS /', 'AI Coach'],
-    kicker: 'TEAM PROJECT · 2024',
-    desc: '雅思口语 AI 陪练网站：在线模拟考题 + AI 自动反馈。Vue + Flask，担任项目策划与前后端对接负责人。',
-    cover: 'ielts',
-    glow: '#e6f79a',
+    slug: '数字人文 / RESOURCE HUB',
+    title: ['数字人文 /', 'Digital Humanities'],
+    kicker: 'CAMPUS PROJECT · 2024',
+    desc: '2024 年 ECNU 校级大创负责人：Jekyll 搭建数字人文学科资源汇总网站（99 项资源 / 9 大学科），编写 100 页《AI 驱动的数字人文教学与工具指南》。',
+    cover: 'dh',
+    glow: '#b3c0ff',
+    href: 'https://paloma333.github.io/DigitalHumanitiesHub/',
+    links: [
+      { label: '学术前沿 · Linked Pasts 10', href: 'https://paloma333.github.io/DigitalHumanitiesHub/Linked_Pasts_2024.html' },
+      { label: 'AI 教学指南 · 100 页',         href: 'https://paloma333.github.io/DigitalHumanitiesHub/Teaching_Guide.html' },
+      { label: '附件下载 · materials-v1',     href: 'https://github.com/Paloma333/DigitalHumanitiesHub/releases/tag/materials-v1' },
+      { label: 'GitHub 源码',                  href: 'https://github.com/Paloma333/DigitalHumanitiesHub' },
+    ],
+  },
+  {
+    no: '04',
+    slug: '东方快车 / 社会网络分析',
+    title: ['《东方快车谋杀案》', '社会网络分析'],
+    kicker: 'LITERATURE VISUALIZATION · 2026',
+    desc: '把阿加莎的群像小说读成一幅社会网络：20 节点、3 章节视角、随章节切换的网络层、嫌疑人星级 + 经典金句的关联阅读。',
+    cover: 'gephi',
+    glow: '#c8334e',
     href: '#',
+    viewer: 'gephi',
   },
 ]
+
+/* ── THINKING：思考手记 ────────────────────────────────────
+ * 包含一个 Gephi 可视化（社会网络分析）+ 多篇短文分析 */
+export const THINKING_HEAD = {
+  cn: '思考手记',
+  en: 'THINKING',
+  kicker: 'SOCIAL NETWORK · LITERATURE · MARKETS',
+  desc: '把零散的阅读、鉴赏、随想沉淀成可视化与分析。第一个 demo 是《东方快车谋杀案》社会网络分析。',
+}
 
 /* ── CONTACT：软木板便签 ───────────────────────────────
  * 三张种子便签 + 用户可自己钉新的。位置/旋转用软木板百分比，组件会钳在软木板范围内。

@@ -12,6 +12,8 @@ const FULL_W = {
   posters: 1000,
   mag: 1049,
   cover: 1400,
+  /** 竖屏手机截图（小屋日志）。图片源是 966×1418，变体按宽度裁 */
+  portrait: 966,
 } as const
 
 /** 与生成脚本保持一致的变体宽度 */
@@ -20,6 +22,7 @@ const VARIANTS: Record<keyof typeof FULL_W, number[]> = {
   posters: [400, 700],
   mag: [420, 760],
   cover: [480, 640, 960],
+  portrait: [400, 700],
 }
 
 export type WorkAssetDir = keyof typeof FULL_W
@@ -40,6 +43,8 @@ export const SIZES = {
   video: '(max-width: 780px) 92vw, (min-width: 1310px) 660px, 54vw',
   /** 网站轮播卡 clamp(280px, 40vw, 532px) */
   website: '(max-width: 700px) 280px, (min-width: 1330px) 532px, 40vw',
+  /** 竖屏手机截图（小屋日志）：在面板里通常出现在左侧或单独展示，宽度不大 */
+  portrait: '(max-width: 720px) 64vw, (min-width: 1330px) 360px, 28vw',
 } as const
 
 /** 返回可直接展开到 `<img>` 上的 src / srcSet */
