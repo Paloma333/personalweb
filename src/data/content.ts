@@ -405,8 +405,11 @@ export const GIG_CITIES: {
   dy: number
   anchor: 'start' | 'middle' | 'end'
 }[] = [
-  { cn: '上海', en: 'SHANGHAI', lat: 31.23, lon: 121.47, dx: 14, dy: -30, anchor: 'middle' },
-  { cn: '杭州', en: 'HANGZHOU', lat: 30.274, lon: 120.155, dx: 22, dy: 34, anchor: 'start' },
+  /* dx / dy：城市名相对城市节点的偏移，用来躲开挂在节点周围的场地 pin 和它的浮标签。
+     上海抬到 pin 环上方（pin 环半径 52），杭州改到节点正下方居中（原来偏右下，
+     会被下面的场地 chips 挡住）。 */
+  { cn: '上海', en: 'SHANGHAI', lat: 31.23, lon: 121.47, dx: 14, dy: -72, anchor: 'middle' },
+  { cn: '杭州', en: 'HANGZHOU', lat: 30.274, lon: 120.155, dx: 0, dy: 28, anchor: 'middle' },
   { cn: '安吉', en: 'ANJI', lat: 30.63, lon: 119.68, dx: -18, dy: -22, anchor: 'end' },
 ]
 
@@ -420,8 +423,9 @@ export type Gig = {
   area: string
   lat: number
   lon: number
-  /** 同城 pin 的方位角（屏幕坐标：0 = 正右，顺时针为正）与半径。
-   *  只对同一个城市有多个场地时用；单场地的城市留空，pin 直接落在真坐标上。 */
+  /** 场地 pin 挂在城市节点周围的方位角（屏幕坐标：0 = 正右，顺时针为正）。
+   *  方位来自场地相对市中心的真实方向，半径是固定的示意值 —— 只保证
+   *  pin 不互相压住、也不盖住城市节点。 */
   bearing?: number
   /** public/assets/gig 下的 slug；缺省 = 海报待补 */
   poster?: string
@@ -454,6 +458,7 @@ export const GIGS: Gig[] = [
     area: '杭州 · 拱墅',
     lat: 30.323,
     lon: 120.137,
+    bearing: 300, // 拱墅在市中心以北，pin 挂在城市节点上方
     poster: 'hangzhou',
   },
   {
@@ -473,6 +478,7 @@ export const GIGS: Gig[] = [
     area: '湖州 · 安吉',
     lat: 30.587,
     lon: 119.655,
+    bearing: 225, // 灵峰街道在安吉县城西南
     poster: 'anji',
   },
   {

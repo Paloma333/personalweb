@@ -160,7 +160,7 @@ function Hotspot({ spec, enabled }: { spec: HotspotSpec; enabled: boolean }) {
           onClick={open}
         >
           <b>{spec.caption}</b>
-          <i>{spec.id === 'work' ? 'SELECTED WORK' : spec.id.toUpperCase()}</i>
+          <i>{spec.kicker ?? spec.id.toUpperCase()}</i>
         </button>
       </Html>
     </group>

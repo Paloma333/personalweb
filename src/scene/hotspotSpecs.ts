@@ -34,6 +34,8 @@ export type HotspotSpec = {
   label: string
   /** hover / focus 时浮出的中文说明 */
   caption: string
+  /** 浮出时副标题的小英文（en kicker）。留空则用 id 转大写 */
+  kicker?: string
   /**
    * 命中框中心。
    * `frame: 'world'` 用世界坐标；`'door2inner'` 用第 2 扇门内侧内容组的局部坐标，
@@ -115,6 +117,7 @@ export const HOTSPOTS: readonly HotspotSpec[] = [
     id: 'music',
     label: 'MY TIME 个人爱好',
     caption: '个人爱好',
+    kicker: 'MY TIME',
     at: [1.77, 0.55, 0.38],
     frame: 'world',
     size: [0.42, 0.42],

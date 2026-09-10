@@ -82,78 +82,80 @@ export default function ProjectsCarousel({ items = PROJECTS, head = 'PERSONAL PR
               data-active={i === active || undefined}
               aria-hidden={i !== active}
             >
-              {/* 视觉区：竖屏项目（小屋）用竖屏比例，其余 16:9 */}
-              <div className={`pcr__visual${w.portrait ? ' pcr__visual--portrait' : ''}`}>
-                <img
-                  {...(w.portrait ? workImage('portrait', w.cover) : workImage('cover', w.cover))}
-                  sizes={w.portrait ? SIZES.portrait : SIZES.website}
-                  alt={w.slug}
-                  loading="lazy"
-                  decoding="async"
-                  draggable={false}
-                  style={{ ['--glow' as string]: w.glow }}
-                />
-              </div>
-
-              {/* 文案区：全部平铺，不藏 */}
-              <div className="pcr__text">
-                <div className="pcr__meta">
-                  <span className="pcr__no">{w.no}</span>
-                  <span className="pcr__kicker">{w.kicker}</span>
+              <div className="pcr__item-inner">
+                {/* 视觉区：竖屏项目（小屋）用竖屏比例，其余 16:9 */}
+                <div className={`pcr__visual${w.portrait ? ' pcr__visual--portrait' : ''}`}>
+                  <img
+                    {...(w.portrait ? workImage('portrait', w.cover) : workImage('cover', w.cover))}
+                    sizes={w.portrait ? SIZES.portrait : SIZES.website}
+                    alt={w.slug}
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                    style={{ ['--glow' as string]: w.glow }}
+                  />
                 </div>
 
-                <h2 className="pcr__title">
-                  {w.title.map((t) => (
-                    <span key={t}>{t}</span>
-                  ))}
-                </h2>
+                {/* 文案区：全部平铺，不藏 */}
+                <div className="pcr__text">
+                  <div className="pcr__meta">
+                    <span className="pcr__no">{w.no}</span>
+                    <span className="pcr__kicker">{w.kicker}</span>
+                  </div>
 
-                <p className="pcr__desc">{w.desc}</p>
-
-                {w.body && <p className="pcr__body">{w.body}</p>}
-
-                {w.features && w.features.length > 0 && (
-                  <ul className="pcr__features">
-                    {w.features.map((f) => (
-                      <li key={f}>{f}</li>
+                  <h2 className="pcr__title">
+                    {w.title.map((t) => (
+                      <span key={t}>{t}</span>
                     ))}
-                  </ul>
-                )}
+                  </h2>
 
-                {w.story && <p className="pcr__story">{w.story}</p>}
+                  <p className="pcr__desc">{w.desc}</p>
 
-                <div className="pcr__actions">
-                  {w.viewer ? (
-                    <button
-                      type="button"
-                      className="pcr__open"
-                      onClick={() => openOverlay(w.viewer as 'gephi' | 'jrock')}
-                    >
-                      查看可视化 ↗
-                    </button>
-                  ) : (
-                    <a
-                      className="pcr__open"
-                      href={w.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-disabled={w.href === '#' ? 'true' : undefined}
-                    >
-                      OPEN PROJECT ↗
-                    </a>
-                  )}
+                  {w.body && <p className="pcr__body">{w.body}</p>}
 
-                  {w.links && w.links.length > 0 && (
-                    <ul className="pcr__links">
-                      {w.links.map((l) => (
-                        <li key={l.href}>
-                          <a href={l.href} target="_blank" rel="noreferrer">
-                            {l.label} ↗
-                          </a>
-                        </li>
+                  {w.features && w.features.length > 0 && (
+                    <ul className="pcr__features">
+                      {w.features.map((f) => (
+                        <li key={f}>{f}</li>
                       ))}
                     </ul>
                   )}
+
+                  {w.story && <p className="pcr__story">{w.story}</p>}
+
+                  <div className="pcr__actions">
+                    {w.viewer ? (
+                      <button
+                        type="button"
+                        className="pcr__open"
+                        onClick={() => openOverlay(w.viewer as 'gephi' | 'jrock')}
+                      >
+                        查看可视化 ↗
+                      </button>
+                    ) : (
+                      <a
+                        className="pcr__open"
+                        href={w.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-disabled={w.href === '#' ? 'true' : undefined}
+                      >
+                        OPEN PROJECT ↗
+                      </a>
+                    )}
+
+                    {w.links && w.links.length > 0 && (
+                      <ul className="pcr__links">
+                        {w.links.map((l) => (
+                          <li key={l.href}>
+                            <a href={l.href} target="_blank" rel="noreferrer">
+                              {l.label} ↗
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               </div>
             </section>

@@ -7,9 +7,9 @@
 <!-- 依赖说明：原页面的 tailwind / gsap / ScrollTrigger CDN 已移除。
      页面样式实际由下方 1000+ 行自定义 CSS 提供（class 均为语义化命名，无 tailwind utility），
      动画全部是 CSS transition/keyframes，JS 中 gsap 零调用 —— 两个 CDN 均为僵尸依赖。
-     仅保留 echarts（本地 vendor，避免 CDN 不可用）。 -->
-<script src="./echarts.min.js"></script>
-<!-- 2026-09-09：原来这里拉 Google Fonts 的 Noto Serif JP / Noto Sans JP。
+<!-- echarts（1MB）不再在 head 里同步加载：见文末「延迟加载 echarts」。
+     首屏只要 HTML + CSS 就能出，滚动到第一个图表（chapter3）前 300px 时才拉。 -->
+<!-- 2026-09-10：原来这里拉 Google Fonts 的 Noto Serif JP / Noto Sans JP。
      国内到不了 fonts.googleapis.com，会白等几秒再回退。
      日文字体改用系统栈（Hiragino / Yu Gothic / Meiryo），见下方 CSS。 -->
 <style>
@@ -1460,6 +1460,35 @@
 
 <!-- ============== JAVASCRIPT ============== -->
 <script>
+// ============== 延迟加载 echarts ==============
+// echarts.min.js 有 1MB，同步加载会白屏一小会儿。改成：
+//   hero（大数字 / 目录）只用 HTML + CSS，数据一到就能出；
+//   滚动到第一个图表（chapter3）前 300px 时才动态建 script 拉 echarts，
+//   拉完再 init 11 个 chart。首屏因此不背这个 1MB。
+let _echartsPromise = null;
+function loadEcharts() {
+  if (_echartsPromise) return _echartsPromise;
+  _echartsPromise = new Promise((resolve, reject) => {
+    if (typeof echarts !== 'undefined') return resolve();
+    const s = document.createElement('script');
+    s.src = './echarts.min.js';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('echarts 加载失败'));
+    document.head.appendChild(s);
+  });
+  return _echartsPromise;
+}
+
+const _chartFns = [renderChapter3, renderChapter4, renderChapter5, renderSurvey];
+let _chartsInited = false;
+function initCharts() {
+  if (_chartsInited) return;
+  _chartsInited = true;
+  _chartFns.forEach((fn) => fn());
+  // 注意：initReveal 不在这里 —— 它在数据到位时就挂过了，
+  // 重复调用会给同一批 .reveal 元素再挂一个 observer，白跑一遍。
+}
+
 // ============== DATA LOAD ==============
 let DATA = null;
 let SURVEY = null;
@@ -1469,11 +1498,22 @@ fetch('./data.json').then(r => r.json()).then(d => {
 }).then(r => r.json()).then(s => {
   SURVEY = s;
   initHero();
-  renderChapter3();
-  renderChapter4();
-  renderChapter5();
-  renderSurvey();
+
+  // 首屏先把 reveal 动画挂上，滚动叙事的淡入不依赖 echarts
   initReveal();
+
+  const target = document.getElementById('chapter3');
+  if (!target || !('IntersectionObserver' in window)) {
+    // 老浏览器 / 结构变了：退回原来的做法，直接加载
+    loadEcharts().then(initCharts);
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    loadEcharts().then(initCharts);
+  }, { rootMargin: '300px 0px' }); // 提前 300px 起拉，滚到时通常已经好了
+  io.observe(target);
 });
 
 const AKANE = '#C8334E';

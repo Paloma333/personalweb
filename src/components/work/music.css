@@ -1,23 +1,24 @@
-/* ── 整体 ──────────────────────────────────────── */
+/* ── 整体 ────────────────────────────────────────
+   2026-09-10：整个面板从暗紫换奶黄纸调，跟地图纸卡统一 */
 .mp {
   position: relative;
   width: 100%;
   height: 100%;
-  background: #1b1422;
-  color: #fbfaf6;
+  background: #f4ead3;
+  color: #5c3a2e;
   display: grid;
   grid-template-rows: auto 1fr;
   font-family: var(--app-font, -apple-system, sans-serif);
 }
 .mp__head {
   padding: 22px 36px 14px 200px;  /* leave room for BackToFolders */
-  border-bottom: 1px solid rgba(200, 200, 220, 0.12);
-  background: linear-gradient(180deg, #241a2c 0%, #1b1422 100%);
+  border-bottom: 1.5px dashed rgba(184, 85, 58, 0.3);
+  background: #f4ead3;
 }
 .mp__eyebrow {
   font-size: 10px;
   letter-spacing: 0.18em;
-  color: #c8f322;
+  color: #b8553a;
   font-weight: 700;
 }
 .mp__title {
@@ -25,7 +26,7 @@
   font-size: 32px;
   font-weight: 700;
   margin: 4px 0 6px;
-  color: #fbfaf6;
+  color: #5c3a2e;
   display: flex;
   align-items: baseline;
   gap: 12px;
@@ -35,11 +36,11 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: rgba(251, 250, 246, 0.32);
+  color: rgba(92, 58, 46, 0.4);
 }
 .mp__desc {
   font-size: 13px;
-  color: rgba(251, 250, 246, 0.6);
+  color: rgba(92, 58, 46, 0.65);
   margin: 0 0 12px;
   max-width: 720px;
   line-height: 1.5;
@@ -62,13 +63,13 @@
   font-family: 'Times New Roman', serif;
   font-size: 22px;
   font-weight: 700;
-  color: #c8f322;
+  color: #b8553a;
   line-height: 1;
 }
 .mp__stat-v {
   font-size: 9.5px;
   letter-spacing: 0.14em;
-  color: rgba(251, 250, 246, 0.42);
+  color: rgba(92, 58, 46, 0.55);
 }
 
 /* ── 主体：左地图 / 右海报夹 ──────────────────────── */
@@ -79,34 +80,58 @@
   padding: 20px 36px 26px;
   min-height: 0;
 }
+
+/* ── 地图：奶油纸卡 + 橙红手绘墨线 ────────────────────
+   参考图那种「旅行手帐 / 国家地理插画地图」的视觉语言：
+   暖奶油底、橙红墨线、红盒白字标签、印章感 pin、小人小树。
+   面板外壳保持暗色，让纸卡自己跳出来。 */
 .mp__map {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 10px;
+  gap: 12px;
   min-height: 0;
+}
+.mp__map-card {
+  position: relative;
+  min-height: 0;
+  /* 整页都是奶黄了，纸卡用更深的奶色 + 虚线边让它自己有边界 */
+  background: #fbf2dd;
+  border: 1.5px solid #b8553a;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px -14px rgba(184, 85, 58, 0.4);
+  padding: 12px 14px 14px;
+  /* 极淡的橙色噪点叠层，给一点纸的颗粒感 */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(184, 85, 58, 0.04) 0, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(232, 165, 60, 0.05) 0, transparent 45%);
 }
 .mp__map-head {
   display: flex;
   align-items: baseline;
   gap: 10px;
+  color: rgba(92, 58, 46, 0.7);
 }
 .mp__map-cn {
+  font-family: var(--font-slab);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #5c3a2e;
 }
 .mp__map-en {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: #c8f322;
-  font-weight: 700;
+  font-family: var(--font-slab);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: #b8553a;
+  font-weight: 400;
 }
 .mp__map-note {
   margin-left: auto;
   font-size: 10px;
-  color: rgba(251, 250, 246, 0.32);
+  color: rgba(92, 58, 46, 0.45);
 }
 
-/* ── 地图 SVG ──────────────────────────────────── */
+/* ── 地图 SVG：暖色调手绘风 ──────────────────────── */
 .gigmap {
   display: block;
   width: 100%;
@@ -114,175 +139,231 @@
   min-height: 0;
   overflow: visible;
 }
+/* 经纬网：极淡的蓝色虚线 */
 .gm__grat line {
-  stroke: rgba(251, 250, 246, 0.08);
+  stroke: rgba(74, 143, 196, 0.22);
   stroke-width: 1;
+  stroke-dasharray: 2 5;
 }
-.gm__grat text {
-  fill: rgba(251, 250, 246, 0.26);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-anchor: middle;
-}
+/* 巡演轨迹：陶土橘红虚线 */
 .gm__route {
   fill: none;
-  stroke: rgba(200, 243, 34, 0.34);
-  stroke-width: 1.5;
-  stroke-dasharray: 6 8;
-  animation: gm-dash 30s linear infinite;
+  stroke: #b8553a;
+  stroke-width: 1.8;
+  stroke-dasharray: 7 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.8;
 }
-@keyframes gm-dash {
-  to { stroke-dashoffset: -280; }
+/* 沿途手绘音符点缀 */
+.gm__note {
+  fill: #b8553a;
+  font-family: 'Times New Roman', serif;
+  font-size: 15px;
+  font-style: italic;
+  opacity: 0.7;
+  pointer-events: none;
 }
-.gm__city {
-  fill: none;
-  stroke: rgba(251, 250, 246, 0.5);
+
+/* 城市标签：奶油底 + 橘红描边 + 橘红字（参考 KAUPPAHALLI 的轻盒子，不是实心红盒） */
+.gm__city-tag {
+  fill: #f7f0dd;
+  stroke: #b8553a;
   stroke-width: 1.5;
 }
 .gm__city-cn {
-  fill: rgba(251, 250, 246, 0.86);
-  font-size: 14px;
-  font-weight: 700;
+  fill: #b8553a;
+  font-family: var(--font-slab);
+  font-size: 13px;
+  font-weight: 400;
+  text-anchor: middle;
+  letter-spacing: 0.06em;
 }
-.gm__city-en {
-  fill: rgba(251, 250, 246, 0.3);
-  font-size: 8.5px;
-  letter-spacing: 0.16em;
-}
+
+/* 上海那圈：虚辐条 */
 .gm__spokes line {
-  stroke: rgba(200, 243, 34, 0.22);
-  stroke-width: 1;
+  stroke: rgba(184, 85, 58, 0.3);
+  stroke-width: 1.1;
   stroke-dasharray: 2 4;
 }
 
-.gm__pin {
-  cursor: pointer;
-  outline: none;
-}
-.gm__pin-halo {
-  fill: transparent;
-  transition: fill 0.18s;
-}
-.gm__pin.is-on .gm__pin-halo {
-  fill: rgba(200, 243, 34, 0.14);
+/* pin：橘红印章 / 活跃换软橘 */
+.gm__pin { cursor: pointer; outline: none; }
+.gm__pin-outer {
+  fill: none;
+  stroke: rgba(184, 85, 58, 0.35);
+  stroke-width: 1.3;
+  stroke-dasharray: 2 3;
+  transition: stroke 0.18s, fill 0.18s;
 }
 .gm__pin-dot {
-  fill: #241a2c;
-  stroke: #c8f322;
-  stroke-width: 1.5;
+  fill: #b8553a;
+  stroke: #f7f0dd;
+  stroke-width: 1.8;
   transition: fill 0.18s;
 }
 .gm__pin-no {
-  fill: #c8f322;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  fill: #f7f0dd;
+  font-family: var(--font-slab);
   font-size: 11px;
-  font-weight: 700;
   text-anchor: middle;
   transition: fill 0.18s;
+  pointer-events: none;
 }
 .gm__pin:hover .gm__pin-dot,
-.gm__pin.is-on .gm__pin-dot {
-  fill: #c8f322;
+.gm__pin.is-on .gm__pin-dot { fill: #d97c4a; }
+.gm__pin:hover .gm__pin-outer,
+.gm__pin.is-on .gm__pin-outer {
+  stroke: #d97c4a;
+  fill: rgba(217, 124, 74, 0.12);
 }
-.gm__pin:hover .gm__pin-no,
-.gm__pin.is-on .gm__pin-no {
-  fill: #1b1422;
-}
-.gm__pin:focus-visible .gm__pin-dot {
-  stroke-width: 3.5;
-}
+.gm__pin:focus-visible .gm__pin-dot { stroke-width: 3; }
 
+/* 当前 pin 的名字浮标：奶油底 + 橘红框 */
 .gm__tag rect {
-  fill: #c8f322;
+  fill: #f7f0dd;
+  stroke: #b8553a;
+  stroke-width: 1.2;
 }
 .gm__tag text {
-  fill: #1b1422;
-  font-size: 13px;
+  fill: #5c3a2e;
+  font-family: 'Bodoni Moda', 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 12px;
   font-weight: 600;
   text-anchor: middle;
+  pointer-events: none;
 }
 
+/* 比例尺：橘红墨线 */
 .gm__scale line {
-  stroke: rgba(251, 250, 246, 0.4);
+  stroke: #b8553a;
   stroke-width: 1;
+  stroke-linecap: round;
 }
 .gm__scale text {
-  fill: rgba(251, 250, 246, 0.4);
+  fill: #b8553a;
+  font-family: 'Bodoni Moda', 'Times New Roman', serif;
+  font-style: italic;
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
 }
-.gm__compass line {
-  stroke: rgba(251, 250, 246, 0.35);
+
+/* 20+ 印章：橘红圆章 + 奶油字 */
+.gm__stamp circle:first-child {
+  fill: #b8553a;
+  stroke: #5c3a2e;
   stroke-width: 1;
 }
-.gm__compass polygon {
-  fill: rgba(251, 250, 246, 0.5);
-}
-.gm__compass text {
-  fill: rgba(251, 250, 246, 0.42);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+.gm__stamp-k {
+  fill: #f7f0dd;
+  font-family: var(--font-slab);
+  font-size: 20px;
   text-anchor: middle;
+  letter-spacing: 0.02em;
 }
-.gm__total-k {
-  fill: #c8f322;
+.gm__stamp-v {
+  fill: #f7f0dd;
+  font-family: var(--font-slab);
+  font-size: 8px;
+  text-anchor: middle;
+  letter-spacing: 0.16em;
+  opacity: 0.85;
+}
+
+/* ── 手绘地标小插画 ────────────────────────────────────
+   陶土橘红 #b8553a 墨线为主，实心彩色剪影点缀（人/树/部分建筑部件）。
+   调色板：陶土 #b8553a / 软橘 #d97c4a / 鼠尾草绿 #7ba35a / 雾蓝 #6b8faa / 深棕 #5c3a2e */
+.ic line,
+.ic rect,
+.ic circle,
+.ic path,
+.ic polygon,
+.ic ellipse {
+  fill: none;
+  stroke: #b8553a;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 需要"线稿+奶油填充"的形状（建筑主体、球体等） */
+.ic-line-fill {
+  fill: #f7f0dd;
+  stroke: #b8553a;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ic-note {
+  fill: #b8553a;
+  stroke: none;
   font-family: 'Times New Roman', serif;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 10px;
+  font-style: italic;
+  opacity: 0.8;
 }
-.gm__total-v {
-  fill: rgba(251, 250, 246, 0.4);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
+.ic-sign {
+  fill: #fbe4b6;
+  stroke: none;
+  font-family: var(--font-slab);
+  font-size: 5.5px;
+  letter-spacing: 0.1em;
 }
+
+/* ── 场地 chips：奶油纸 + 陶土橘红边框，两行堆叠（名称+地区）不挤 ── */
+.mp__chips button {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+  row-gap: 1px;
+  align-items: baseline;
+  padding: 6px 12px;
+  background: #f4ead3;
+  border: 1.5px solid rgba(184, 85, 58, 0.35);
+  color: #5c3a2e;
+}
+.mp__chips button:hover {
+  background: #fbf2dd;
+  border-color: #b8553a;
+  color: #1b1422;
+}
+.mp__chips button.is-on {
+  background: #b8553a;
+  border-color: #b8553a;
+  color: #f7f0dd;
+}
+.mp__chip-no {
+  grid-row: 1 / 3;
+  font-family: var(--font-slab);
+  font-size: 10px;
+  color: #b8553a;
+}
+.mp__chips button.is-on .mp__chip-no { color: #f7f0dd; opacity: 0.85; }
+.mp__chip-name {
+  grid-column: 2;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mp__chip-area {
+  grid-column: 2;
+  font-family: 'Bodoni Moda', 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 9px;
+  white-space: nowrap;
+  color: rgba(58, 46, 38, 0.55);
+}
+.mp__chips button.is-on .mp__chip-area { color: rgba(255, 246, 221, 0.7); }
 
 /* ── 场地 chips（同时是地图的图例） ───────────────────── */
 .mp__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 9px 10px;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-.mp__chips button {
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(200, 200, 220, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(251, 250, 246, 0.72);
-  cursor: pointer;
-  transition: background 0.18s, border-color 0.18s, color 0.18s;
-}
-.mp__chips button:hover {
-  background: rgba(255, 255, 255, 0.09);
-  color: #fbfaf6;
-}
-.mp__chips button.is-on {
-  background: #c8f322;
-  border-color: #c8f322;
-  color: #1b1422;
-}
-.mp__chip-no {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  color: #c8f322;
-}
-.mp__chip-name {
-  font-size: 12px;
-  font-weight: 600;
-}
-.mp__chip-area {
-  font-size: 10px;
-  color: rgba(251, 250, 246, 0.4);
-}
-.mp__chips button.is-on .mp__chip-no,
-.mp__chips button.is-on .mp__chip-area {
-  color: rgba(27, 20, 34, 0.62);
 }
 
 /* ── 右侧海报夹 ─────────────────────────────────── */
@@ -297,9 +378,12 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
-  border: 1px solid rgba(200, 200, 220, 0.14);
-  background: rgba(0, 0, 0, 0.3);
+  border: 1.5px solid #b8553a;
+  background: #fbf2dd;
   overflow: hidden;
+  /* 海报照片稍微倾斜像被磁铁吸在纸上 */
+  transform: rotate(-1.2deg);
+  box-shadow: 0 6px 18px -10px rgba(184, 85, 58, 0.4);
 }
 .mp__pframe img {
   display: block;
@@ -316,15 +400,15 @@
   margin: 24px;
   padding: 44px 24px;
   width: 100%;
-  border: 1px dashed rgba(200, 200, 220, 0.24);
+  border: 1.5px dashed rgba(184, 85, 58, 0.4);
   border-radius: 10px;
-  color: rgba(251, 250, 246, 0.45);
+  color: rgba(92, 58, 46, 0.5);
 }
 .mp__ptba-mark {
   font-family: 'Times New Roman', serif;
   font-size: 40px;
   line-height: 1;
-  color: #c8f322;
+  color: #b8553a;
 }
 .mp__ptba strong {
   font-size: 13px;
@@ -341,27 +425,28 @@
   gap: 2px;
 }
 .mp__pmeta-no {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-slab);
   font-size: 10px;
   letter-spacing: 0.14em;
-  color: #c8f322;
+  color: #b8553a;
 }
 .mp__pmeta h3 {
   font-family: 'Times New Roman', 'Songti SC', serif;
   font-size: 16px;
   font-weight: 700;
   margin: 1px 0 0;
+  color: #5c3a2e;
 }
 .mp__pmeta-en {
   margin: 0;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: rgba(251, 250, 246, 0.4);
+  color: rgba(92, 58, 46, 0.45);
 }
 .mp__pmeta-area {
   margin: 5px 0 0;
   font-size: 11px;
-  color: rgba(251, 250, 246, 0.56);
+  color: rgba(92, 58, 46, 0.65);
 }
 
 /* ── 窄屏：地图在上，海报横向排 ─────────────────────── */

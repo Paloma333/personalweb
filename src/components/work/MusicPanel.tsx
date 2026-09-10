@@ -47,7 +47,9 @@ export default function MusicPanel() {
             <span className="mp__map-en">TOUR MAP</span>
             <span className="mp__map-note">城市按真实方位，同城场地环形示意排布</span>
           </div>
-          <GigMap active={no} hover={hover} onPick={setNo} onHover={setHover} />
+          <div className="mp__map-card">
+            <GigMap active={no} hover={hover} onPick={setNo} onHover={setHover} />
+          </div>
           <ul className="mp__chips">
             {GIGS.map((g) => (
               <li key={g.no}>
