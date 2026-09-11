@@ -1,10 +1,12 @@
 /* ============================================================================
  * MY TIME › 个人爱好 · 演出地图样式
  *
- * 2026-09-11：整套配色跟着「长三角真实底图」走 —— 陆地绿 / 水蓝 / 白卡 / 深橄榄字。
- * 调色板直接从底图采样：
- *   陆地 #b2cd8b · 水 #b9e1e0 · 路 #f0f0e0 · 地图字 #46512c
+ * 配色全部跟着「长三角真实底图」走 —— 陆地绿 / 水蓝 / 白卡 / 深橄榄字。
+ * 调色板从底图采样：陆地 #b2cd8b · 水 #b9e1e0 · 路 #f0f0e0 · 地图字 #46512c
  * 面板底用比陆地更淡的 #eef2e4，卡片纯白，形成"纸上的地图卡片"层次。
+ *
+ * 2026-09-12：场地列表从地图下方移到右列（地图能铺满、比例不再被压扁）；
+ * pin 加大 + 呼吸光环；删掉引线卡 / 聚焦圈 / 底部图例 / 头部说明。
  * ========================================================================== */
 
 /* ── 整体 ──────────────────────────────────────── */
@@ -61,11 +63,7 @@
   margin: 0;
   padding: 0;
 }
-.mp__stats li {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-}
+.mp__stats li { display: flex; align-items: baseline; gap: 7px; }
 .mp__stat-k {
   font-family: 'Times New Roman', serif;
   font-size: 22px;
@@ -79,18 +77,18 @@
   color: rgba(56, 65, 42, 0.55);
 }
 
-/* ── 主体：左地图 / 右海报夹 ──────────────────────── */
+/* ── 主体：左地图 / 右侧栏（海报 + 场地列表） ─────────── */
 .mp__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 26px;
-  padding: 20px 36px 26px;
+  gap: 24px;
+  padding: 18px 36px 22px;
   min-height: 0;
 }
 .mp__map {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
   min-height: 0;
 }
 /* 地图卡：纯白，比面板亮一档，thin 边 + 轻投影 */
@@ -101,7 +99,8 @@
   border: 1px solid #d5dfc2;
   border-radius: 10px;
   box-shadow: 0 4px 16px -10px rgba(70, 81, 44, 0.3);
-  padding: 10px;
+  padding: 8px;
+  overflow: hidden;
 }
 .mp__map-head {
   display: flex;
@@ -119,11 +118,6 @@
   color: #6f8f3f;
   font-weight: 700;
 }
-.mp__map-note {
-  margin-left: auto;
-  font-size: 10px;
-  color: rgba(56, 65, 42, 0.48);
-}
 
 /* ── 地图 SVG ──────────────────────────────────── */
 .gigmap {
@@ -131,250 +125,93 @@
   width: 100%;
   height: 100%;
   min-height: 0;
+  border-radius: 5px;
 }
 
-/* 地图字：深橄榄 + 白色描边（跟底图自带的城市标签同一路子） */
+/* 白描边的地图字（跟底图自带的城市标签一个路子） */
 .gm__label {
   fill: #46512c;
   font-family: var(--font-cn, sans-serif);
   paint-order: stroke fill;
   stroke: #ffffff;
-  stroke-width: 5px;
+  stroke-width: 6px;
   stroke-linejoin: round;
   pointer-events: none;
 }
 
-/* 上海聚焦圈 */
-.gm__focus {
-  fill: rgba(255, 255, 255, 0.16);
-  stroke: #46512c;
-  stroke-width: 2;
-  stroke-dasharray: 7 6;
-}
-/* 4 个场地的真位置小点 */
-.gm__dot {
-  fill: #ffffff;
-  stroke: #46512c;
-  stroke-width: 2.5;
-}
-.gm__dot.is-on {
-  fill: #6f8f3f;
-}
-/* 引线锥：聚焦圈 → 卡片的浅绿半透明锥 */
-.gm__cone {
-  fill: rgba(178, 205, 139, 0.55);
-  stroke: #8aa663;
-  stroke-width: 1.5;
-}
-.gm__cone-stem {
-  stroke: #8aa663;
-  stroke-width: 1.5;
-  stroke-dasharray: 4 4;
-}
-/* 上海聚合标记 */
-.gm__agg {
-  cursor: pointer;
-  outline: none;
-}
-.gm__agg-ring {
-  fill: #ffffff;
-  stroke: #46512c;
-  stroke-width: 2.5;
-}
-.gm__agg-n {
-  fill: #46512c;
-  font-family: var(--font-slab);
-  font-size: 15px;
-  text-anchor: middle;
-  pointer-events: none;
-}
-.gm__agg.is-on .gm__agg-ring {
-  fill: #6f8f3f;
-  stroke: #4d6b2a;
-}
-.gm__agg.is-on .gm__agg-n {
-  fill: #ffffff;
-}
-
-/* 上海引线卡：白卡 + 细边 + 4 行场地 */
-.gm__card rect {
-  fill: #ffffff;
-  stroke: #cfd9bd;
-  stroke-width: 1.5;
-}
-.gm__card-kicker {
-  fill: #6f8f3f;
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-.gm__card-rule {
-  stroke: #e2e8d6;
-  stroke-width: 1.5;
-}
-.gm__row {
-  cursor: pointer;
-  outline: none;
-}
-.gm__row-hit {
-  fill: transparent;
-}
-.gm__row:hover .gm__row-hit {
-  fill: #f3f7ea;
-}
-.gm__row:focus-visible .gm__row-hit {
-  fill: #e8f0d9;
-}
-.gm__row-dot {
-  fill: #ffffff;
-  stroke: #46512c;
-  stroke-width: 2.5;
-  transition: fill 0.16s;
-}
-.gm__row-no {
-  fill: #46512c;
-  font-family: var(--font-slab);
-  font-size: 14px;
-  text-anchor: middle;
-  pointer-events: none;
-  transition: fill 0.16s;
-}
-.gm__row-name {
-  fill: #38412a;
-  font-family: var(--font-cn, sans-serif);
-  font-size: 22px;
-  font-weight: 600;
-  pointer-events: none;
-}
-.gm__row-area {
-  fill: rgba(56, 65, 42, 0.55);
-  font-family: var(--font-cn, sans-serif);
-  font-size: 16px;
-  pointer-events: none;
-}
-.gm__row.is-on .gm__row-dot {
-  fill: #6f8f3f;
-  stroke: #4d6b2a;
-}
-.gm__row.is-on .gm__row-no {
-  fill: #ffffff;
-}
-.gm__row.is-on .gm__row-hit {
-  fill: #eef4e2;
-}
-
-/* 单场地 pin（杭州 / 安吉） */
+/* ── 场地 pin ──────────────────────────────────── */
 .gm__pin {
   cursor: pointer;
   outline: none;
 }
-.gm__pin-stem {
-  stroke: #46512c;
-  stroke-width: 2;
+/* 呼吸光环：错开相位由组件里的 animationDelay 控制 */
+.gm__pulse {
+  fill: none;
+  stroke: #6f8f3f;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gm-pulse 3.2s cubic-bezier(0.22, 0.6, 0.35, 1) infinite;
+  pointer-events: none;
+}
+@keyframes gm-pulse {
+  0%   { transform: scale(0.82); opacity: 0.85; }
+  58%  { transform: scale(1.6);  opacity: 0; }
+  100% { transform: scale(1.6);  opacity: 0; }
+}
+/* 透明的大命中区，让 26px 内都好点 */
+.gm__pin-hit {
+  fill: transparent;
 }
 .gm__pin-dot {
-  fill: #ffffff;
-  stroke: #46512c;
-  stroke-width: 2.5;
-  transition: fill 0.16s;
+  fill: #4d7a2e;
+  stroke: #ffffff;
+  stroke-width: 3;
+  transition: fill 0.16s, transform 0.16s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .gm__pin-no {
-  fill: #46512c;
+  fill: #ffffff;
   font-family: var(--font-slab);
-  font-size: 15px;
+  font-size: 19px;
   text-anchor: middle;
   pointer-events: none;
   transition: fill 0.16s;
 }
 .gm__pin:hover .gm__pin-dot,
 .gm__pin.is-on .gm__pin-dot {
-  fill: #6f8f3f;
-  stroke: #4d6b2a;
-}
-.gm__pin:hover .gm__pin-no,
-.gm__pin.is-on .gm__pin-no {
-  fill: #ffffff;
+  fill: #2f5a1e;
+  transform: scale(1.1);
 }
 .gm__pin:focus-visible .gm__pin-dot {
-  stroke-width: 4;
+  stroke-width: 5;
 }
 
-/* 图例 */
-.gm__legend rect {
-  fill: rgba(255, 255, 255, 0.9);
-  stroke: #cfd9bd;
-  stroke-width: 1.5;
+/* 当前 pin 的浮标（上海 4 个挤在一起时靠它区分） */
+.gm__tip rect {
+  fill: #2f5a1e;
 }
-.gm__legend-t {
-  fill: #38412a;
-  font-size: 17px;
+.gm__tip text {
+  fill: #ffffff;
+  font-family: var(--font-cn, sans-serif);
+  font-size: 20px;
   font-weight: 600;
-}
-.gm__legend-s {
-  fill: rgba(56, 65, 42, 0.6);
-  font-size: 14px;
+  text-anchor: middle;
+  pointer-events: none;
 }
 
-/* ── 场地 chips ─────────────────────────────────── */
-.mp__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px 10px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.mp__chips button {
-  font-family: inherit;
+/* ── 右侧栏：海报 + 场地列表 ─────────────────────── */
+.mp__side {
   display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 7px;
-  row-gap: 1px;
-  align-items: baseline;
-  padding: 6px 13px;
-  border-radius: 999px;
-  background: #ffffff;
-  border: 1.5px solid #d5dfc2;
-  color: #38412a;
-  cursor: pointer;
-  transition: background 0.16s, border-color 0.16s, color 0.16s;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 14px;
+  min-height: 0;
 }
-.mp__chips button:hover {
-  border-color: #8aa663;
-  background: #f6faf0;
-}
-.mp__chips button.is-on {
-  background: #6f8f3f;
-  border-color: #6f8f3f;
-  color: #ffffff;
-}
-.mp__chip-no {
-  grid-row: 1 / 3;
-  font-family: var(--font-slab);
-  font-size: 10px;
-  color: #6f8f3f;
-}
-.mp__chips button.is-on .mp__chip-no { color: rgba(255, 255, 255, 0.85); }
-.mp__chip-name {
-  grid-column: 2;
-  font-size: 11.5px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.mp__chip-area {
-  grid-column: 2;
-  font-size: 9px;
-  color: rgba(56, 65, 42, 0.55);
-  white-space: nowrap;
-}
-.mp__chips button.is-on .mp__chip-area { color: rgba(255, 255, 255, 0.72); }
-
-/* ── 右侧海报夹 ─────────────────────────────────── */
 .mp__poster {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 10px;
   min-height: 0;
 }
 .mp__pframe {
@@ -399,8 +236,8 @@
   display: grid;
   justify-items: center;
   gap: 6px;
-  margin: 24px;
-  padding: 44px 24px;
+  margin: 20px;
+  padding: 40px 22px;
   width: 100%;
   border: 1.5px dashed #cfd9bd;
   border-radius: 10px;
@@ -412,19 +249,10 @@
   line-height: 1;
   color: #8aa663;
 }
-.mp__ptba strong {
-  font-size: 13px;
-  font-weight: 600;
-}
-.mp__ptba-en {
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  opacity: 0.6;
-}
-.mp__pmeta {
-  display: grid;
-  gap: 2px;
-}
+.mp__ptba strong { font-size: 13px; font-weight: 600; }
+.mp__ptba-en { font-size: 9px; letter-spacing: 0.16em; opacity: 0.6; }
+
+.mp__pmeta { display: grid; gap: 2px; }
 .mp__pmeta-no {
   font-family: var(--font-slab);
   font-size: 10px;
@@ -450,20 +278,84 @@
   color: rgba(56, 65, 42, 0.68);
 }
 
-/* ── 窄屏：地图在上，海报横向排 ─────────────────────── */
+/* ── 场地列表（竖排，在地图右边） ─────────────────── */
+.mp__chips {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mp__chips li { display: flex; }
+.mp__chips button {
+  font-family: inherit;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 9px;
+  row-gap: 1px;
+  align-items: baseline;
+  padding: 6px 11px;
+  border-radius: 9px;
+  background: #ffffff;
+  border: 1.5px solid #d5dfc2;
+  color: #38412a;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.16s, border-color 0.16s, color 0.16s;
+}
+.mp__chips button:hover {
+  border-color: #8aa663;
+  background: #f6faf0;
+}
+.mp__chips button.is-on {
+  background: #4d7a2e;
+  border-color: #4d7a2e;
+  color: #ffffff;
+}
+.mp__chip-no {
+  grid-row: 1 / 3;
+  font-family: var(--font-slab);
+  font-size: 11px;
+  color: #6f8f3f;
+  line-height: 1.5;
+}
+.mp__chips button.is-on .mp__chip-no { color: rgba(255, 255, 255, 0.9); }
+.mp__chip-name {
+  grid-column: 2;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp__chip-area {
+  grid-column: 2;
+  font-size: 9.5px;
+  color: rgba(56, 65, 42, 0.55);
+  white-space: nowrap;
+}
+.mp__chips button.is-on .mp__chip-area { color: rgba(255, 255, 255, 0.72); }
+
+/* ── 窄屏：单列堆叠 ─────────────────────────────── */
 @media (max-width: 1040px) {
   .mp__body {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1.1fr) auto;
+    grid-template-rows: minmax(260px, 1fr) auto;
+    gap: 18px;
     overflow-y: auto;
   }
-  .mp__poster {
+  .mp__side {
     grid-template-rows: auto;
-    grid-template-columns: 200px minmax(0, 1fr);
-    align-items: center;
+    grid-template-columns: 190px minmax(0, 1fr);
+    align-items: start;
     gap: 18px;
   }
-  .mp__pframe {
-    height: 280px;
-  }
+  .mp__pframe { height: 300px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm__pulse { animation: none; opacity: 0; }
 }

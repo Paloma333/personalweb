@@ -441,6 +441,15 @@ export type Gig = {
   lon: number
   /** 所属城市（GIG_CITIES.cn）。底图上同城场地会挤在几 px 内，需要分组处理 */
   city: string
+  /**
+   * 底图坐标下的**可读性位移**（px）。只有上海 4 个场地用。
+   *
+   * 实测这 4 个点真实投影后只占 38×12 px（交大与 Sandbar 相距 600m ≈ 2px），
+   * 圆点会完全叠在一起没法点。用户确认「只要都在上海区域内即可，不需要严格遵循经纬」，
+   * 所以按真实方位把 4 个 pin 推开——**位移后的位置是示意，不是真实坐标**，
+   * 真坐标仍然保存在 lat/lon 里。
+   */
+  spread?: [number, number]
   /** public/assets/gig 下的 slug；缺省 = 海报待补 */
   poster?: string
 }
@@ -454,6 +463,7 @@ export const GIGS: Gig[] = [
     city: '上海',
     lat: 31.229,
     lon: 121.405,
+    spread: [-50, -45], // 真实在市中心西北（普陀）→ 往西北推
     poster: 'ecnu',
   },
   {
@@ -464,6 +474,7 @@ export const GIGS: Gig[] = [
     city: '上海',
     lat: 31.203,
     lon: 121.437,
+    spread: [-10, 62], // 真实在市中心西南（徐汇）→ 往南推
   },
   {
     no: '03',
@@ -483,6 +494,7 @@ export const GIGS: Gig[] = [
     city: '上海',
     lat: 31.201,
     lon: 121.431,
+    spread: [-85, 10], // 真实在市中心西侧（长宁）→ 往西推
     poster: 'sandbar',
   },
   {
@@ -503,6 +515,7 @@ export const GIGS: Gig[] = [
     city: '上海',
     lat: 31.21,
     lon: 121.51,
+    spread: [58, 40], // 真实在市中心以东（浦东）→ 往东南推
     poster: 'cream',
   },
 ]

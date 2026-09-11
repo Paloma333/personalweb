@@ -45,11 +45,43 @@ export default function MusicPanel() {
           <div className="mp__map-head">
             <span className="mp__map-cn">演出地图</span>
             <span className="mp__map-en">TOUR MAP</span>
-            <span className="mp__map-note">pin 按真实经纬度落点 · 上海 4 场地用引线卡展开</span>
           </div>
           <div className="mp__map-card">
             <GigMap active={no} hover={hover} onPick={setNo} onHover={setHover} />
           </div>
+        </section>
+
+        <aside className="mp__side">
+          <div className="mp__poster">
+            <div className="mp__pframe">
+              {img ? (
+                <img
+                  src={img.src}
+                  srcSet={img.srcSet}
+                  sizes={SIZES.gig}
+                  alt={`${gig.venue} 演出海报`}
+                  width="1000"
+                  height="1778"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <div className="mp__ptba">
+                  <span className="mp__ptba-mark">♪</span>
+                  <strong>海报待补</strong>
+                  <span className="mp__ptba-en">POSTER TBA</span>
+                </div>
+              )}
+            </div>
+            <div className="mp__pmeta">
+              <span className="mp__pmeta-no">{gig.no}</span>
+              <h3>{gig.venue}</h3>
+              <p className="mp__pmeta-en">{gig.en}</p>
+              <p className="mp__pmeta-area">{gig.area}</p>
+            </div>
+          </div>
+
+          {/* 场地列表：原来在地图下方，会压掉地图的高度；移到右侧后地图能铺满 */}
           <ul className="mp__chips">
             {GIGS.map((g) => (
               <li key={g.no}>
@@ -66,35 +98,6 @@ export default function MusicPanel() {
               </li>
             ))}
           </ul>
-        </section>
-
-        <aside className="mp__poster">
-          <div className="mp__pframe">
-            {img ? (
-              <img
-                src={img.src}
-                srcSet={img.srcSet}
-                sizes={SIZES.gig}
-                alt={`${gig.venue} 演出海报`}
-                width="1000"
-                height="1778"
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div className="mp__ptba">
-                <span className="mp__ptba-mark">♪</span>
-                <strong>海报待补</strong>
-                <span className="mp__ptba-en">POSTER TBA</span>
-              </div>
-            )}
-          </div>
-          <div className="mp__pmeta">
-            <span className="mp__pmeta-no">{gig.no}</span>
-            <h3>{gig.venue}</h3>
-            <p className="mp__pmeta-en">{gig.en}</p>
-            <p className="mp__pmeta-area">{gig.area}</p>
-          </div>
         </aside>
       </div>
     </div>
