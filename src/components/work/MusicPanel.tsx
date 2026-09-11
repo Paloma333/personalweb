@@ -45,7 +45,7 @@ export default function MusicPanel() {
           <div className="mp__map-head">
             <span className="mp__map-cn">演出地图</span>
             <span className="mp__map-en">TOUR MAP</span>
-            <span className="mp__map-note">城市按真实方位，同城场地环形示意排布</span>
+            <span className="mp__map-note">pin 按真实经纬度落点 · 上海 4 场地用引线卡展开</span>
           </div>
           <div className="mp__map-card">
             <GigMap active={no} hover={hover} onPick={setNo} onHover={setHover} />

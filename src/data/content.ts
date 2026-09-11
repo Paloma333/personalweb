@@ -373,13 +373,16 @@ export const THINKING_HEAD = {
 }
 
 /* ── MY TIME：个人爱好 › 演出地图 ──────────────────────────
- * 2026-09-09：第一个栏目是乐队演出地图。
+ * 2026-09-11：改用**真实地图底图**。
  *
- * 地图是**示意图**，不是测绘成果：
- *   - 城市节点用真实经纬度（GCJ-02）投影，上海 / 杭州 / 安吉 的相对方位是真的；
- *   - 同一城市里多个场地（上海 4 个）改按「方位 + 固定半径」摆在城市节点周围，
- *     否则真坐标下它们会挤在 20px 内互相压住 —— 半径内只有方位有意义。
- *   - 没有画任何行政边界、海岸线，只有经纬网和比例尺。
+ * 底图 = 用户提供的长三角地图截图，裁掉外围后存在 public/assets/gig-map/。
+ * 投影参数不是猜的：从底图上 4 个城市标记（上海市 / 杭州市 / 南京市 / 宁波市）
+ * 的最小二乘拟合解出来的，残差 < 2px，c/a = 1.1700 与 Web Mercator 在 31°N 的
+ * 理论值 1.1691 吻合 —— 说明底图是标准 Web Mercator 投影，坐标可信。
+ *
+ * 于是所有场地 pin 都直接落在**真实经纬度投影**的位置上，不再有任何"示意性排布"。
+ * 代价：上海 4 个场地真实间距只有 38×12 px（交大和 Sandbar 相距 600m ≈ 2px），
+ * 物理上不可能各画一个可点的大 pin —— 所以上海用「引线卡」承载这 4 个场地。
  *
  * poster 对应 public/assets/gig/<slug>.webp，由 scripts/gen-gig-posters.mjs 生成；
  * 没有海报的场地（上海交通大学）组件会画占位框。 */
@@ -390,9 +393,27 @@ export const MYTIME_HEAD = {
   desc: '4 年乐队：吉他 / 主唱 / VJ 视觉编程。从校园礼堂到 Livehouse，这张图是这四年演过的地方。',
 }
 
-/** 地图投影范围：经纬度 → SVG 视图坐标（viewBox 0 0 660 470 内作图区） */
-export const GIG_MAP_BOX = { x0: 70, y0: 60, w: 520, h: 349 }
-export const GIG_MAP_RANGE = { lon: [119.3, 121.9], lat: [30.05, 31.55] }
+/* ── 底图投影 ─────────────────────────────────────────
+ * 底图是 1686×1156 的原截图裁掉 (100,150)-(1500,1090) 后的 1400×940。
+ * 全图坐标系下的拟合式（最小二乘，4 点残差 <2px）：
+ *   x_img = 364.0 · lon - 43180.4
+ *   y_img = -425.9 · lat + 13728.3
+ * 下面把裁剪偏移减掉，直接得到裁剪图内坐标。 */
+export const GIG_MAP_IMG = { w: 1400, h: 940 }
+const CROP_X = 100
+const CROP_Y = 150
+export const GIG_PROJ = {
+  a: 364.0, b: -43180.4,   // x = a·lon + b
+  c: -425.9, d: 13728.3,   // y = c·lat + d
+  ox: CROP_X, oy: CROP_Y,  // 裁剪偏移
+}
+/** 经纬度 → 底图内像素坐标 */
+export function gigXY(lon: number, lat: number) {
+  return {
+    x: GIG_PROJ.a * lon + GIG_PROJ.b - GIG_PROJ.ox,
+    y: GIG_PROJ.c * lat + GIG_PROJ.d - GIG_PROJ.oy,
+  }
+}
 
 /** 城市节点（真实经纬度） */
 export const GIG_CITIES: {
@@ -400,17 +421,12 @@ export const GIG_CITIES: {
   en: string
   lat: number
   lon: number
-  /** 城市名的摆放偏移，躲开压在上面的场地 pin */
-  dx: number
-  dy: number
-  anchor: 'start' | 'middle' | 'end'
 }[] = [
-  /* dx / dy：城市名相对城市节点的偏移，用来躲开挂在节点周围的场地 pin 和它的浮标签。
-     上海抬到 pin 环上方（pin 环半径 52），杭州改到节点正下方居中（原来偏右下，
-     会被下面的场地 chips 挡住）。 */
-  { cn: '上海', en: 'SHANGHAI', lat: 31.23, lon: 121.47, dx: 14, dy: -72, anchor: 'middle' },
-  { cn: '杭州', en: 'HANGZHOU', lat: 30.274, lon: 120.155, dx: 0, dy: 28, anchor: 'middle' },
-  { cn: '安吉', en: 'ANJI', lat: 30.63, lon: 119.68, dx: -18, dy: -22, anchor: 'end' },
+  /* 2026-09-11：改用真实底图后，city 只用来做「哪些场地属于同一个城市」的分组判断，
+     坐标不再参与作图（城市名已经印在底图上了）。 */
+  { cn: '上海', en: 'SHANGHAI', lat: 31.23, lon: 121.47 },
+  { cn: '杭州', en: 'HANGZHOU', lat: 30.274, lon: 120.155 },
+  { cn: '安吉', en: 'ANJI', lat: 30.63, lon: 119.68 },
 ]
 
 export type Gig = {
@@ -423,10 +439,8 @@ export type Gig = {
   area: string
   lat: number
   lon: number
-  /** 场地 pin 挂在城市节点周围的方位角（屏幕坐标：0 = 正右，顺时针为正）。
-   *  方位来自场地相对市中心的真实方向，半径是固定的示意值 —— 只保证
-   *  pin 不互相压住、也不盖住城市节点。 */
-  bearing?: number
+  /** 所属城市（GIG_CITIES.cn）。底图上同城场地会挤在几 px 内，需要分组处理 */
+  city: string
   /** public/assets/gig 下的 slug；缺省 = 海报待补 */
   poster?: string
 }
@@ -437,9 +451,9 @@ export const GIGS: Gig[] = [
     venue: '华东师范大学',
     en: 'EAST CHINA NORMAL UNIVERSITY',
     area: '上海 · 普陀',
+    city: '上海',
     lat: 31.229,
     lon: 121.405,
-    bearing: 205,
     poster: 'ecnu',
   },
   {
@@ -447,18 +461,18 @@ export const GIGS: Gig[] = [
     venue: '上海交通大学',
     en: 'SHANGHAI JIAO TONG UNIVERSITY',
     area: '上海 · 徐汇',
+    city: '上海',
     lat: 31.203,
     lon: 121.437,
-    bearing: 120,
   },
   {
     no: '03',
     venue: '边角料咖啡酒馆',
     en: 'LEFT CORNER COFFEE & BARS',
     area: '杭州 · 拱墅',
+    city: '杭州',
     lat: 30.323,
     lon: 120.137,
-    bearing: 300, // 拱墅在市中心以北，pin 挂在城市节点上方
     poster: 'hangzhou',
   },
   {
@@ -466,9 +480,9 @@ export const GIGS: Gig[] = [
     venue: 'Sandbar',
     en: 'SANDBAR 柏沙吧',
     area: '上海 · 长宁',
+    city: '上海',
     lat: 31.201,
     lon: 121.431,
-    bearing: 160,
     poster: 'sandbar',
   },
   {
@@ -476,9 +490,9 @@ export const GIGS: Gig[] = [
     venue: '麓 Livehouse',
     en: 'LU LIVEHOUSE',
     area: '湖州 · 安吉',
+    city: '安吉',
     lat: 30.587,
     lon: 119.655,
-    bearing: 225, // 灵峰街道在安吉县城西南
     poster: 'anji',
   },
   {
@@ -486,9 +500,9 @@ export const GIGS: Gig[] = [
     venue: '奶油俱乐部',
     en: 'CREAM CLUB',
     area: '上海 · 浦东',
+    city: '上海',
     lat: 31.21,
     lon: 121.51,
-    bearing: 25,
     poster: 'cream',
   },
 ]
