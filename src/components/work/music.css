@@ -210,27 +210,33 @@
 }
 
 /* 装饰：一把吉他 + 一套鼓。没有白卡、没有底框，
-   就是两件乐器贴着面板摆在那儿（用户要「像装饰画一样」）。 */
+   就是两件乐器贴着面板摆在那儿（用户要「像装饰画一样」）。
+   装饰区 = 右列第一行（minmax(0,1fr)），下面那行是 6 项场地列表；
+   窗口变矮时第一行会被压，所以这里的贴纸必须能跟着缩、且不许溢出。 */
 .mp__rocks {
   min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 4px 14px;
+  padding: 6px 4px 12px;
+  /* 兜底：真到了极矮的窗口，宁可裁贴纸下缘，也绝不压住下面的场地列表 */
+  overflow: hidden;
 }
 .mp__rocks img {
   position: relative;
   display: block;
-  /* 尺寸由组件通过 --w 传进来，窄屏断点才好统一缩 */
-  width: var(--w);
-  height: auto;
+  /* 用**高度**定尺寸（宽度 auto 跟出等比），高度由组件通过 --h 传进来。
+     配 max-height:100% 后窗口再矮也会整体缩小，不会顶到 chips。 */
+  height: var(--h);
+  width: auto;
+  max-height: 100%;
   /* 贴纸自带白色模切边，再给一点投影就"贴"在纸上了 */
   filter: drop-shadow(0 3px 5px rgba(70, 81, 44, 0.22));
   transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
-/* 鼓压住吉他右缘 26px，吉他再抬到上层 → 读起来像「吉他斜靠在鼓组上」 */
+/* 鼓压住吉他右缘，吉他再抬到上层 → 读起来像「吉他斜靠在鼓组上」 */
 .mp__rocks img + img {
-  margin-left: -26px;
+  margin-left: -22px;
 }
 .mp__rocks img:first-child {
   z-index: 2;
@@ -431,7 +437,8 @@
     align-items: start;
     gap: 18px;
   }
-  .mp__rocks img { width: calc(var(--w) * 0.78); }
+  /* 窄屏装饰与列表并排，高度不再受行高限制，手动收一档 */
+  .mp__rocks img { height: calc(var(--h) * 0.82); }
   /* 窄屏浮窗改成横向铺满地图下半，避免盖住太多地图 */
   .mp__float {
     left: 12px;

@@ -17,12 +17,14 @@ import { SIZES, workImage } from './imageSources'
 import './music.css'
 
 /** 装饰贴纸：一把吉他 + 一套鼓。尺寸与倾角手调 ——
- *  吉他竖长（0.43）、鼓横宽（1.53），让鼓压住吉他右缘 26px，
+ *  吉他竖长（0.43）、鼓横宽（1.53），让鼓压住吉他右缘 22px，
  *  吉他再抬到上层（CSS 里 z-index），读起来就是「吉他斜靠在鼓组上」。
- *  合计宽 260px，正好放进 300px 的右列。 */
+ *  尺寸按**高度**给（宽度 auto 跟出等比）：吉他 184、鼓 96，
+ *  合计宽 204px 放进 300px 的右列；高度写 CSS 变量是为了让
+ *  `max-height: 100%` 能在矮窗口里把它整体缩下来，压不到下面的场地列表。 */
 const ROCK_STICKERS = [
-  { src: 'guitar', w: 102, rot: -9, dy: 24 },
-  { src: 'drums-b', w: 184, rot: 3, dy: -16 },
+  { src: 'guitar', h: 184, rot: -9, dy: 19 },
+  { src: 'drums-b', h: 96, rot: 3, dy: -13 },
 ] as const
 
 export default function MusicPanel() {
@@ -124,7 +126,7 @@ export default function MusicPanel() {
                 alt=""
                 draggable={false}
                 style={{
-                  ['--w' as string]: `${s.w}px`,
+                  ['--h' as string]: `${s.h}px`,
                   transform: `rotate(${s.rot}deg) translateY(${s.dy}px)`,
                 }}
               />
