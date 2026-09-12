@@ -201,30 +201,77 @@
   pointer-events: none;
 }
 
-/* ── 右侧栏：海报 + 场地列表 ─────────────────────── */
+/* ── 右侧栏：贴纸墙 + 场地列表 ───────────────────── */
 .mp__side {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 14px;
   min-height: 0;
 }
-.mp__poster {
+
+/* 贴纸墙：白卡上随手贴的 5 张 rock 贴纸（纯装饰） */
+.mp__rocks {
+  min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 2px 10px;
+  padding: 14px 10px;
+  background: #ffffff;
+  border: 1px solid #d5dfc2;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px -10px rgba(70, 81, 44, 0.3);
+  overflow: hidden;
+}
+.mp__rocks img {
+  display: block;
+  height: auto;
+  /* 贴纸自带白色模切边，再给一点投影就"贴"在纸上了 */
+  filter: drop-shadow(0 2px 3px rgba(70, 81, 44, 0.2));
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.mp__rocks img:hover {
+  transform: scale(1.06) rotate(0deg) !important;
+}
+
+/* ── 海报浮窗：浮在地图上，点 pin / 列表才出现 ───────── */
+.mp__float {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  width: 250px;
+  z-index: 3;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 10px;
-  min-height: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.975);
+  border: 1px solid #d5dfc2;
+  border-radius: 10px;
+  box-shadow: 0 12px 34px -14px rgba(40, 50, 24, 0.55);
+  /* 收起态：往右滑出去 + 透明 + 不可点 */
+  opacity: 0;
+  transform: translateX(14px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
-.mp__pframe {
+.mp__float.is-open {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.mp__float-frame {
   min-height: 0;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  border: 1px solid #d5dfc2;
-  background: #ffffff;
+  border-radius: 6px;
+  background: #f4f8ec;
   overflow: hidden;
-  box-shadow: 0 4px 16px -10px rgba(70, 81, 44, 0.3);
 }
-.mp__pframe img {
+.mp__float-frame img {
   display: block;
   max-width: 100%;
   max-height: 100%;
@@ -232,24 +279,51 @@
   height: auto;
   object-fit: contain;
 }
+.mp__float-meta { display: grid; gap: 2px; }
+.mp__float-meta h3 {
+  font-family: 'Times New Roman', 'Songti SC', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 1px 0 0;
+  color: #38412a;
+}
+.mp__float-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(56, 65, 42, 0.12);
+  color: #38412a;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+}
+.mp__float-x:hover { background: #4d7a2e; color: #fff; }
+.mp__float-x:focus-visible { outline: 2px solid #4d7a2e; outline-offset: 2px; }
+
+/* 海报待补的占位块（浮窗里用） */
 .mp__ptba {
   display: grid;
   justify-items: center;
   gap: 6px;
-  margin: 20px;
-  padding: 40px 22px;
+  padding: 30px 16px;
   width: 100%;
-  border: 1.5px dashed #cfd9bd;
-  border-radius: 10px;
   color: rgba(56, 65, 42, 0.5);
 }
 .mp__ptba-mark {
   font-family: 'Times New Roman', serif;
-  font-size: 40px;
+  font-size: 34px;
   line-height: 1;
   color: #8aa663;
 }
-.mp__ptba strong { font-size: 13px; font-weight: 600; }
+.mp__ptba strong { font-size: 12px; font-weight: 600; }
 .mp__ptba-en { font-size: 9px; letter-spacing: 0.16em; opacity: 0.6; }
 
 .mp__pmeta { display: grid; gap: 2px; }
@@ -343,17 +417,25 @@
 @media (max-width: 1040px) {
   .mp__body {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(260px, 1fr) auto;
+    grid-template-rows: minmax(280px, 1fr) auto;
     gap: 18px;
     overflow-y: auto;
   }
   .mp__side {
     grid-template-rows: auto;
-    grid-template-columns: 190px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 200px;
     align-items: start;
     gap: 18px;
   }
-  .mp__pframe { height: 300px; }
+  .mp__rocks { max-height: 260px; }
+  /* 窄屏浮窗改成横向铺满地图下半，避免盖住太多地图 */
+  .mp__float {
+    left: 12px;
+    width: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
