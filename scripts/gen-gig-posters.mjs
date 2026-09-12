@@ -24,6 +24,7 @@ const SLUG = {
   '海报-杭州.JPG': 'hangzhou',
   '海报-上海cream.JPG': 'cream',
   '海报-上海sandbar.JPG': 'sandbar',
+  '海报-上海交大.JPG': 'sjtu',
   '海报-上海毕业晚会.jpg': 'ecnu',
 }
 

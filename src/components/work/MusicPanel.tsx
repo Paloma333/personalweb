@@ -4,8 +4,9 @@
  * 2026-09-12 结构调整：
  *   - 海报不再固定在右列（右边太挤，海报被压得显示不全），改成**地图上的浮窗**，
  *     点 pin 或点场地列表才出现，可关闭。
- *   - 右列上半换成 rock 贴纸墙（吉他 / 架子鼓×2 / 键盘 / 麦克风），
+ *   - 右列上半放两件 rock 贴纸当装饰画（一把电吉他 + 一套架子鼓），
  *     贴纸从 素材/01-贴纸-透明底 抠出（scripts/extract-rock-stickers.py）。
+ *     2026-09-12 二次调整：去掉贴纸外面的白卡，只留这两件乐器本身。
  *   - 右列下半仍是 6 个场地的竖排列表。
  */
 import { useEffect, useState } from 'react'
@@ -15,14 +16,13 @@ import GigMap from './GigMap'
 import { SIZES, workImage } from './imageSources'
 import './music.css'
 
-/** 贴纸墙：宽度与倾角是手调的 —— 让 5 张在 ~280px 宽里排成
- *  「吉他+鼓 / 鼓 / 键盘+麦克」三行，看起来像随手贴上去的 */
+/** 装饰贴纸：一把吉他 + 一套鼓。尺寸与倾角手调 ——
+ *  吉他竖长（0.43）、鼓横宽（1.53），让鼓压住吉他右缘 26px，
+ *  吉他再抬到上层（CSS 里 z-index），读起来就是「吉他斜靠在鼓组上」。
+ *  合计宽 260px，正好放进 300px 的右列。 */
 const ROCK_STICKERS = [
-  { src: 'guitar', w: 62, rot: -8, dy: 4 },
-  { src: 'drums-a', w: 104, rot: 5, dy: -6 },
-  { src: 'drums-b', w: 180, rot: -3, dy: 6 },
-  { src: 'keys', w: 96, rot: 4, dy: -4 },
-  { src: 'mic', w: 40, rot: -6, dy: 8 },
+  { src: 'guitar', w: 102, rot: -9, dy: 24 },
+  { src: 'drums-b', w: 184, rot: 3, dy: -16 },
 ] as const
 
 export default function MusicPanel() {
@@ -115,16 +115,18 @@ export default function MusicPanel() {
         </section>
 
         <aside className="mp__side">
-          {/* 贴纸墙 */}
+          {/* 装饰：一把吉他 + 一套鼓（纯装饰，无卡片底框） */}
           <div className="mp__rocks" aria-hidden="true">
             {ROCK_STICKERS.map((s) => (
               <img
                 key={s.src}
                 src={`/assets/rock-stickers/${s.src}.png`}
                 alt=""
-                width={s.w}
                 draggable={false}
-                style={{ width: s.w, transform: `rotate(${s.rot}deg)`, marginTop: s.dy }}
+                style={{
+                  ['--w' as string]: `${s.w}px`,
+                  transform: `rotate(${s.rot}deg) translateY(${s.dy}px)`,
+                }}
               />
             ))}
           </div>

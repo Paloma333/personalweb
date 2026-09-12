@@ -201,7 +201,7 @@
   pointer-events: none;
 }
 
-/* ── 右侧栏：贴纸墙 + 场地列表 ───────────────────── */
+/* ── 右侧栏：装饰贴纸 + 场地列表 ─────────────────── */
 .mp__side {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
@@ -209,31 +209,35 @@
   min-height: 0;
 }
 
-/* 贴纸墙：白卡上随手贴的 5 张 rock 贴纸（纯装饰） */
+/* 装饰：一把吉他 + 一套鼓。没有白卡、没有底框，
+   就是两件乐器贴着面板摆在那儿（用户要「像装饰画一样」）。 */
 .mp__rocks {
   min-height: 0;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  align-content: center;
-  gap: 2px 10px;
-  padding: 14px 10px;
-  background: #ffffff;
-  border: 1px solid #d5dfc2;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px -10px rgba(70, 81, 44, 0.3);
-  overflow: hidden;
+  padding: 8px 4px 14px;
 }
 .mp__rocks img {
+  position: relative;
   display: block;
+  /* 尺寸由组件通过 --w 传进来，窄屏断点才好统一缩 */
+  width: var(--w);
   height: auto;
   /* 贴纸自带白色模切边，再给一点投影就"贴"在纸上了 */
-  filter: drop-shadow(0 2px 3px rgba(70, 81, 44, 0.2));
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+  filter: drop-shadow(0 3px 5px rgba(70, 81, 44, 0.22));
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+/* 鼓压住吉他右缘 26px，吉他再抬到上层 → 读起来像「吉他斜靠在鼓组上」 */
+.mp__rocks img + img {
+  margin-left: -26px;
+}
+.mp__rocks img:first-child {
+  z-index: 2;
 }
 .mp__rocks img:hover {
-  transform: scale(1.06) rotate(0deg) !important;
+  z-index: 3;
+  transform: rotate(0deg) scale(1.04) !important;
 }
 
 /* ── 海报浮窗：浮在地图上，点 pin / 列表才出现 ───────── */
@@ -427,7 +431,7 @@
     align-items: start;
     gap: 18px;
   }
-  .mp__rocks { max-height: 260px; }
+  .mp__rocks img { width: calc(var(--w) * 0.78); }
   /* 窄屏浮窗改成横向铺满地图下半，避免盖住太多地图 */
   .mp__float {
     left: 12px;

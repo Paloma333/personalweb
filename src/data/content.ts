@@ -475,6 +475,7 @@ export const GIGS: Gig[] = [
     lat: 31.203,
     lon: 121.437,
     spread: [-10, 62], // 真实在市中心西南（徐汇）→ 往南推
+    poster: 'sjtu',
   },
   {
     no: '03',

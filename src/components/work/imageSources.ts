@@ -48,8 +48,9 @@ export const SIZES = {
   website: '(max-width: 700px) 280px, (min-width: 1330px) 532px, 40vw',
   /** 竖屏手机截图（小屋日志）：在面板里通常出现在左侧或单独展示，宽度不大 */
   portrait: '(max-width: 720px) 64vw, (min-width: 1330px) 360px, 28vw',
-  /** 演出海报：右侧海报夹固定 clamp(200px, 20vw, 268px) 宽 */
-  gig: '(max-width: 900px) 200px, (min-width: 1340px) 268px, 20vw',
+  /** 演出海报：地图上的浮窗固定 250px 宽，减去 12px 内边距 → 框内 ≤226px。
+   *  窄屏断点浮窗改成横向铺满地图下半，海报占其中一列 */
+  gig: '(max-width: 1040px) 40vw, 226px',
 } as const
 
 /** 返回可直接展开到 `<img>` 上的 src / srcSet */
