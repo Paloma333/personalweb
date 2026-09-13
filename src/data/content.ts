@@ -296,7 +296,7 @@ export const INTERNSHIPS: WebsiteEntry[] = [
     slug: "MCDONALD'S / GLOBAL DATA",
     title: ['麦当劳 · PM ·', '数据产品组'],
     kicker: 'DATA PM INTERNSHIP · 2025.04–07',
-    desc: '在麦当劳数据产品组，我提出并落地了 BI 组的第一个 AI 项目：报表解读 Agent。针对不同业务问题设计多线 workflow，用 RAG 注入指标口径与业务规则，并给模型立规矩——必须引用具体指标变化、区分结构性变化与短期波动。完成 demo 与趋势分析，团队内测反馈正面，被列为部门可持续迭代方向。',
+    desc: '在麦当劳数据产品组，我提出并落地了 BI 组的第一个 AI 项目：报表解读 Agent。针对不同业务问题设计多线 workflow，用 RAG 注入指标口径与业务规则，完成 demo 与趋势分析。团队内测反馈正面，被列为部门可持续迭代方向。',
     cover: 'mcd',
     glow: '#ffb3a0',
     href: '#',

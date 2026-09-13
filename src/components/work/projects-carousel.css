@@ -343,6 +343,12 @@
     grid-template-columns: 1fr;
     gap: 22px;
     padding: 96px 24px 60px;
+    /* 2026-09-13：单列堆叠后内容(约 1000px)必然高过视口，而外层
+       .pcr__viewport 是 overflow:hidden —— 不给这里开纵向滚动，
+       手机/矮窗口下正文下半截永远读不到（内容不可达，不只是「难看」）。 */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   /* 在窄屏上：右侧项目名导航贴右边更紧凑、字更小 */
   .pcr__nav {
@@ -360,8 +366,99 @@
     height: 40px;
     font-size: 16px;
   }
-  /* 窄屏箭头避开右侧锚点导航 */
+  /* 窄屏箭头避开右侧锚点导航（导航约 153px 宽 + 右间距 12px） */
   .pcr__arrow--next {
-    right: 96px;
+    right: 176px;
+  }
+}
+
+/* ── 手机（≤680px）────────────────────────────────────────────
+ * 402px 宽下原设计有三处叠在一起：右列纵排的锚点导航正好压在封面和
+ * 右箭头上；右箭头又压住文案；头部标题 + 计数被挤到换行（"01 /" "04"）。
+ * 这里不重排版面，只把这三件浮层挪到不打架的位置：
+ *   头部  → 收紧左内边距 + 缩小标题、计数不换行
+ *   导航  → 从右侧纵排改成贴底的横向条（4 个项目一眼全在，仍可点跳）
+ *   箭头  → 上移到封面那一块，左右各一
+ */
+@media (max-width: 680px) {
+  .pcr__head {
+    padding: 16px 16px 12px 110px;
+    gap: 8px;
+  }
+  .pcr__title-main {
+    font-size: 15px;
+    letter-spacing: 0.07em;
+  }
+  .pcr__count {
+    flex: none;
+    white-space: nowrap;
+  }
+  /* 给贴底导航条留出高度，滚到底时最后一行不会被压住 */
+  .pcr__item-inner {
+    padding: 76px 18px 88px;
+  }
+
+  .pcr__nav {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2px;
+    /* 左右各留 52px 给翻页箭头，凑成 ← | 01 02 03 04 | → 一条翻页条 */
+    padding: 6px 52px 8px;
+    background: linear-gradient(to top, var(--paper) 74%, transparent);
+  }
+  .pcr__nav-item {
+    flex: 1 1 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    justify-items: stretch;
+    text-align: center;
+    gap: 1px;
+    padding: 5px 4px;
+    border-left: none;
+    border-top: 2px solid rgba(20, 22, 26, 0.16);
+  }
+  .pcr__nav-item[data-on] {
+    border-top-color: var(--ink);
+  }
+  .pcr__nav-item:hover {
+    transform: none;
+  }
+  .pcr__nav-label {
+    font-size: 10.5px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+  .pcr__nav-no {
+    font-size: 10px;
+  }
+
+  /* 箭头并进底部翻页条两端：不再浮在封面/正文上，滚到哪儿都不压字。
+     z-index 要压过导航条(5)——它的渐变底色会把箭头盖掉。 */
+  .pcr__arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+    z-index: 6;
+  }
+  .pcr__arrow--prev {
+    left: 6px;
+    top: auto;
+    bottom: 14px;
+    transform: none;
+  }
+  .pcr__arrow--next {
+    right: 6px;
+    top: auto;
+    bottom: 14px;
+    transform: none;
+  }
+  .pcr__arrow--prev:hover,
+  .pcr__arrow--next:hover {
+    transform: none;
   }
 }

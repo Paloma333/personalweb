@@ -423,8 +423,18 @@
 }
 .mp__chips button.is-on .mp__chip-area { color: rgba(255, 255, 255, 0.72); }
 
-/* ── 窄屏：单列堆叠 ─────────────────────────────── */
+/* ── 窄屏：单列堆叠 ───────────────────────────────
+ * 2026-09-13 手机端修复。根因：.mp 是 grid，隐式单列宽 auto，其最小值取
+ * 各条目 min-content 的最大值 —— 头部计数条（4 项）min-content ≈ 596px，
+ * 于是 402px 的窄屏上栅格被撑到 594px：头部文字、地图卡、场地列表整体右溢，
+ * 被 .wv 的 overflow:hidden 裁掉。把列宽钳成 minmax(0, 1fr) 后栅格恒等于
+ * 容器宽，这个「撑宽 — 裁切」的连锁问题一次性消失。 */
 @media (max-width: 1040px) {
+  .mp { grid-template-columns: minmax(0, 1fr); }
+  /* 头部不再给返回按钮留 200px，跟 PROJECTS 的窄屏值对齐 */
+  .mp__head { padding-left: 120px; }
+  /* 计数条允许折行，否则它自己就是那个 596px 的 min-content */
+  .mp__stats { flex-wrap: wrap; gap: 10px 22px; }
   .mp__body {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(280px, 1fr) auto;
@@ -446,6 +456,39 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
     align-items: center;
+  }
+}
+
+/* ── 手机（≤680px）：BACK 独占一行，场地列表两列铺满 ────────────
+ * 1040 那档是「地图 + 右侧栏」的并排逻辑，压到 400px 宽时右侧栏只剩
+ * 200px，6 个场名全被省略号吃掉。手机改成：返回按钮占第一行，头部整宽，
+ * 地图整宽，装饰 + 场地列表整宽两列 —— 层级更少、每块都能读全。 */
+@media (max-width: 680px) {
+  .mp__head { padding: 58px 18px 12px; }
+  .mp__title { font-size: 26px; }
+  .mp__desc { font-size: 12.5px; }
+  /* 4 项计数两两一行，读起来是整齐的两行两列，而不是「挤满一行 + 尾巴」 */
+  .mp__stats {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    gap: 8px 26px;
+  }
+  .mp__body {
+    padding: 14px 18px 22px;
+    grid-template-rows: minmax(250px, 1fr) auto;
+    gap: 14px;
+  }
+  .mp__side { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  /* 装饰区给**确定高度**：.mp__side 的行是 auto，在正文高过一屏时会被压
+     （.mp__rocks 带 min-height:0 + overflow:hidden，min-content 可缩到 0），
+     一压就把贴纸叠到下面的场地列表上。写死高度后这一行不可压缩。 */
+  .mp__rocks { height: 130px; padding: 0 4px; }
+  .mp__rocks img { height: calc(var(--h) * 0.68); }
+  .mp__chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
   }
 }
 
